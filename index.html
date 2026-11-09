@@ -4445,7 +4445,7 @@ a.btn[href="#local"]{opacity:.62}
   function setStep(c, st, to) {
     var i = idx(st), s = stOf(c, st[0]), lock = lockOf(c, i);
     if (!canAct(c, st)) { toast('บทบาทนี้ไม่ได้รับสิทธิ์ทำขั้นนี้'); return; }
-    if (lock && !s) { toast('ยังเริ่มไม่ได้ รอด่าน ' + lock[5] + ' ที่ขั้น ' + lock[0]); return; }
+    if (lock && !s) { toast('เริ่มได้เมื่อผ่านด่าน ' + lock[5] + ' ที่ขั้น ' + lock[0]); return; }
     if (to === 'done') {
       if (st[5]) {
         var open = STEPS.slice(0, i).filter(function (x) { return stOf(c, x[0]) !== 'done'; }).map(function (x) { return x[0]; });
@@ -6226,7 +6226,7 @@ a.btn[href="#local"]{opacity:.62}
     var h = '<section class="card panel"><div class="ph"><div><h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ด่าน ' + st[5] + '</span>' : '') + '</h3>' +
       '<div class="meta"><span class="who" title="' + esc('ผู้ทำ ' + st[4]) + '">' + st[8].map(function (k) { return av(k); }).join('') + '</span>กำหนดตามแผน ' + dL(du) + '</div></div><div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div>' +
       '<div class="tabs">' + [['form', 'แบบฟอร์ม'], ['flow', 'ผังงาน'], ['files', 'ไฟล์']].map(function (t) { return '<button type="button" data-a="ptab" data-v="' + t[0] + '" aria-selected="' + (S.ptab === t[0]) + '">' + ic(TAB_IC[t[0]]) + '<span>' + t[1] + '</span></button>'; }).join('') + '</div><div class="pb">';
-    if (lk) h += note('lock', 'ขั้นนี้ยังล็อก รอด่าน ' + lk[5] + ' ที่ขั้น ' + lk[0] + ': ' + esc(lk[6]), 'warn');
+    if (lk) h += note('lock', 'เริ่มได้เมื่อผ่านด่าน ' + lk[5] + ' ที่ขั้น ' + lk[0] + ': ' + esc(lk[6]), 'warn');
     if (S.ptab === 'flow') h += flowLane(st[1], c, st[0]);
     else if (S.ptab === 'files') h += filesView(c, st);
     else if (!seeDoc(c, st)) h += note('lock', 'ฝ่ายนี้เห็นเฉพาะสถานะของขั้นนี้ ไม่เห็นเนื้อหาเอกสารทางเทคนิค ตาม P-GCC-07 ข้อ 5.10', 'warn');
