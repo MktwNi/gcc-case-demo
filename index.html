@@ -1512,6 +1512,92 @@ a.btn[href="#local"]{opacity:.62}
   #printArea{display:block}
   body{background:#fff}
 }
+/* ---------- permissions (page สิทธิ์ผู้ใช้, src/js/53-permissions.js), laid out like GCC Registry's roles page:
+   the roles on the left, the chosen role's rights on the right, a save bar that stays in view, a table of every role ---------- */
+.pr-roles{display:grid;grid-template-columns:264px minmax(0,1fr);gap:16px;align-items:start}
+.pr-stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pr-list{display:flex;flex-direction:column;gap:2px;padding:10px}
+.pr-list-h{padding:8px 12px 4px;color:var(--mut);font-size:12px}
+.pr-ri{display:flex;flex-direction:column;gap:1px;width:100%;min-width:0;padding:9px 12px;border:0;border-radius:12px;background:transparent;color:var(--ink);font:inherit;text-align:left;cursor:pointer;transition:background-color .12s}
+.pr-ri b,.pr-ri span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-ri b{font-size:14px;font-weight:500;line-height:1.45}
+.pr-ri span{color:var(--ink-2);font-size:13px;line-height:1.45}
+.pr-ri:hover{background:var(--tint)}
+.pr-ri[aria-current=true]{background:var(--tint-2)}
+.pr-ri[aria-current=true] b{color:var(--link)}
+.pr-ri.lock b{color:var(--ink-2)}
+.pr-ed{min-width:0;padding:0}
+.pr-ed-h{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 24px 16px;border-bottom:1px solid var(--line)}
+.pr-ed-h h3{margin:0;color:var(--ink);font-size:18px;font-weight:500;line-height:1.4}
+.pr-ed-h p{margin:2px 0 0;color:var(--ink-2);font-size:13px;line-height:1.55}
+.pr-ed-acts{display:flex;flex:none;align-items:center;gap:16px;padding-top:4px}
+.pr-lnk{padding:0;border:0;background:none;color:var(--link);font:inherit;font-size:14px;cursor:pointer}
+.pr-quiet{padding:0 4px;border:0;background:none;color:var(--mut);font:inherit;font-size:13px;cursor:pointer}
+.pr-grp{padding:6px 24px 14px}
+.pr-grp+.pr-grp{border-top:1px solid var(--line)}
+.pr-grp-h{display:flex;flex-direction:column;gap:2px;padding:14px 0 8px}
+.pr-grp-h h4{margin:0;color:var(--ink);font-size:16px;font-weight:500;line-height:1.4}
+.pr-grp-h span{color:var(--ink-2);font-size:13px;line-height:1.6}
+.pr-ph{padding:12px 0 4px;color:var(--mut);font-size:12px}
+.pr-cap{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:2px 12px;min-height:44px;margin:0 -10px;padding:7px 10px;border-radius:12px;transition:background-color .12s}
+.pr-cap:hover{background:var(--tint)}
+.pr-cap.chg,.pr-cap.chg:hover{background:var(--tint-2)}
+.pr-box{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;padding:0;border:1.5px solid var(--field);border-radius:6px;background:transparent;color:#fff;cursor:pointer}
+.pr-box svg{width:14px;height:14px}
+.pr-cap.on .pr-box{border-color:var(--brand);background:var(--brand)}
+.pr-box[disabled]{cursor:default}
+.pr-cap.dis .pr-box{opacity:.55}
+.pr-box:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.pr-cap-t{display:flex;flex-direction:column;gap:1px;min-width:0}
+.pr-cap-t b,.pr-cap-t>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pr-cap-t b{color:var(--ink);font-size:14px;font-weight:400;line-height:1.45}
+.pr-cap.on .pr-cap-t b{font-weight:500}
+.pr-cap.dis:not(.on) .pr-cap-t b{color:var(--mut)}
+.pr-cap-t>span{color:var(--ink-2);font-size:13px;line-height:1.5}
+.pr-cap-r{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+.pr-sid{display:inline-block;min-width:34px;color:var(--ink-2);font-weight:500;font-variant-numeric:tabular-nums}
+.pr-seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--band)}
+.pr-seg button{height:28px;padding:0 12px;border:0;border-radius:999px;background:transparent;color:var(--ink-2);font:inherit;font-size:13px;white-space:nowrap;cursor:pointer;transition:background-color .12s,color .12s}
+.pr-seg button[aria-pressed=true]{background:#fff;color:var(--link);font-weight:500;box-shadow:0 1px 2px rgba(14,20,48,.14)}
+.pr-seg button[disabled]{cursor:default}
+.pr-seg button[disabled]:not([aria-pressed=true]){opacity:.5}
+.pr-seg button:not([aria-pressed=true]):not([disabled]):hover{background:rgba(255,255,255,.7);color:var(--ink)}
+.pr-fixv{display:inline-block;padding:0 10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line);color:var(--mut);font-size:12.5px;line-height:24px;white-space:nowrap}
+.pr-foot{margin:0;padding:10px 0 2px;color:var(--mut);font-size:13px;line-height:1.6}
+.pr-pad{padding:12px 24px 18px}
+.pr-save{position:sticky;bottom:0;z-index:2;display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:12px 24px;border-top:1px solid var(--line);border-radius:0 0 var(--r) var(--r);background:inherit}
+.pr-save-t{min-width:0;margin-right:auto;overflow:hidden;color:var(--ink-2);font-size:13px;line-height:1.5;text-overflow:ellipsis;white-space:nowrap}
+.pr-save-t b{color:var(--ink);font-weight:500}
+/* every role side by side: the card scrolls sideways inside itself, the page never does */
+.pr-mx-w{padding:4px 14px 18px;overflow-x:auto}
+.pr-mx-w:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.pr-mx{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}
+.pr-mx th,.pr-mx td{padding:9px 10px;border-bottom:1px solid var(--divider);line-height:1.45}
+.pr-mx thead th{border-bottom:1px solid var(--line);padding-top:14px;font-weight:400;text-align:center;vertical-align:bottom}
+.pr-mx thead th.pr-mx-cap{width:32%}
+.pr-mx-r{display:block;min-width:76px;color:var(--ink);font-size:13px;white-space:nowrap}
+.pr-mx-n{display:block;color:var(--mut);font-size:12px;white-space:nowrap}
+.pr-mx tbody th[scope=row]{color:var(--ink);font-weight:400;text-align:left}
+.pr-mx-t{display:block;min-width:200px;white-space:nowrap}
+.pr-mx td{text-align:center}
+.pr-mx-g th{padding-top:18px;border-bottom:1px solid var(--line);color:var(--ink);font-size:14px;font-weight:500;text-align:left}
+.pr-mx thead th.pr-mx-cap,.pr-mx tbody tr:not(.pr-mx-g)>th[scope=row]{position:sticky;left:0;z-index:1;background:#fff}
+.pr-mx tbody tr:not(.pr-mx-g):hover>*{background:var(--tint)}
+.pr-y{display:inline-flex;color:var(--link)}
+.pr-y svg{width:14px;height:14px}
+.pr-ap{display:inline-block;padding:0 8px;border-radius:999px;background:var(--info-bg);color:var(--link);font-size:12px;line-height:20px;white-space:nowrap}
+.pr-e{color:var(--ok);font-size:12.5px;font-weight:500}
+.pr-v{color:var(--ink-2);font-size:12.5px;white-space:nowrap}
+.pr-fix{color:var(--mut)}
+.pr-no{color:var(--mut);font-size:13px}
+.pr-who{display:flex;align-items:center;gap:10px;white-space:nowrap}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+html[data-theme=dark] .pr-seg button[aria-pressed=true]{background:#24406F;color:#E7EEF9}
+html[data-theme=dark] .pr-seg button:not([aria-pressed=true]):not([disabled]):hover{background:rgba(255,255,255,.08)}
+html[data-theme=dark] .pr-mx thead th.pr-mx-cap,html[data-theme=dark] .pr-mx tbody tr:not(.pr-mx-g)>th[scope=row]{background:#122244}
+@media (max-width:1000px){.pr-roles{grid-template-columns:220px minmax(0,1fr)}}
+@media (max-width:760px){.pr-roles{grid-template-columns:minmax(0,1fr)}.pr-grp,.pr-ed-h{padding-left:16px;padding-right:16px}.pr-save{padding:10px 16px}}
+@media (prefers-reduced-motion:reduce){.pr-ri,.pr-cap,.pr-seg button{transition:none}}
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -1584,6 +1670,36 @@ a.btn[href="#local"]{opacity:.62}
   var GHG = [['co2','CO<sub>2</sub>'],['ch4','CH<sub>4</sub>'],['n2o','N<sub>2</sub>O'],['hfc','HFCs'],['pfc','PFCs'],['sf6','SF<sub>6</sub>'],['nf3','NF<sub>3</sub>']];
   var ST_TXT = { use:'ใช้งาน', draft:'ร่าง', pend:'รอตรวจสอบ', cancel:'ยกเลิก' };
   var CLIENT_DOCS = ['F-GCC-24','F-GCC-26','F-GCC-32','F-GCC-33','F-GCC-36','F-GCC-38','F-GCC-39','F-GCC-42'];
+
+  /* ---------- permissions by role (the page สิทธิ์ผู้ใช้; on the app page an admin changes them and the database follows) ----------
+     PERM_ROLES are the GCC roles the page sets; the client, สมอ. and อบก. keep fixed rights. SEE0: which cases a role sees
+     at the start: all, team (named on the case; an IR from step 4.2) or none. PART_GROUPS: [key, name, what it holds, the case
+     parts in it, the starting level of each PERM_ROLES role in that order (0 none, 1 read, 2 edit), the client's fixed right].
+     server/schema.sql starts role_rules and part_rules from these (tests/server checks they match). STEP_GRP: the group whose
+     forms a step shows; a role sees the step's forms when it may read that group and fills them in when it may edit it. */
+  var PERM_ROLES = ['admin', 'sales', 'mgr', 'md', 'lv', 'ir', 'qmr', 'dcc'];
+  var SEE0 = { admin:'all', sales:'all', mgr:'all', md:'none', lv:'team', ir:'team', qmr:'none', dcc:'none' };
+  var PART_GROUPS = [
+    ['case', 'ข้อมูลเคส', 'ชื่อลูกค้า ผู้ติดต่อ เลขที่งาน และทะเบียน', ['core', 'f25', 'f51'], '21201100', 'ดู'],
+    ['f24', 'คำขอรับการทวนสอบ', 'ข้อมูลที่ลูกค้ากรอกตอนขอรับบริการ', ['f24'], '21202100', 'แก้'],
+    ['rev', 'ทบทวนคำขอและ Manday', 'ผลทบทวนคำขอและการคำนวณ Manday', ['rev', 'f77'], '20202100', '—'],
+    ['f26', 'ใบเสนอราคาและข้อตกลง', 'ราคา เงื่อนไข และการลงนาม', ['f26'], '22202100', 'ดู'],
+    ['pay', 'การเงิน', 'ใบแจ้งหนี้และการชำระเงิน', ['pay'], '22201100', '—'],
+    ['team', 'ทีมและผู้ทบทวนอิสระ', 'รายชื่อคณะผู้ทวนสอบและ IR', ['team'], '21201100', 'ชื่อทีม'],
+    ['f30', 'ทบทวนเอกสาร', 'ผลทบทวนเอกสารก่อนวางแผน', ['f30'], '20202100', '—'],
+    ['f31', 'SARA แผนสุ่ม และ Gate Review', 'การประเมินความเสี่ยง แผนการสุ่ม และการยืนยันก่อนลงพื้นที่', ['f31', 'gate'], '20202100', '—'],
+    ['f32', 'แผนการทวนสอบ', 'แผนที่ส่งให้ลูกค้ายืนยัน', ['f32'], '20202100', 'ดู'],
+    ['onsite', 'บรรยายสรุปทีมและบันทึกหน้างาน', 'ประชุมเปิด ใบลงชื่อ บันทึกการตรวจ และ End-of-Task Review', ['f15', 'f33', 'f34', 'f35', 'eot'], '20202100', 'บางส่วน'],
+    ['find', 'สิ่งที่พบและการแก้ไข', 'ประเด็นที่พบและคำตอบของลูกค้า', ['findings', 'f36'], '20202100', 'หลัง 3.3'],
+    ['report', 'ร่างรายงานและถ้อยแถลง', 'รายงานผลและถ้อยแถลงการทวนสอบ', ['res', 'f38'], '20202100', 'หลัง 4.2'],
+    ['f41', 'ทบทวนอิสระ', 'ผลทบทวนและการตัดสินของ IR', ['f41'], '20201200', '—'],
+    ['iss', 'ออกผล', 'เลขที่ ลงนาม และส่งผล', ['iss'], '21201100', 'ดู'],
+    ['f42', 'แบบประเมินความพึงพอใจ', 'แบบที่ลูกค้ากรอกหลังออกผล', ['f42'], '20201100', 'แก้'],
+    ['shares', 'การแชร์ให้ สมอ. และ อบก.', 'ลิงก์ให้หน่วยงานภายนอกดูแฟ้ม', ['shares'], '20201100', '—']
+  ];
+  var STEP_GRP = { '0.1':'f24', '1.1':'f24', '1.2':'case', '1.3':'rev', '1.4':'f26', '1.5':'case', '1.6':'team', '1.7':'team', '2.1':'f30', '2.2':'f31',
+    '2.3':'f32', '2.4':'f31', '3.1':'onsite', '3.2':'onsite', '3.3':'find', '3.4':'find', '3.5':'find', '4.1':'report', '4.2':'f41', '4.3':'report',
+    '4.4':'iss', '5.1':'case', '5.2':'f42' };
   /* ---------- the remaining forms: wording copied from the issued F-GCC-30, 31, 32, 41 (08/11/2569) ---------- */
   var F30_FMT = ['แบบบันทึก','วิธีปฏิบัติ Procedure หรือ วิธีการทำงาน Work Instruction','คู่มือ Manual','รายงาน','หลักฐานจากภายนอก','เอกสารอ้างอิงอื่นๆ','ข้อมูลในระบบสารสนเทศ หรือการจัดการขององค์กร'];
   var F30_IT = ['โปรแกรมที่รับการทวนสอบ คือ CFO','เนื้อหาของรายงานครบถ้วน สมบูรณ์ (เช่น บริบท เนื้อหา และความซับซ้อน ค่า EF)','ขอบข่ายของการทวนสอบ (เช่น สาขา)',
@@ -4367,29 +4483,35 @@ a.btn[href="#local"]{opacity:.62}
   function ext() { return S.role === 'tisi' || S.role === 'tgo'; }
   function share(c, r) { return c.shares.filter(function (s) { return s.to === r && s.until >= todayIso(); })[0] || null; }
   function caseById(id) { for (var i = 0; i < DB.cases.length; i++) if (DB.cases[i].id === id) return DB.cases[i]; return null; }
+  /* a GCC role sees the cases its rule allows (seeRule, page สิทธิ์ผู้ใช้); on the app page the database has already left out
+     the rest, on the demo an IR named on a case sees it from step 4.2 */
   function cases() {
     var r = S.role;
     return DB.cases.filter(function (c) {
       if (isClient(r)) return APP_ON || c.id === myCase(r);
       if (ext()) return !!share(c, r);
-      if (r === 'qmr' || r === 'dcc') return false;
-      if (r === 'ir') { var k = cur(c); return !k || idx(k) >= idx(stepById('4.2')); }
+      var s = seeRule(r);
+      if (s === 'none') return false;
+      if (!APP_ON && r === 'ir' && s === 'team') { var k = cur(c); return !k || idx(k) >= idx(stepById('4.2')); }
       return true;
     });
   }
   function seeStep(c, st) { if (isClient(S.role)) return clientSees(c, st); if (ext()) { var s = share(c, S.role); return !!s && (s.scope === 'all' || st[0] === '4.4'); } return true; }
-  function seeDoc(c, st) { if (S.role === 'sales') return st[0] === '0.1' || st[0] === '1.4'; return seeStep(c, st); }
-  function canAct(c, st) { if (jOn() || ext() || S.role === 'qmr' || S.role === 'dcc') return false; return st[8].indexOf(rk()) >= 0; }
+  /* a GCC role sees the forms of a step when it may read the step's group (STEP_GRP, page สิทธิ์ผู้ใช้) */
+  function seeDoc(c, st) { if (isClient(S.role) || ext()) return seeStep(c, st); var g = STEP_GRP[st[0]]; return (!g || grpLvl(rk(), g) >= 1) && seeStep(c, st); }
+  function canAct(c, st) { if (jOn() || ext()) return false; return st[8].indexOf(rk()) >= 0; }
   // on the app page the people page goes with the right to manage accounts (ME.is_admin), whatever the work role,
   // and with the manager role, which may invite staff
   function navs0() {
     var r = S.role, n = navsOf(r);
+    if (!isClient(r) && !ext() && permEdit() && n.indexOf('perm') < 0) n = n.concat(['perm']);
     return APP_ON && !isClient(r) && !ext() && (r === 'mgr' || (ME && ME.is_admin)) ? n.concat(['users']) : n;
   }
   function navsOf(r) {
     if (isClient(r) || ext()) return ['home','cases'];
-    if (r === 'qmr') return ['home','docs','flow','perm'];
-    if (r === 'dcc' || r === 'md') return ['home','docs','flow'];
+    var cs = seeRule(r) !== 'none' ? ['cases'] : [];   // QMR, the document controller and the MD see cases only when the rules say so
+    if (r === 'qmr') return ['home'].concat(cs, ['docs','flow','perm']);
+    if (r === 'dcc' || r === 'md') return ['home'].concat(cs, ['docs','flow']);
     if (r === 'mgr') return ['home','cases','reg','docs','flow','perm'];
     if (r === 'sales') return ['home','cases','reg','flow'];
     if (r === 'admin' || r === 'lv') return ['home','cases','reg','docs','flow'];
@@ -6075,6 +6197,7 @@ a.btn[href="#local"]{opacity:.62}
 
   function demoBar() { if (APP_ON) return ''; return '<div class="demo"><span>ฉบับทดสอบ · ใช้ข้อมูลสมมุติเท่านั้น · ที่กรอกเก็บในเบราว์เซอร์นี้เท่านั้น</span><button type="button" data-a="reset">เริ่มข้อมูลตัวอย่างใหม่</button></div>' + jrBar(); }
   function page() {
+    rulesApply();   // who works and approves each step, from the saved rules (page สิทธิ์ผู้ใช้)
     if (navs().indexOf(S.page === 'case' ? 'cases' : S.page === 'carec' ? 'ca' : S.page) < 0) S.page = 'home';
     if (S.page === 'case') return pageCase();
     if (S.page === 'ca') return pageCA();
@@ -6237,7 +6360,7 @@ a.btn[href="#local"]{opacity:.62}
     if (S.ptab === 'flow') h += flowLane(st[1], c, st[0]);
     else if (S.ptab === 'files') h += filesView(c, st);
     else if (!seeDoc(c, st)) h += note('lock', 'ฝ่ายนี้เห็นเฉพาะสถานะของขั้นนี้ ไม่เห็นเนื้อหาเอกสารทางเทคนิค ตาม P-GCC-07 ข้อ 5.10', 'warn');
-    else { if (st[6]) h += note('info', (st[5] ? 'อนุมัติเมื่อ: ' : 'ผ่านเมื่อ: ') + esc(st[6])); h += ofsGateBox(c, st) + attBox(c, st) + flBox(c, st) + outBox(c, st) + rvBox(c, st) + formView(c, st, can && !lk && s !== 'done' && !(closed(c) && st[0] !== '5.2')); }
+    else { if (st[6]) h += note('info', (st[5] ? 'อนุมัติเมื่อ: ' : 'ผ่านเมื่อ: ') + esc(st[6])); h += ofsGateBox(c, st) + attBox(c, st) + flBox(c, st) + outBox(c, st) + rvBox(c, st) + formView(c, st, can && !lk && s !== 'done' && !(closed(c) && st[0] !== '5.2') && stepEdit(st)); }
     return h + '</div></section>';
   }
   function stepBtns(c, st, s, lk, can) {
@@ -6397,17 +6520,6 @@ a.btn[href="#local"]{opacity:.62}
   }
 
   /* ---------- documents ---------- */
-  function pagePerm() {
-    var Y = '<span class="yes">✓</span>', N = '<span class="no">–</span>', L = function (t) { return '<span class="lim">' + t + '</span>'; };
-    var rows = [['client', 'เฉพาะเคสตัวเอง', L('ส่วนของลูกค้า'), L('ตอบรับ ยืนยัน'), N, N, Y],
-      ['admin', 'ทุกเคส', L('งานธุรการ'), N, L('ดู'), Y, N], ['sales', L('เห็นสถานะ'), L('ใบเสนอราคา ข้อตกลง'), L('ขั้น 1.4'), N, N, N],
-      ['mgr', 'ทุกเคส', N, L('ขั้น 1.3 และ 1.6'), L('ดู'), Y, N], ['lv', 'เคสที่ได้รับ', L('งานเทคนิค'), L('ขั้น 2.4 3.3 3.5'), L('ดู'), N, N],
-      ['ir', L('ตั้งแต่ขั้นทบทวน'), L('F-GCC-41'), L('ขั้น 4.2'), L('ดู'), N, N], ['qmr', '<span class="no">ไม่เห็นเคส</span>', N, L('แก้บันทึกที่ปิดแล้ว'), L('ดู'), N, N],
-      ['dcc', '<span class="no">ไม่เห็นเคส</span>', N, N, Y, N, N], ['md', '<span class="no">ไม่เห็นเคส</span>', N, L('อนุมัติเอกสาร Q P R'), L('อนุมัติ'), N, N], ['tisi', L('เฉพาะที่แชร์'), L('อ่านอย่างเดียว'), N, N, N, N], ['tgo', L('เฉพาะที่แชร์'), L('รายงานและถ้อยแถลง'), N, N, N, N]];
-    return '<section class="card"><table class="t perm"><thead><tr><th>บทบาท</th><th>เห็นเคส</th><th>กรอกหรือแก้ในเคส</th><th>อนุมัติ</th><th>เอกสารควบคุม</th><th class="c">แชร์เคส</th><th class="c">รับอีเมลแจ้ง</th><th>ร้องเรียน/อุทธรณ์</th></tr></thead><tbody>' +
-      rows.map(function (r) { return '<tr><td><div style="display:flex;align-items:center;gap:10px">' + av(r[0]) + '<b>' + esc(role(r[0])[1]) + '</b></div></td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td><td>' + r[4] + '</td><td class="c">' + r[5] + '</td><td class="c">' + r[6] + '</td><td>' + cxPermCell(r[0]) + '</td></tr>'; }).join('') +
-      '</tbody></table></section><section class="sec">' + note('info', 'กรรมการผู้จัดการลงนามสัญญาและถ้อยแถลงตามขั้นตอน ส่วน QMR เห็นเฉพาะเรื่องที่ส่งต่อตาม P-GCC-08 เป็นรายเรื่อง การแชร์ให้ สมอ. และ อบก. อ้าง F-GCC-26 ข้อ 5 และบันทึกตาม P-GCC-12') + '</section>';
-  }
 
   /* ---------- modals ---------- */
   function modal(title, icon, body, foot) {
@@ -6627,6 +6739,257 @@ a.btn[href="#local"]{opacity:.62}
     var c = curCase(); if (!c) return;
     setv(c, t.getAttribute('data-f'), t.value); save();
     var mn = $('missN'); if (mn) { var m = f24Missing(c); mn.textContent = m.length ? 'ยังขาด ' + m.length + ' หัวข้อบังคับ' : 'ครบทุกหัวข้อบังคับแล้ว'; }
+  });
+  /* ---------- permissions: which cases a role sees, which steps it works and approves, which parts of a case it sees or edits ----------
+     The rules live in the database on the app page (role_rules, part_rules, step_rules in server/schema.sql, which checks them
+     on every read and write) and in DB.rules on the demo; with neither, the starting values in steps-roles-config.js apply.
+     pagePerm() is the editor, laid out like GCC Registry's roles page: the roles on the left, the chosen role's rights on the
+     right as tick rows with a scope switch, a save bar for the changes, and one table that compares every role.
+     Who may change them: on the app page whoever holds the admin right (profiles.is_admin), on the demo the admin office. */
+  var RULES = null;                 // the app page's rules from the database, null until loaded
+  var PR_D = null;                  // the role being edited and its unsaved rights
+  var STEPS0 = STEPS.map(function (s) { return s[8].slice(); }), GATE0 = JSON.parse(JSON.stringify(GATE_BY));
+  var PART_OF = {}, GRP = {};
+  PART_GROUPS.forEach(function (g) { GRP[g[0]] = g; g[3].forEach(function (p) { PART_OF[p] = g[0]; }); });
+  var PR_SHORT = { admin:'ธุรการ', sales:'ใบเสนอราคา', mgr:'ผู้จัดการฝ่าย', md:'ผู้บริหาร', lv:'LV', ir:'IR', qmr:'QMR', dcc:'คุมเอกสาร', client:'ลูกค้า' };
+  var PR_SEE = { all:'ทุกเคส', team:'ที่มีชื่อในทีม', none:'ไม่เห็น' }, PR_LVL = ['ไม่เห็น', 'ดูอย่างเดียว', 'แก้ได้'];
+  var PR_TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function rulesNow() { return APP_ON ? RULES : (DB && DB.rules) || null; }
+  function seeRule(r) { var x = rulesNow(); return (x && x.see && x.see[r]) || SEE0[r] || 'none'; }
+  function grpDef(r, g) { var i = PERM_ROLES.indexOf(r); return GRP[g] && i >= 0 ? +GRP[g][4].charAt(i) : 0; }
+  function grpLvl(r, g) { var x = rulesNow(), v = x && x.lvl && x.lvl[g] ? x.lvl[g][r] : undefined; return v === undefined || v === null ? grpDef(r, g) : +v; }
+  /* the level of a case part for a GCC role, or null for a part outside the table (what the client fills in, the client's
+     print view, the outside-work files): those keep the fixed rules in appCanPart() and in the database */
+  function partLvl(r, pt) { var g = PART_OF[pt]; return g ? grpLvl(r, g) : null; }
+  /* the client's print view is made from the team, SARA and IR parts: only a role that reads all three may write it */
+  function prFullView(r) { return grpLvl(r, 'team') >= 1 && grpLvl(r, 'f31') >= 1 && grpLvl(r, 'f41') >= 1; }
+  /* who works each step and who approves it: the saved rules over the starting STEPS and GATE_BY (every draw starts here) */
+  function rulesApply() {
+    var x = rulesNow(), sr = (x && x.steps) || {};
+    STEPS.forEach(function (st, i) {
+      var o = sr[st[0]];
+      st[8] = o && o.actors && o.actors.length ? o.actors.slice() : STEPS0[i].slice();
+      if (st[5]) GATE_BY[st[5]] = o && o.gate_by ? o.gate_by : GATE0[st[5]];
+    });
+  }
+  function permEdit() { return APP_ON ? !!(ME && ME.is_admin && ME.active !== false) : S.role === 'admin'; }
+  /* a step's forms can be filled in by a GCC role that may edit the step's group (the client keeps its own fixed rules) */
+  function stepEdit(st) { if (isClient(S.role)) return true; if (ext()) return false; var g = STEP_GRP[st[0]]; return !g || grpLvl(rk(), g) >= 2; }
+
+  /* ---------- the page ---------- */
+  function pagePerm() {
+    var sel = S.prr || 'cmp';
+    if (sel !== 'cmp' && sel !== 'client' && sel !== 'ext' && PERM_ROLES.indexOf(sel) < 0) sel = 'cmp';
+    if (PR_D && PR_D.role !== sel) PR_D = null;
+    var right = sel === 'cmp' ? '<div class="pr-stack">' + prMatrix() + prOther() + '</div>' : sel === 'client' || sel === 'ext' ? prFixed(sel) : prEditor(sel, permEdit());
+    return '<div class="pr-roles">' + prList(sel) + right + '</div>';
+  }
+  function prPeople(k) { return APP_ON && typeof USERS !== 'undefined' ? USERS.filter(function (u) { return u.active && u.role === k; }) : null; }
+  function prSub(k) { var p = prPeople(k); return p ? p.length + ' คน' : 'บทบาทตัวอย่าง'; }
+  function prList(sel) {
+    var it = function (k, b, s, cls) {
+      return '<button type="button" class="pr-ri' + (cls ? ' ' + cls : '') + '" data-a="prr" data-v="' + k + '" aria-current="' + (sel === k) + '"><b>' + b + '</b><span>' + s + '</span></button>';
+    };
+    return '<nav class="card pr-list" aria-label="บทบาท">' + it('cmp', 'เทียบทุกบทบาท', 'ดูสิทธิ์ทุกบทบาทในตารางเดียว') +
+      '<span class="pr-list-h">บทบาทของ GCC</span>' + PERM_ROLES.map(function (k) { return it(k, esc(role(k)[1]), prSub(k)); }).join('') +
+      '<span class="pr-list-h">บุคคลภายนอก</span>' + it('client', 'ลูกค้า', 'ล็อกไว้ ตามเอกสารของลูกค้า', 'lock') +
+      it('ext', 'สมอ. และ อบก.', 'ล็อกไว้ ดูอย่างเดียวตามที่แชร์', 'lock') + '</nav>';
+  }
+  /* the saved rights of a role, in the editor's shape */
+  function prState(k) {
+    var o = { role:k, see:seeRule(k), lvl:{}, steps:{} };
+    PART_GROUPS.forEach(function (g) { o.lvl[g[0]] = grpLvl(k, g[0]); });
+    STEPS.forEach(function (st) { o.steps[st[0]] = { on:st[8].indexOf(k) >= 0, ap:!!st[5] && GATE_BY[st[5]] === k }; });
+    return o;
+  }
+  function prStart(k) {
+    var o = { role:k, see:SEE0[k] || 'none', lvl:{}, steps:{} };
+    PART_GROUPS.forEach(function (g) { o.lvl[g[0]] = grpDef(k, g[0]); });
+    STEPS.forEach(function (st, i) { o.steps[st[0]] = { on:STEPS0[i].indexOf(k) >= 0, ap:!!st[5] && GATE0[st[5]] === k }; });
+    return o;
+  }
+  function prChanges(d) {
+    var s = prState(d.role), out = [];
+    if (d.see !== s.see) out.push('เห็นเคส: ' + PR_SEE[d.see]);
+    STEPS.forEach(function (st) {
+      var a = d.steps[st[0]], b = s.steps[st[0]];
+      if (a.on !== b.on) out.push((a.on ? 'เปิดขั้น ' : 'ปิดขั้น ') + st[0]);
+      else if (a.ap !== b.ap) out.push((a.ap ? 'อนุมัติขั้น ' : 'เลิกอนุมัติขั้น ') + st[0]);
+    });
+    PART_GROUPS.forEach(function (g) { if (d.lvl[g[0]] !== s.lvl[g[0]]) out.push(g[1] + ': ' + PR_LVL[d.lvl[g[0]]]); });
+    return out;
+  }
+  function prSeg(key, opts, on, dis) {
+    return '<div class="pr-seg" role="group">' + opts.map(function (o) {
+      var off = dis || o[2];
+      return '<button type="button" data-a="prseg" data-v="' + key + '|' + o[0] + '" aria-pressed="' + (o[0] === on) + '"' + (off ? ' disabled' : '') + (o[3] ? ' title="' + esc(o[3]) + '"' : '') + '>' + o[1] + '</button>';
+    }).join('') + '</div>';
+  }
+  function prRow(key, on, t, d, right, chg, dis, tip) {
+    return '<div class="pr-cap' + (on ? ' on' : '') + (chg ? ' chg' : '') + (dis ? ' dis' : '') + '">' +
+      '<button type="button" class="pr-box" data-a="prck" data-v="' + key + '" role="checkbox" aria-checked="' + on + '"' + (dis ? ' disabled' : '') +
+      ' aria-label="' + esc(String(t).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()) + '"' + (tip ? ' title="' + esc(tip) + '"' : '') + '>' + (on ? PR_TICK : '') + '</button>' +
+      '<span class="pr-cap-t"><b>' + t + '</b>' + (d ? '<span>' + d + '</span>' : '') + '</span><span class="pr-cap-r">' + (right || '') + '</span></div>';
+  }
+  function prEditor(k, ed) {
+    var d = PR_D && PR_D.role === k ? PR_D : prState(k), s = prState(k), lock = !ed, h = '';
+    var ppl = prPeople(k), who = ppl ? (ppl.length ? ppl.length + ' คน: ' + ppl.map(function (u) { return esc(u.name || u.email); }).join(', ') : 'ยังไม่มีผู้ใช้') : 'บทบาทตัวอย่างในชุดสาธิต';
+    // which cases
+    var seeOn = d.see !== 'none';
+    h += '<section class="pr-grp"><div class="pr-grp-h"><h4>เห็นเคส</h4><span>เคสที่เปิดดูได้ในหน้าเคสลูกค้า</span></div>' +
+      prRow('see', seeOn, 'เปิดดูเคส', k === 'ir' ? 'ที่มีชื่อ คือมีชื่อเป็น IR ของเคส เห็นตั้งแต่ขั้น 4.2' : 'ที่มีชื่อ คือมีชื่ออยู่ในทีมของเคส (ขั้น 1.6)',
+        seeOn ? prSeg('see', [['all', 'ทุกเคส'], ['team', 'ที่มีชื่อในทีม']], d.see, lock) : '', d.see !== s.see, lock) + '</section>';
+    // which steps
+    h += '<section class="pr-grp"><div class="pr-grp-h"><h4>ขั้นที่ทำได้</h4><span>เริ่มและปิดขั้นได้ ขั้นที่ต้องอนุมัติ เลือกได้ว่าบทบาทนี้อนุมัติด้วยหรือไม่</span></div>';
+    var ph = -1;
+    STEPS.forEach(function (st) {
+      if (st[1] !== ph) { ph = st[1]; h += '<div class="pr-ph">ช่วงที่ ' + ph + ' · ' + esc(PH[ph][0]) + '</div>'; }
+      var x = d.steps[st[0]], y = s.steps[st[0]], gate = !!st[5], others = st[8].filter(function (r) { return r !== k; }).length;
+      var keepAp = x.on && y.ap, alone = x.on && !others, tip = keepAp ? 'เป็นผู้อนุมัติขั้นนี้ ให้บทบาทอื่นเป็นผู้อนุมัติก่อน' : alone ? 'ขั้นนี้ต้องมีบทบาทที่ทำได้อย่างน้อย 1 บทบาท' : '';
+      var who2 = x.ap ? 'บทบาทนี้เป็นผู้อนุมัติ' : 'ผู้อนุมัติ ' + esc(role(GATE_BY[st[5]] || 'lv')[1]);
+      h += prRow('s:' + st[0], x.on, '<span class="pr-sid">' + st[0] + '</span>' + esc(st[2]), gate ? 'ต้องอนุมัติ · ' + who2 : '',
+        x.on && gate ? prSeg('s:' + st[0], [['do', 'ทำ', y.ap, y.ap ? 'ต้องมีผู้อนุมัติ 1 บทบาท ตั้งบทบาทอื่นเป็น ทำและอนุมัติ แทน' : ''], ['ap', 'ทำและอนุมัติ']], x.ap ? 'ap' : 'do', lock) : '',
+        x.on !== y.on || x.ap !== y.ap, lock || keepAp || alone, tip);
+    });
+    h += '</section>';
+    // which parts of a case
+    h += '<section class="pr-grp"><div class="pr-grp-h"><h4>ส่วนของเคส</h4><span>ติ๊กส่วนที่เห็นได้ แล้วเลือกว่าแก้ได้หรือดูอย่างเดียว</span></div>';
+    PART_GROUPS.forEach(function (g) {
+      var v = d.lvl[g[0]], need = g[0] === 'case' && d.see !== 'none' && v >= 1;
+      h += prRow('p:' + g[0], v >= 1, esc(g[1]), esc(g[2]), v >= 1 ? prSeg('p:' + g[0], [['1', 'ดู'], ['2', 'แก้']], String(v), lock) : '',
+        v !== s.lvl[g[0]], lock || need, need ? 'เห็นเคสแล้วต้องเห็นข้อมูลเคส' : '');
+    });
+    h += '<p class="pr-foot">ลูกค้า สมอ. และ อบก. ตั้งที่นี่ไม่ได้ · แฟ้มที่ปิดแล้วแก้ได้แค่ขั้น 5.2 · หัวเคสและการเปิดเคสใหม่เป็นของธุรการและผู้จัดการฝ่าย</p></section>';
+    var ch = ed && PR_D && PR_D.role === k ? prChanges(PR_D) : [];
+    var bar = ch.length ? '<div class="pr-save"><span class="pr-save-t" role="status" title="' + esc(ch.join(', ')) + '">แก้แล้ว <b>' + ch.length + ' รายการ</b>: ' + esc(ch.slice(0, 3).join(', ') + (ch.length > 3 ? ' …' : '')) +
+      ' · มีผลกับ' + (ppl && ppl.length ? ' ' + esc(ppl.map(function (u) { return u.name || u.email; }).join(', ')) : 'ผู้ใช้บทบาทนี้') + ' ทันทีหลังบันทึก</span>' +
+      '<button type="button" class="pr-quiet" data-a="prcancel">ยกเลิก</button><button type="button" class="btn pri" data-a="prsave">' + ic('check') + 'บันทึก</button></div>' : '';
+    return '<section class="card pr-ed" aria-labelledby="pr-ed-h"><div class="pr-ed-h"><div><h3 id="pr-ed-h">' + esc(role(k)[1]) + '</h3><p>' + who + (lock ? ' · ดูอย่างเดียว แก้ได้เฉพาะผู้ดูแลระบบ' : '') + '</p></div>' +
+      (ed ? '<div class="pr-ed-acts"><button type="button" class="pr-lnk" data-a="prreset">คืนค่าตั้งต้น</button></div>' : '') + '</div>' + h + bar + '</section>';
+  }
+  /* the client, สมอ. and อบก.: what they get, fixed by the procedures */
+  function prFixed(k) {
+    var h = '', no = '';
+    if (k === 'client') {
+      h += '<section class="pr-grp"><div class="pr-grp-h"><h4>เห็นเคส</h4></div>' + prRow('x', true, 'เฉพาะเคสของตัวเอง', 'บัญชีลูกค้าผูกกับเคสตอนรับคำเชิญ', '', false, true) + '</section>';
+      h += '<section class="pr-grp"><div class="pr-grp-h"><h4>ขั้นที่ทำได้</h4></div>' + STEPS.filter(function (st) { return st[8].indexOf('client') >= 0; }).map(function (st) {
+        return prRow('x', true, '<span class="pr-sid">' + st[0] + '</span>' + esc(st[2]), '', '', false, true);
+      }).join('') + '</section>';
+      h += '<section class="pr-grp"><div class="pr-grp-h"><h4>ส่วนของเคส</h4></div>' + PART_GROUPS.map(function (g) {
+        var on = g[5] !== '—';
+        return prRow('x', on, esc(g[1]), esc(g[2]), on ? '<span class="pr-fixv">' + esc(g[5]) + '</span>' : '', false, true);
+      }).join('') + '</section>';
+      no = 'ลูกค้าเห็นสิ่งที่พบหลังปิดประชุม (ขั้น 3.3) และร่างผลหลัง IR อนุมัติ (ขั้น 4.2)';
+    } else {
+      h += '<section class="pr-grp"><div class="pr-grp-h"><h4>เห็นเคส</h4></div>' + prRow('x', true, 'เคสที่ GCC แชร์ให้ และยังไม่หมดอายุ', 'ผู้จัดการฝ่ายเป็นผู้แชร์ในหน้าเคส', '', false, true) + '</section>';
+      h += '<section class="pr-grp"><div class="pr-grp-h"><h4>ส่วนของเคส</h4></div>' + prRow('x', true, 'ทั้งแฟ้ม หรือเฉพาะรายงานและถ้อยแถลง', 'ตามที่เลือกตอนแชร์', '', false, true) +
+        prRow('x', false, 'แก้หรือเพิ่มข้อมูล', 'ดูอย่างเดียว ทุกครั้งที่เปิดเคสถูกบันทึก', '', false, true) + '</section>';
+    }
+    return '<section class="card pr-ed"><div class="pr-ed-h"><div><h3>' + (k === 'client' ? 'ลูกค้า' : 'สมอ. และ อบก.') + '</h3><p>ล็อกไว้ · สิทธิ์ตามขั้นตอนของ GCC ตั้งที่นี่ไม่ได้</p></div></div>' + h +
+      (no ? '<p class="pr-foot pr-pad">' + no + '</p>' : '') + '</section>';
+  }
+  /* every role side by side, read only */
+  function prMatrix() {
+    var cols = PERM_ROLES.concat(['client']);
+    var y = '<span class="pr-y" role="img" aria-label="ได้">' + PR_TICK + '</span>', no = '<span class="pr-no" aria-label="ไม่ได้">—</span>';
+    var g = function (t) { return '<tr class="pr-mx-g"><th colspan="' + (cols.length + 1) + '" scope="colgroup">' + t + '</th></tr>'; };
+    var row = function (t, cells) { return '<tr><th scope="row"><span class="pr-mx-t">' + t + '</span></th>' + cells.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; };
+    var head = '<tr><th class="pr-mx-cap" scope="col"><span class="sr-only">สิทธิ์</span></th>' + cols.map(function (k) {
+      return '<th scope="col" title="' + esc(k === 'client' ? 'ลูกค้า' : role(k)[1]) + '"><span class="pr-mx-r">' + PR_SHORT[k] + '</span><span class="pr-mx-n">' + (k === 'client' ? 'ล็อกไว้' : prSub(k)) + '</span></th>';
+    }).join('') + '</tr>';
+    var body = g('เห็นเคส') + row('เปิดดูเคส', cols.map(function (k) {
+      if (k === 'client') return '<span class="pr-v pr-fix">ของตัวเอง</span>';
+      var s = seeRule(k); return s === 'all' ? '<span class="pr-v">ทุกเคส</span>' : s === 'team' ? '<span class="pr-v">ที่มีชื่อ</span>' : no;
+    }));
+    body += g('ขั้นที่ทำได้');
+    STEPS.forEach(function (st) {
+      body += row('<span class="pr-sid">' + st[0] + '</span>' + esc(st[2]), cols.map(function (k) { return st[8].indexOf(k) < 0 ? no : st[5] && GATE_BY[st[5]] === k ? '<span class="pr-ap">อนุมัติ</span>' : y; }));
+    });
+    body += g('ส่วนของเคส');
+    PART_GROUPS.forEach(function (p) {
+      body += row(esc(p[1]), cols.map(function (k) {
+        if (k === 'client') return p[5] === '—' ? no : '<span class="pr-v pr-fix">' + esc(p[5]) + '</span>';
+        var v = grpLvl(k, p[0]); return v >= 2 ? '<span class="pr-e">แก้</span>' : v >= 1 ? '<span class="pr-v">ดู</span>' : no;
+      }));
+    });
+    return '<section class="card pr-ed" aria-labelledby="pr-mx-h"><div class="pr-ed-h"><div><h3 id="pr-mx-h">เทียบทุกบทบาท</h3><p>อ่านอย่างเดียว · ' + (permEdit() ? 'แก้ทีละบทบาทจากรายการทางซ้าย' : 'แก้ได้เฉพาะผู้ดูแลระบบ') + '</p></div></div>' +
+      '<div class="pr-mx-w" tabindex="0" role="region" aria-label="ตารางเทียบสิทธิ์ทุกบทบาท"><table class="pr-mx"><thead>' + head + '</thead><tbody>' + body + '</tbody></table></div></section>';
+  }
+
+  /* rights that stay as the procedures set them: controlled documents, sharing a case, the client's e-mails, complaints */
+  function prOther() {
+    var Y = '<span class="yes">✓</span>', N = '<span class="no">–</span>', L = function (t) { return '<span class="lim">' + t + '</span>'; };
+    var rows = [['admin', L('ดู'), Y, N], ['sales', N, N, N], ['mgr', L('ดู'), Y, N], ['md', L('อนุมัติ Q P R'), N, N], ['lv', L('ดู'), N, N], ['ir', L('ดู'), N, N],
+      ['qmr', L('ดู แก้บันทึกที่ปิดแล้ว'), N, N], ['dcc', Y, N, N], ['client', N, N, Y], ['tisi', N, N, N], ['tgo', N, N, N]];
+    return '<section class="card pr-other"><div class="pr-ed-h"><div><h3>สิทธิ์อื่นที่ล็อกไว้</h3><p>ตามขั้นตอนของ GCC ตั้งที่หน้านี้ไม่ได้</p></div></div><div class="pr-mx-w">' +
+      '<table class="t perm"><thead><tr><th>บทบาท</th><th>เอกสารควบคุม</th><th class="c">แชร์เคส</th><th class="c">รับอีเมลแจ้ง</th><th>ร้องเรียน/อุทธรณ์</th></tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr><td><div class="pr-who">' + av(r[0]) + '<b>' + esc(role(r[0])[1]) + '</b></div></td><td>' + r[1] + '</td><td class="c">' + r[2] + '</td><td class="c">' + r[3] + '</td><td>' + cxPermCell(r[0]) + '</td></tr>'; }).join('') +
+      '</tbody></table></div><p class="pr-foot pr-pad">กรรมการผู้จัดการลงนามสัญญาและถ้อยแถลงตามขั้นตอน ส่วน QMR เห็นเฉพาะเรื่องที่ส่งต่อตาม P-GCC-08 เป็นรายเรื่อง การแชร์ให้ สมอ. และ อบก. อ้าง F-GCC-26 ข้อ 5 และบันทึกตาม P-GCC-12</p></section>';
+  }
+
+  /* ---------- changes ---------- */
+  function prDraft(k) { if (!PR_D || PR_D.role !== k) PR_D = JSON.parse(JSON.stringify(prState(k))); return PR_D; }
+  function prSettle() { if (PR_D && !prChanges(PR_D).length) PR_D = null; render(); }
+  function prPick(v) {
+    if (PR_D && PR_D.role !== v && prChanges(PR_D).length && !window.confirm('ยังไม่ได้บันทึกสิทธิ์ที่แก้ไว้ ออกจากบทบาทนี้โดยไม่บันทึก?')) return;
+    if (PR_D && PR_D.role !== v) PR_D = null;
+    S.prr = v; render();
+  }
+  function prToggle(key) {
+    var k = S.prr; if (!permEdit() || PERM_ROLES.indexOf(k) < 0) return;
+    var d = prDraft(k);
+    if (key === 'see') d.see = d.see === 'none' ? 'team' : 'none';
+    else if (key.indexOf('s:') === 0) { var x = d.steps[key.slice(2)]; if (!x) return; x.on = !x.on; if (!x.on) x.ap = false; }
+    else if (key.indexOf('p:') === 0) { var g = key.slice(2); if (d.lvl[g] === undefined) return; d.lvl[g] = d.lvl[g] >= 1 ? 0 : 1; }
+    prSettle();
+  }
+  function prSegPick(v) {
+    var k = S.prr; if (!permEdit() || PERM_ROLES.indexOf(k) < 0) return;
+    var i = v.lastIndexOf('|'), key = v.slice(0, i), val = v.slice(i + 1), d = prDraft(k);
+    if (key === 'see') d.see = val;
+    else if (key.indexOf('s:') === 0) { var x = d.steps[key.slice(2)]; if (x && x.on) x.ap = val === 'ap'; }
+    else if (key.indexOf('p:') === 0) { var g = key.slice(2); if (d.lvl[g] >= 1) d.lvl[g] = +val; }
+    prSettle();
+  }
+  function prReset() {
+    var k = S.prr; if (!permEdit() || PERM_ROLES.indexOf(k) < 0) return;
+    PR_D = prStart(k);
+    // an approver can only be handed over from the role that takes it: keep the approvers the role holds now
+    STEPS.forEach(function (st) { var x = PR_D.steps[st[0]]; if (st[5] && GATE_BY[st[5]] === k) { x.on = true; x.ap = true; } });
+    prSettle();
+  }
+  /* what a save changes: the role's case view, its levels, and for each step it touches the new workers and approver */
+  function prPlan(d) {
+    var k = d.role, s = prState(k), steps = {}, lvl = {};
+    STEPS.forEach(function (st) {
+      var x = d.steps[st[0]], y = s.steps[st[0]];
+      if (x.on === y.on && x.ap === y.ap) return;
+      var actors = st[8].filter(function (r) { return r !== k; }); if (x.on) actors.push(k);
+      steps[st[0]] = { actors:actors, gate_by:st[5] ? (x.ap ? k : GATE_BY[st[5]]) : null };
+    });
+    PART_GROUPS.forEach(function (g) { if (d.lvl[g[0]] !== s.lvl[g[0]]) lvl[g[0]] = d.lvl[g[0]]; });
+    return { role:k, see:d.see !== s.see ? d.see : null, lvl:lvl, steps:steps };
+  }
+  function prSave() {
+    if (!PR_D || !permEdit()) return;
+    var p = prPlan(PR_D);
+    if (APP_ON) { appRulesSave(p); return; }
+    var R = DB.rules || (DB.rules = { see:{}, lvl:{}, steps:{} });
+    if (p.see) R.see[p.role] = p.see;
+    Object.keys(p.lvl).forEach(function (g) { (R.lvl[g] = R.lvl[g] || {})[p.role] = p.lvl[g]; });
+    Object.keys(p.steps).forEach(function (sid) { R.steps[sid] = p.steps[sid]; });
+    PR_D = null; save(); render(); toast('บันทึกสิทธิ์ของ ' + role(p.role)[1] + ' แล้ว');
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-a]'); if (!t || S.page !== 'perm') return;
+    var a = t.getAttribute('data-a'), v = t.getAttribute('data-v') || '';
+    if (a === 'prr') prPick(v);
+    else if (a === 'prck') prToggle(v);
+    else if (a === 'prseg') prSegPick(v);
+    else if (a === 'prcancel') { PR_D = null; render(); }
+    else if (a === 'prsave') prSave();
+    else if (a === 'prreset') prReset();
   });
   if (APP_ON) appStart(); else render();
 })();
