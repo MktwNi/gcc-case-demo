@@ -6839,7 +6839,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function apAdm() { return !!(ME && ME.is_admin && ME.active !== false); }
   function val(id) { var e = $(id); return e ? String(e.value || '').trim() : ''; }
   function rpc(name, args) { return SB.rpc(name, args || {}).then(function (r) { if (r.error) throw r.error; return r.data; }); }
-  function chk(r) { if (r && r.error) throw r.error; return r; }
+  // a Supabase reply: its data, or its error thrown (named apart from chk(), the form tick box in 45-panels.js)
+  function sbOk(r) { if (r && r.error) throw r.error; return r; }
   function rulesErr(e) { return /row-level security|violates|permission denied|42501|ไม่มีสิทธิ์|ยื่นเรื่องได้เฉพาะ/i.test(String((e && (e.message || e.code)) || e || '')); }
   function thErr(e) {
     var m = String((e && (e.message || e.error_description || e.msg)) || e || '');
@@ -6893,7 +6894,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     APP.view = 'loading'; APP.busy = false; render();
     var acc = APP.code ? rpc('accept_invite', { c:APP.code }).then(function () { APP.code = ''; ssSet(''); }, function (e) { APP.code = ''; ssSet(''); APP.msg = thErr(e); }) : Promise.resolve();
     return acc.then(function () { return SB.from('profiles').select('id,email,name,role,active,is_admin').eq('id', u.id).maybeSingle(); }).then(function (r) {
-      chk(r); ME = r.data || { id:u.id, email:u.email || '', name:'', role:'pending', active:true, is_admin:false };
+      sbOk(r); ME = r.data || { id:u.id, email:u.email || '', name:'', role:'pending', active:true, is_admin:false };
       if (want && want !== ME.name && String(ME.email).toLowerCase() === String(u.email || '').toLowerCase()) return SB.from('profiles').update({ name:want }).eq('id', ME.id).then(function () { ME.name = want; });
     }).then(function () {
       if (!ME.active) { APP.view = 'off'; render(); return; }
@@ -7023,7 +7024,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var out = [];
     function page(from) {
       return SB.from(t).select(cols).order(ord).range(from, from + 999).then(function (r) {
-        chk(r); out = out.concat(r.data || []);
+        sbOk(r); out = out.concat(r.data || []);
         return (r.data || []).length === 1000 ? page(from + 1000) : out;
       });
     }
@@ -7061,11 +7062,11 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   /* an admin saves one role's rights (prPlan in 53-permissions.js): the database checks who may and keeps the rules whole */
   function appRulesSave(p) {
     var jobs = [];
-    if (p.see) jobs.push(function () { return SB.from('role_rules').update({ see:p.see }).eq('role', p.role).select('role').then(function (r) { chk(r); if (!r.data || !r.data.length) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); }); });
+    if (p.see) jobs.push(function () { return SB.from('role_rules').update({ see:p.see }).eq('role', p.role).select('role').then(function (r) { sbOk(r); if (!r.data || !r.data.length) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); }); });
     var rows = Object.keys(p.lvl).map(function (g) { return { role:p.role, grp:g, lvl:p.lvl[g] }; });
-    if (rows.length) jobs.push(function () { return SB.from('part_rules').upsert(rows).select('role').then(function (r) { chk(r); if (!r.data || r.data.length !== rows.length) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); }); });
+    if (rows.length) jobs.push(function () { return SB.from('part_rules').upsert(rows).select('role').then(function (r) { sbOk(r); if (!r.data || r.data.length !== rows.length) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); }); });
     Object.keys(p.steps).forEach(function (sid) {
-      jobs.push(function () { return SB.from('step_rules').update({ actors:p.steps[sid].actors, gate_by:p.steps[sid].gate_by }).eq('sid', sid).select('sid').then(function (r) { chk(r); if (!r.data || !r.data.length) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); }); });
+      jobs.push(function () { return SB.from('step_rules').update({ actors:p.steps[sid].actors, gate_by:p.steps[sid].gate_by }).eq('sid', sid).select('sid').then(function (r) { sbOk(r); if (!r.data || !r.data.length) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); }); });
     });
     var run = jobs.reduce(function (a, f) { return a.then(f); }, Promise.resolve());   // one at a time: a refusal stops the rest
     return run.then(function () { PR_D = null; toast('บันทึกสิทธิ์ของ ' + roleName(p.role) + ' แล้ว'); }, function (e) { toast('บันทึกสิทธิ์ไม่ได้: ' + thErr(e)); })
@@ -7207,38 +7208,38 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
             return { reload:id };
           });
         });
-        if (pt === 'core') jobs.push(function () { return SB.from('cases').update({ name:c.name || '' }).eq('id', id).then(chk); });
+        if (pt === 'core') jobs.push(function () { return SB.from('cases').update({ name:c.name || '' }).eq('id', id).then(sbOk); });
       });
       if (team && appCanPart(c, 'team')) jobs.push(function () { return appMembers(c); });
       var s0 = SYNC.steps[id], s1 = c.track || {};
       Object.keys(s1).forEach(function (sid) {
         var v = s1[sid] || {}, k = v.s + '|' + (v.d || ''), old = s0[sid] ? s0[sid].split('|')[0] : '';
         if (s0[sid] === k || (v.s !== 'doing' && v.s !== 'done') || !appCanStep(c, sid, v.s, old)) return;
-        jobs.push(function () { return SB.from('case_steps').upsert({ case_id:id, sid:sid, s:v.s, d:v.d || '' }).then(chk).then(function () { s0[sid] = k; }); });
+        jobs.push(function () { return SB.from('case_steps').upsert({ case_id:id, sid:sid, s:v.s, d:v.d || '' }).then(sbOk).then(function () { s0[sid] = k; }); });
       });
       Object.keys(s0).forEach(function (sid) {
         if (s1[sid] || !appCanStep(c, sid, '', s0[sid].split('|')[0])) return;
-        jobs.push(function () { return SB.from('case_steps').delete().eq('case_id', id).eq('sid', sid).then(chk).then(function () { delete s0[sid]; }); });
+        jobs.push(function () { return SB.from('case_steps').delete().eq('case_id', id).eq('sid', sid).then(sbOk).then(function () { delete s0[sid]; }); });
       });
       var f0 = SYNC.files[id], f1 = appFiles(c);
       Object.keys(f1).forEach(function (fid) {
         var x = f1[fid], j = JSON.stringify(x.data); if (f0[fid] === j) return;
         jobs.push(function () {
           var q = f0[fid] === undefined ? SB.from('case_files').insert({ id:fid, case_id:id, kind:x.kind, sid:x.sid, data:x.data }) : SB.from('case_files').update({ data:x.data }).eq('id', fid);
-          return q.then(chk).then(function () { f0[fid] = j; SYNC.fcase[fid] = id; });
+          return q.then(sbOk).then(function () { f0[fid] = j; SYNC.fcase[fid] = id; });
         });
       });
       Object.keys(f0).forEach(function (fid) {
         if (f1[fid]) return;
         jobs.push(function () {
-          return SB.storage.from('case-files').remove([id + '/' + fid]).then(function () { return SB.from('case_files').delete().eq('id', fid); }).then(chk).then(function () { delete f0[fid]; });
+          return SB.storage.from('case-files').remove([id + '/' + fid]).then(function () { return SB.from('case_files').delete().eq('id', fid); }).then(sbOk).then(function () { delete f0[fid]; });
         });
       });
       if (!rowsOk) return;
       var nm = (c.mail || []).length - SYNC.mailN[id], nl = (c.log || []).length - SYNC.logN[id];
       if (nm > 0) { var ms = c.mail.slice(0, nm).reverse().map(function (m) { return { case_id:id, at:m.at || '', to:m.to || '', subj:m.subj || '', kind:m.kind === 'invite' ? 'invite' : '' }; });
-        jobs.push(function () { return SB.from('case_mail').insert(ms).then(chk).then(function () { SYNC.mailN[id] += ms.length; c.mail.slice(0, nm).forEach(function (m) { if (!m.st) m.st = 'queued'; }); appKick(); }); }); }
-      if (nl > 0) { var ls = c.log.slice(0, nl).reverse().map(function (m) { return { case_id:id, at:m.at || '', who:m.who || '', t:m.t || '' }; }); jobs.push(function () { return SB.from('case_log').insert(ls).then(chk).then(function () { SYNC.logN[id] += ls.length; }); }); }
+        jobs.push(function () { return SB.from('case_mail').insert(ms).then(sbOk).then(function () { SYNC.mailN[id] += ms.length; c.mail.slice(0, nm).forEach(function (m) { if (!m.st) m.st = 'queued'; }); appKick(); }); }); }
+      if (nl > 0) { var ls = c.log.slice(0, nl).reverse().map(function (m) { return { case_id:id, at:m.at || '', who:m.who || '', t:m.t || '' }; }); jobs.push(function () { return SB.from('case_log').insert(ls).then(sbOk).then(function () { SYNC.logN[id] += ls.length; }); }); }
     });
     REG_KEYS.forEach(function (k) {
       var j = JSON.stringify(DB[k] || []), s = SYNC.reg[k];
@@ -7269,8 +7270,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     MEMBERS.forEach(function (m) { if (m.case_id === c.id && m.kind !== 'client') have[m.user_id + '|' + m.kind] = 1; });
     var add = Object.keys(want).filter(function (k) { return !have[k]; }), del = Object.keys(have).filter(function (k) { return !want[k]; });
     var p = Promise.resolve();
-    if (add.length) p = p.then(function () { return SB.from('case_members').insert(add.map(function (k) { return { case_id:c.id, user_id:k.split('|')[0], kind:k.split('|')[1] }; })).then(chk); });
-    del.forEach(function (k) { p = p.then(function () { return SB.from('case_members').delete().eq('case_id', c.id).eq('user_id', k.split('|')[0]).eq('kind', k.split('|')[1]).then(chk); }); });
+    if (add.length) p = p.then(function () { return SB.from('case_members').insert(add.map(function (k) { return { case_id:c.id, user_id:k.split('|')[0], kind:k.split('|')[1] }; })).then(sbOk); });
+    del.forEach(function (k) { p = p.then(function () { return SB.from('case_members').delete().eq('case_id', c.id).eq('user_id', k.split('|')[0]).eq('kind', k.split('|')[1]).then(sbOk); }); });
     return p.then(function () {
       MEMBERS = MEMBERS.filter(function (m) { return m.case_id !== c.id || m.kind === 'client' || want[m.user_id + '|' + m.kind]; });
       add.forEach(function (k) { MEMBERS.push({ case_id:c.id, user_id:k.split('|')[0], kind:k.split('|')[1] }); });
@@ -7295,13 +7296,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function appPut(id, blob) {
     var c = curCase(), cid = c && c.id && c.track ? c.id : ''; if (!cid) return Promise.reject(new Error('no case'));
     SYNC.fcase[id] = cid;
-    return SB.storage.from('case-files').upload(cid + '/' + id, blob, { upsert:false, contentType:blob.type || 'application/octet-stream' }).then(chk);
+    return SB.storage.from('case-files').upload(cid + '/' + id, blob, { upsert:false, contentType:blob.type || 'application/octet-stream' }).then(sbOk);
   }
   function appGet(id) {
     var cid = SYNC.fcase[id] || (curCase() || {}).id;
-    return SB.storage.from('case-files').download(cid + '/' + id).then(function (r) { chk(r); return r.data; });
+    return SB.storage.from('case-files').download(cid + '/' + id).then(function (r) { sbOk(r); return r.data; });
   }
-  function appDel(id) { var cid = SYNC.fcase[id] || (curCase() || {}).id; return SB.storage.from('case-files').remove([cid + '/' + id]).then(chk); }
+  function appDel(id) { var cid = SYNC.fcase[id] || (curCase() || {}).id; return SB.storage.from('case-files').remove([cid + '/' + id]).then(sbOk); }
 
   /* ---------- the top bar: who is signed in, and whether the last changes are saved ---------- */
   function apSyncTxt() { return APP.err ? ['err', 'ยังบันทึกไม่ได้', APP.err + ' · กดเพื่อลองใหม่'] : APP.saving || APP.dirty ? ['busy', 'กำลังบันทึก', 'กำลังบันทึกลงฐานข้อมูล'] : ['ok', 'บันทึกแล้ว', 'ข้อมูลล่าสุดอยู่ในฐานข้อมูลแล้ว · กดเพื่อโหลดใหม่']; }
@@ -7326,7 +7327,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function appInvites() {
     APP.invBusy = true;
     return SB.from('invites').select('code,email,name,role,case_id,created_at,expires_at,used_at').order('created_at', { ascending:false }).then(function (r) {
-      chk(r); INVITES = r.data || []; APP.invBusy = false; if (S.page === 'users') render();
+      sbOk(r); INVITES = r.data || []; APP.invBusy = false; if (S.page === 'users') render();
     }).catch(function (e) { APP.invBusy = false; INVITES = []; toast(thErr(e)); });
   }
   function pageUsers() {
@@ -7384,7 +7385,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var nm = val('uiName'), em = val('uiMail'), rl = val('uiRole');
     if (!nm || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { toast('ใส่ชื่อและอีเมลให้ถูกต้อง'); return; }
     SB.from('invites').insert({ email:em, name:nm, role:rl }).select('code,email,name,role,case_id,created_at,expires_at,used_at').single().then(function (r) {
-      chk(r); INVITES = [r.data].concat(INVITES || []); render(); appInviteShow(r.data, null);
+      sbOk(r); INVITES = [r.data].concat(INVITES || []); render(); appInviteShow(r.data, null);
     }).catch(function (e) { toast(thErr(e)); });
   }
   function appCopy(code) {
@@ -7397,7 +7398,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var me = ME && uid === ME.id;
     if (me && !window.confirm('เปลี่ยนบทบาทของคุณเป็น ' + roleName(rl) + '? เมนูและสิทธิ์ในเคสจะเปลี่ยนตามบทบาทใหม่ ส่วนสิทธิ์ผู้ดูแลระบบยังอยู่')) { render(); return; }
     SB.from('profiles').update({ role:rl }).eq('id', uid).select('id,role').then(function (r) {
-      chk(r); var u = USERS.filter(function (x) { return x.id === uid; })[0]; if (u && r.data && r.data[0]) u.role = r.data[0].role;
+      sbOk(r); var u = USERS.filter(function (x) { return x.id === uid; })[0]; if (u && r.data && r.data[0]) u.role = r.data[0].role;
       var done = !!u && u.role === rl;
       if (!me || !done) { render(); toast(done ? 'เปลี่ยนบทบาทเป็น ' + roleName(rl) + ' แล้ว' : 'เปลี่ยนบทบาทไม่ได้'); return; }
       ME.role = rl; S.role = rl;
@@ -7412,7 +7413,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       : me ? 'เลิกเป็นผู้ดูแลระบบ? คุณจะจัดการบัญชีไม่ได้อีก จนกว่าผู้ดูแลคนอื่นให้สิทธิ์คืน' : 'ถอดสิทธิ์ผู้ดูแลระบบของ ' + nm + '?';
     if (!window.confirm(q)) { render(); return; }
     SB.from('profiles').update({ is_admin:on }).eq('id', uid).select('id,is_admin').then(function (r) {
-      chk(r); if (r.data && r.data[0]) u.is_admin = r.data[0].is_admin;
+      sbOk(r); if (r.data && r.data[0]) u.is_admin = r.data[0].is_admin;
       if (me) ME.is_admin = u.is_admin;
       if (u.is_admin !== on) { render(); toast('เปลี่ยนสิทธิ์ผู้ดูแลระบบไม่ได้'); return; }
       if (me && !on && navs().indexOf('users') < 0) S.page = 'home';
@@ -7433,7 +7434,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (!nm || !apMailOk(em)) { toast('ใส่ชื่อและอีเมลให้ถูกต้อง'); return; }
     if (nm !== u.name) p = p.then(function () {
       return SB.from('profiles').update({ name:nm }).eq('id', uid).select('id,name').then(function (r) {
-        chk(r); if (!r.data || !r.data[0]) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); u.name = r.data[0].name; if (me) ME.name = u.name;
+        sbOk(r); if (!r.data || !r.data[0]) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้'); u.name = r.data[0].name; if (me) ME.name = u.name;
       });
     });
     if (em !== String(u.email || '').toLowerCase()) p = p.then(function () { return rpc('admin_set_email', { uid:uid, em:em }).then(function (e2) { u.email = e2 || em; if (me) ME.email = u.email; }); });
@@ -7452,7 +7453,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var nm = val('ieName'), em = val('ieMail').toLowerCase(), rl = val('ieRole');
     if (!nm || !apMailOk(em)) { toast('ใส่ชื่อและอีเมลให้ถูกต้อง'); return; }
     SB.from('invites').update({ name:nm, email:em, role:rl }).eq('code', code).select('code,email,name,role,case_id,created_at,expires_at,used_at').then(function (r) {
-      chk(r); if (!r.data || !r.data[0]) throw new Error('คำเชิญนี้แก้ไม่ได้แล้ว อาจถูกใช้หรือลบไปแล้ว');
+      sbOk(r); if (!r.data || !r.data[0]) throw new Error('คำเชิญนี้แก้ไม่ได้แล้ว อาจถูกใช้หรือลบไปแล้ว');
       INVITES = (INVITES || []).map(function (i) { return i.code === code ? r.data[0] : i; });
       closeModal(); render(); toast('แก้คำเชิญแล้ว ลิงก์เดิมยังใช้ได้');
     }).catch(function (e) { toast(thErr(e)); });
@@ -7461,7 +7462,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var u = USERS.filter(function (x) { return x.id === uid; })[0]; if (!u) return;
     if (u.active && !window.confirm('ปิดบัญชี ' + (u.name || u.email) + '? ผู้ใช้นี้จะเข้าระบบไม่ได้จนกว่าจะเปิดอีกครั้ง')) return;
     SB.from('profiles').update({ active:!u.active }).eq('id', uid).select('id,active').then(function (r) {
-      chk(r); if (r.data && r.data[0]) u.active = r.data[0].active; render(); toast(u.active ? 'เปิดบัญชีแล้ว' : 'ปิดบัญชีแล้ว');
+      sbOk(r); if (r.data && r.data[0]) u.active = r.data[0].active; render(); toast(u.active ? 'เปิดบัญชีแล้ว' : 'ปิดบัญชีแล้ว');
     }).catch(function (e) { toast(thErr(e)); });
   }
 
@@ -7477,13 +7478,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var nm = val('ncName'), sh = val('ncShort') || nm, cn = val('ncCon'), cm = val('ncMail'), st = val('ncStart') || todayIso();
     if (!nm || !cn || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(cm)) { toast('ใส่ชื่อบริษัท ผู้ติดต่อ และอีเมลให้ถูกต้อง'); return; }
     var id = 'k' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), c;
-    SB.from('cases').insert({ id:id, name:nm }).then(chk).then(function () {
+    SB.from('cases').insert({ id:id, name:nm }).then(sbOk).then(function () {
       c = appShell(id); c.name = nm; c.short = sh; c.start = st; c.contact = { name:cn, mail:cm }; c.f24 = { org:nm, cName:cn, cMail:cm };
       c.track['0.1'] = { s:'doing', d:'' }; logC(c, 'เปิดเคส');
       DB.cases.push(c); SYNC.parts[id] = {}; SYNC.steps[id] = {}; SYNC.files[id] = {}; SYNC.mailN[id] = 0; SYNC.logN[id] = 0;
       return SB.from('invites').insert({ email:cm, name:cn, role:'client', case_id:id }).select('code,email,name,role,case_id,created_at,expires_at,used_at').single();
     }).then(function (r) {
-      chk(r); c.inv = r.data.code; if (INVITES) INVITES.unshift(r.data);
+      sbOk(r); c.inv = r.data.code; if (INVITES) INVITES.unshift(r.data);
       save(); closeModal(); S.page = 'case'; S.cid = id; S.sid = '0.1'; S.ctab = 'docs'; S.ptab = 'form'; render(); toTop(); openInvite(c);
     }).catch(function (e) { toast(thErr(e)); });
   }
@@ -7499,7 +7500,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (c.inv) { show(c.inv); return; }
     if (!c.contact || !c.contact.mail) { toast('ใส่อีเมลผู้ติดต่อของเคสก่อน'); return; }
     SB.from('invites').insert({ email:c.contact.mail, name:c.contact.name || '', role:'client', case_id:c.id }).select('code').single().then(function (r) {
-      chk(r); c.inv = r.data.code; INVITES = null; save(); show(c.inv);
+      sbOk(r); c.inv = r.data.code; INVITES = null; save(); show(c.inv);
     }).catch(function (e) { toast(thErr(e)); });
   }
 
@@ -7523,7 +7524,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     else if (a === 'uinvite') appInviteForm();
     else if (a === 'uinvsave') appInviteSave();
     else if (a === 'invcopy') appCopy(v);
-    else if (a === 'invdel') { if (!window.confirm('ลบคำเชิญนี้? ลิงก์ที่ส่งไปแล้วจะใช้ไม่ได้')) return; SB.from('invites').delete().eq('code', v).then(chk).then(function () { INVITES = (INVITES || []).filter(function (x) { return x.code !== v; }); render(); toast('ลบคำเชิญแล้ว'); }).catch(function (er) { toast(thErr(er)); }); }
+    else if (a === 'invdel') { if (!window.confirm('ลบคำเชิญนี้? ลิงก์ที่ส่งไปแล้วจะใช้ไม่ได้')) return; SB.from('invites').delete().eq('code', v).then(sbOk).then(function () { INVITES = (INVITES || []).filter(function (x) { return x.code !== v; }); render(); toast('ลบคำเชิญแล้ว'); }).catch(function (er) { toast(thErr(er)); }); }
     else if (a === 'uact') appSetActive(v);
     else if (a === 'uedit') appUserEdit(v);
     else if (a === 'uesave') appUserEditSave(v);
