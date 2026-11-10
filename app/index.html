@@ -1599,6 +1599,27 @@ html[data-theme=dark] .pr-mx thead th.pr-mx-cap,html[data-theme=dark] .pr-mx tbo
 @media (max-width:1000px){.pr-roles{grid-template-columns:220px minmax(0,1fr)}}
 @media (max-width:760px){.pr-roles{grid-template-columns:minmax(0,1fr)}.pr-grp,.pr-ed-h{padding-left:16px;padding-right:16px}.pr-save{padding:10px 16px}}
 @media (prefers-reduced-motion:reduce){.pr-ri,.pr-cap,.pr-seg button{transition:none}}
+/* ---------- phones and narrow windows (2026-11-10): the page never scrolls sideways; a box that cannot fit scrolls inside itself ---------- */
+/* one column for the step list and the panel, the folder and its details: the column may shrink below its widest line */
+/* the step list is not sticky here, so its sticky offset must not apply when the sliding marker makes it relative (37-motion-dark-mode.js):
+   without this a first click moved the whole list 12px down */
+@media (max-width:1180px){.cbody,.fv,.cal{grid-template-columns:minmax(0,1fr)}.tl{top:auto}}
+/* a form table keeps readable columns on a phone and scrolls sideways inside its own box (div.ft-w, 30-render.js) */
+@media screen and (max-width:760px){.ft-w{max-width:100%;overflow-x:auto;scrollbar-width:thin}.ft:has(tr>:nth-child(4)){min-width:600px}.ft th{white-space:nowrap}}
+/* a phone gives every field the full width, so its label stays on one line */
+@media screen and (max-width:560px){.fg{grid-template-columns:minmax(0,1fr)!important}}   /* also the 3- and 4-field rows set inline */
+/* the upload box keeps its two lines on one line each at 360 px */
+@media screen and (max-width:400px){.at-drop{gap:10px;padding:12px}.at-drop b{font-size:13.5px}.at-drop small{font-size:11.5px}}
+/* a list table inside a card body scrolls inside that body (the complaints list) */
+.pb:has(>table.t){overflow-x:auto;overflow-y:hidden}
+@media screen and (max-width:760px){
+  /* the three how-to steps above an upload: each step keeps its button whole and moves to the next line */
+  .at-how li{flex-wrap:wrap;min-width:0;max-width:100%}
+  /* the folder path: whole crumbs move to the next line, a crumb's label never breaks */
+  .fv-bc{flex-wrap:wrap;row-gap:4px}
+}
+/* the summary line of a folded report box ends in an ellipsis instead of running past the box */
+details.rv>summary small{display:block}
 /* ---------- the app page only: sign-in, who is signed in, saving, accounts and invitations ---------- */
 .ap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 16px}
 .ap-card{width:100%;max-width:420px;padding:28px 28px 24px;border-radius:24px;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}
@@ -4721,10 +4742,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var a = document.activeElement, fid = a && a.id, caret = a && typeof a.selectionStart === 'number' ? a.selectionStart : null;
     var sc = document.querySelector('#app .content'), top = sc ? sc.scrollTop : 0, kp = kpGrab(), pg = page();
     $('app').innerHTML = '<div class="shell"><div class="frame">' + topbar() + '<div class="frame-body">' + side() + '<div class="content"><main class="main">' + pageHead() + demoBar() + pg + '</main></div></div></div></div>';
+    ftWrap();
     sc = document.querySelector('#app .content'); if (sc && top) sc.scrollTop = top;
     kpPut(kp);
     if (fid && $(fid)) { var n = $(fid); n.focus(); if (caret !== null && n.setSelectionRange) try { n.setSelectionRange(caret, caret); } catch (e) { /* not a text field */ } }
   }
+  /* every form table sits in its own box (div.ft-w): on a phone that box scrolls sideways, never the page (11-phone.css) */
+  function ftWrap() { [].forEach.call(document.querySelectorAll('#app table.ft'), function (t) { if (t.parentNode.classList.contains('ft-w')) return; var w = document.createElement('div'); w.className = 'ft-w'; t.parentNode.insertBefore(w, t); w.appendChild(t); }); }
   function roleOptions() { return ROLES.map(function (r) { return '<option value="' + r[0] + '"' + (r[0] === S.role ? ' selected' : '') + '>' + esc(r[1]) + '</option>'; }).join(''); }
   function titles() {
     if (S.page === 'ca' || S.page === 'carec') return cxTitles();
