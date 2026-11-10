@@ -1698,7 +1698,7 @@ a.btn[href="#local"]{opacity:.62}
   /* ---------- 1.6 team ---------- */
   function teamView(c, edit) {
     var why = teamCheck(c);
-    var h = why ? note('alert', 'ด่าน 3 ยังไม่ผ่าน: ' + esc(why), 'warn') : note('check', 'คณะครบ ทุกคนมี F-GCC-08 และ F-GCC-09 และผู้ทบทวนอิสระไม่อยู่ในคณะ', 'okn');
+    var h = why ? note('alert', 'อนุมัติไม่ได้: ' + esc(why), 'warn') : note('check', 'คณะครบ ทุกคนมี F-GCC-08 และ F-GCC-09 และผู้ทบทวนอิสระไม่อยู่ในคณะ', 'okn');
     h += '<table class="ft"><thead><tr><th>ชื่อ-นามสกุล</th><th style="width:170px">บทบาท</th><th>ความสามารถ (สาขา)</th><th style="width:110px">ภายใน/ภายนอก</th><th class="c" style="width:76px">F-GCC-08</th><th class="c" style="width:76px">F-GCC-09</th></tr></thead><tbody>' +
       c.team.map(function (m, i) { var p = 'team.' + i + '.'; return '<tr><td>' + cell(c, p + 'n', !edit, 'rc') + '</td><td>' + sel(c, p + 'r', TEAM_ROLES, !edit) + '</td><td>' + cell(c, p + 'comp', !edit) + '</td><td>' + sel(c, p + 'ext', ['ภายใน', 'ภายนอก'], !edit) + '</td><td class="c">' + box(c, p + 'f08', !edit) + '</td><td class="c">' + box(c, p + 'f09', !edit) + '</td></tr>'; }).join('') + '</tbody></table>';
     if (edit) h += addBtn('team', 'เพิ่มคน');
@@ -2032,9 +2032,9 @@ a.btn[href="#local"]{opacity:.62}
   }
   function eotBlock(c) {
     var ob = onsiteBlock(c);
-    if (ob) return 'ด่าน 5: ' + ob;
-    if (!c.f36.ackN) return 'ด่าน 5: ยังไม่มีชื่อผู้มีอำนาจของลูกค้าที่ลงนามรับทราบสิ่งที่พบ';
-    if (EOT7.some(function (x, i) { return !c.eot[i]; })) return 'ด่าน 5: End-of-Task Review ยังไม่ครบ 7 ข้อ';
+    if (ob) return 'อนุมัติไม่ได้: ' + ob;
+    if (!c.f36.ackN) return 'อนุมัติไม่ได้: ยังไม่มีชื่อผู้มีอำนาจของลูกค้าที่ลงนามรับทราบสิ่งที่พบ';
+    if (EOT7.some(function (x, i) { return !c.eot[i]; })) return 'อนุมัติไม่ได้: End-of-Task Review ยังไม่ครบ 7 ข้อ';
     return '';
   }
   function rov(label, val, w) { return '<div class="f' + (w ? ' w' : '') + '"><label>' + esc(label) + '</label><div class="tv">' + esc(val || '-') + '</div></div>'; }
@@ -2799,7 +2799,7 @@ a.btn[href="#local"]{opacity:.62}
     h += '<div class="fs"><h4><i>1</i>การทบทวนคำขอ 13 หัวข้อ</h4>' + REV13.map(function (x, i) { return chk(c, 'rev.items.' + i, (i + 1) + '. ' + esc(x), !lv); }).join('') + '</div>';
     h += '<div class="fs"><h4><i>2</i>Manday และผลการทบทวน</h4><div class="fg">' + (f77Done(c) ? auto('จำนวน Manday (จาก F-GCC-77)', fmt(k.tot, 1) + ' Manday · ขนาดองค์กร' + SIZES[k.sz]) : rov('จำนวน Manday (F-GCC-77)', 'ยังไม่ได้ประเมินในแท็บ F-GCC-77')) +
       '<div class="f"><label>ผลการทบทวน</label><div class="opts">' + rad(c, 'rev.decision', 'accept', 'รับคำขอ', !lv) + rad(c, 'rev.decision', 'reject', 'ไม่รับคำขอ', !lv) + '</div></div></div></div>';
-    if (S.role === 'mgr') h += note('shield', 'คุณเป็นผู้อนุมัติด่าน 1 ทั้งการรับคำขอและ Manday ใน F-GCC-77 เมื่อตรวจแล้วกด "ผ่านด่าน 1" ด้านบน');
+    if (S.role === 'mgr') h += note('shield', 'คุณเป็นผู้อนุมัติขั้นนี้ ทั้งการรับคำขอและ Manday ใน F-GCC-77 เมื่อตรวจแล้วกด "อนุมัติ" ด้านบน');
     return h;
   }
   function f77View(c, edit) {
@@ -4207,6 +4207,8 @@ a.btn[href="#local"]{opacity:.62}
   function stepById(id) { for (var i = 0; i < STEPS.length; i++) if (STEPS[i][0] === id) return STEPS[i]; return null; }
   function idx(st) { return STEPS.indexOf(st); }
   function stOf(c, id) { var t = c.track[id]; return t ? t.s : ''; }
+  // the step a gate number belongs to (2.4 for gate 4); the screens name the step, not the number
+  function gateSid(g) { var s = STEPS.filter(function (x) { return x[5] && String(x[5]) === String(g); })[0]; return s ? s[0] : ''; }
   function gateBefore(i) { for (var k = i - 1; k >= 0; k--) if (STEPS[k][5]) return k; return -1; }
   function lockOf(c, i) { var g = gateBefore(i); return g >= 0 && stOf(c, STEPS[g][0]) !== 'done' ? STEPS[g] : null; }
   function acts(c) { return DRAFT.map(function (o) { return { s:addDays(c.start, o[0]), e:addDays(c.start, o.length > 1 ? o[1] : o[0]) }; }); }
@@ -4378,14 +4380,19 @@ a.btn[href="#local"]{opacity:.62}
   function seeStep(c, st) { if (isClient(S.role)) return clientSees(c, st); if (ext()) { var s = share(c, S.role); return !!s && (s.scope === 'all' || st[0] === '4.4'); } return true; }
   function seeDoc(c, st) { if (S.role === 'sales') return st[0] === '0.1' || st[0] === '1.4'; return seeStep(c, st); }
   function canAct(c, st) { if (jOn() || ext() || S.role === 'qmr' || S.role === 'dcc') return false; return st[8].indexOf(rk()) >= 0; }
+  // on the app page the people page goes with the right to manage accounts (ME.is_admin), whatever the work role,
+  // and with the manager role, which may invite staff
   function navs0() {
-    var r = S.role;
+    var r = S.role, n = navsOf(r);
+    return APP_ON && !isClient(r) && !ext() && (r === 'mgr' || (ME && ME.is_admin)) ? n.concat(['users']) : n;
+  }
+  function navsOf(r) {
     if (isClient(r) || ext()) return ['home','cases'];
     if (r === 'qmr') return ['home','docs','flow','perm'];
     if (r === 'dcc' || r === 'md') return ['home','docs','flow'];
-    if (r === 'mgr') return ['home','cases','reg','docs','flow','perm'].concat(APP_ON ? ['users'] : []);
+    if (r === 'mgr') return ['home','cases','reg','docs','flow','perm'];
     if (r === 'sales') return ['home','cases','reg','flow'];
-    if (r === 'admin' || r === 'lv') return ['home','cases','reg','docs','flow'].concat(APP_ON && r === 'admin' ? ['users'] : []);
+    if (r === 'admin' || r === 'lv') return ['home','cases','reg','docs','flow'];
     return ['home','cases','docs','flow'];
   }
   function navName(k) {
@@ -4411,46 +4418,46 @@ a.btn[href="#local"]{opacity:.62}
   }
   function gateBlock(c, g) {
     var off = ofsGate(c, g);
-    if (off.length && !(c.ofsOk || {})[g]) return 'ด่าน ' + g + ': ยังไม่ได้ยืนยันว่าตรวจไฟล์ที่ทำนอกระบบของขั้น ' + off.join(', ') + ' แล้ว';
-    if (g === 1 && c.rev.decision !== 'accept') return 'ด่าน 1: ผลการทบทวนยังไม่ได้เลือก "รับคำขอ"';
-    if (g === 1 && !ofs(c, '1.3') && !f77Done(c)) return 'ด่าน 1: ยังไม่ได้ประเมิน Manday ครบ 4 ปัจจัยใน F-GCC-77';
-    if (g === 2 && !c.f26.lvOk) return 'ด่าน 2: หัวหน้าผู้ทวนสอบยังไม่ได้ยืนยันความถูกต้องของ F-GCC-26';
-    if (g === 2 && !(c.f26.client && c.f26.md)) return 'ด่าน 2: ข้อตกลงยังลงนามไม่ครบสองฝ่าย';
-    if (g === 3 && !ofs(c, '1.6')) { var tw = teamCheck(c); if (tw) return 'ด่าน 3: ' + tw; }
+    if (off.length && !(c.ofsOk || {})[g]) return 'อนุมัติไม่ได้: ยังไม่ได้ยืนยันว่าตรวจไฟล์ที่ทำนอกระบบของขั้น ' + off.join(', ') + ' แล้ว';
+    if (g === 1 && c.rev.decision !== 'accept') return 'อนุมัติไม่ได้: ผลการทบทวนยังไม่ได้เลือก "รับคำขอ"';
+    if (g === 1 && !ofs(c, '1.3') && !f77Done(c)) return 'อนุมัติไม่ได้: ยังไม่ได้ประเมิน Manday ครบ 4 ปัจจัยใน F-GCC-77';
+    if (g === 2 && !c.f26.lvOk) return 'อนุมัติไม่ได้: หัวหน้าผู้ทวนสอบยังไม่ได้ยืนยันความถูกต้องของ F-GCC-26';
+    if (g === 2 && !(c.f26.client && c.f26.md)) return 'อนุมัติไม่ได้: ข้อตกลงยังลงนามไม่ครบสองฝ่าย';
+    if (g === 3 && !ofs(c, '1.6')) { var tw = teamCheck(c); if (tw) return 'อนุมัติไม่ได้: ' + tw; }
     if (g === 4) {
       var rk4 = c.f31.risk || {};
-      if (!ofs(c, '2.2') && !(rk4.ir && rk4.cr && rk4.adr)) return 'ด่าน 4: SARA ยังไม่มีคะแนนความเสี่ยงครบ (F-GCC-31)';
-      if (!ofs(c, '2.2') && !paretoOk(c)) return 'ด่าน 4: ตาราง ก. ยังไม่ผ่านเกณฑ์ร้อยละ 5 และสะสมร้อยละ 80 ทุก Scope';
-      if (c.gate.some(function (v) { return !v; })) return 'ด่าน 4: Gate Review ยังไม่ครบ 5 ข้อ';
+      if (!ofs(c, '2.2') && !(rk4.ir && rk4.cr && rk4.adr)) return 'อนุมัติไม่ได้: SARA ยังไม่มีคะแนนความเสี่ยงครบ (F-GCC-31)';
+      if (!ofs(c, '2.2') && !paretoOk(c)) return 'อนุมัติไม่ได้: ตาราง ก. ยังไม่ผ่านเกณฑ์ร้อยละ 5 และสะสมร้อยละ 80 ทุก Scope';
+      if (c.gate.some(function (v) { return !v; })) return 'อนุมัติไม่ได้: Gate Review ยังไม่ครบ 5 ข้อ';
     }
     if (g === 5) {
-      if (!ofs(c, '3.2')) { var ob = onsiteBlock(c); if (ob) return 'ด่าน 5: ' + ob; }
-      if (!ofs(c, '3.3') && !c.f36.ackN) return 'ด่าน 5: ยังไม่มีชื่อผู้มีอำนาจของลูกค้าที่ลงนามรับทราบสิ่งที่พบ';
-      if (EOT7.some(function (x, i) { return !c.eot[i]; })) return 'ด่าน 5: End-of-Task Review ยังไม่ครบ 7 ข้อ';
+      if (!ofs(c, '3.2')) { var ob = onsiteBlock(c); if (ob) return 'อนุมัติไม่ได้: ' + ob; }
+      if (!ofs(c, '3.3') && !c.f36.ackN) return 'อนุมัติไม่ได้: ยังไม่มีชื่อผู้มีอำนาจของลูกค้าที่ลงนามรับทราบสิ่งที่พบ';
+      if (EOT7.some(function (x, i) { return !c.eot[i]; })) return 'อนุมัติไม่ได้: End-of-Task Review ยังไม่ครบ 7 ข้อ';
     }
-    if (g === 6 && !ofs(c, '3.5') && c.findings.some(function (f) { return f.type !== 'OBS' && !isClosed(f); })) return 'ด่าน 6: ยังมี NC MMS หรือ MIS ที่ยังไม่ปิด';
+    if (g === 6 && !ofs(c, '3.5') && c.findings.some(function (f) { return f.type !== 'OBS' && !isClosed(f); })) return 'อนุมัติไม่ได้: ยังมี NC MMS หรือ MIS ที่ยังไม่ปิด';
     if (g === 7) {
       var f41 = c.f41 || {};
       if (!ofs(c, '4.2')) {
         var bad = [0, 1, 2, 3, 4, 5].filter(function (i) { return f41g(c, i) !== 'y'; });
-        if (bad.length) return 'ด่าน 7: ข้อมูลทั่วไปของผู้ทบทวนอิสระยังไม่ครบ ข้อ ' + bad.map(function (i) { return i + 1; }).join(', ');
-        if (F41_SUM.some(function (x, i) { return !(f41.sum || {})[i]; })) return 'ด่าน 7: สรุปผลการทบทวนยังไม่ครบ 4 ข้อ';
+        if (bad.length) return 'อนุมัติไม่ได้: ข้อมูลทั่วไปของผู้ทบทวนอิสระยังไม่ครบ ข้อ ' + bad.map(function (i) { return i + 1; }).join(', ');
+        if (F41_SUM.some(function (x, i) { return !(f41.sum || {})[i]; })) return 'อนุมัติไม่ได้: สรุปผลการทบทวนยังไม่ครบ 4 ข้อ';
       }
-      if (!f41.op) return 'ด่าน 7: ยังไม่ได้เลือกชนิดความเห็น';
-      if (f41.op === 'none') return 'ด่าน 7: ไม่ยืนยันการอ้างสิทธิ์ จึงออกถ้อยแถลงไม่ได้';
-      if (f41.op !== 'unmod' && !f41.opWhy) return 'ด่าน 7: ระบุเหตุผลของชนิดความเห็นก่อน';
+      if (!f41.op) return 'อนุมัติไม่ได้: ยังไม่ได้เลือกชนิดความเห็น';
+      if (f41.op === 'none') return 'อนุมัติไม่ได้: ไม่ยืนยันการอ้างสิทธิ์ จึงออกถ้อยแถลงไม่ได้';
+      if (f41.op !== 'unmod' && !f41.opWhy) return 'อนุมัติไม่ได้: ระบุเหตุผลของชนิดความเห็นก่อน';
     }
     return '';
   }
   function setStep(c, st, to) {
     var i = idx(st), s = stOf(c, st[0]), lock = lockOf(c, i);
     if (!canAct(c, st)) { toast('บทบาทนี้ไม่ได้รับสิทธิ์ทำขั้นนี้'); return; }
-    if (lock && !s) { toast('เริ่มได้เมื่อผ่านด่าน ' + lock[5] + ' ที่ขั้น ' + lock[0]); return; }
+    if (lock && !s) { toast('เริ่มได้เมื่อขั้น ' + lock[0] + ' อนุมัติแล้ว'); return; }
     if (to === 'done') {
       if (st[5]) {
         var open = STEPS.slice(0, i).filter(function (x) { return stOf(c, x[0]) !== 'done'; }).map(function (x) { return x[0]; });
-        if (open.length) { toast('ด่าน ' + st[5] + ' ยังผ่านไม่ได้ ขั้นก่อนหน้ายังไม่เสร็จ: ' + open.join(', ')); return; }
-        if (GATE_BY[st[5]] !== rk()) { toast('ด่าน ' + st[5] + ' ต้องให้ ' + role(GATE_BY[st[5]])[1] + ' เป็นผู้ผ่าน'); return; }
+        if (open.length) { toast('อนุมัติไม่ได้ ขั้นก่อนหน้ายังไม่เสร็จ: ' + open.join(', ')); return; }
+        if (GATE_BY[st[5]] !== rk()) { toast('ขั้นนี้ต้องให้ ' + role(GATE_BY[st[5]])[1] + ' เป็นผู้อนุมัติ'); return; }
         var why = gateBlock(c, st[5]); if (why) { toast(why); return; }
       }
       if (st[0] === '1.1') { var m = f24Missing(c); if (m.length) { toast('ยังขาด ' + m.length + ' หัวข้อบังคับ: ' + m.slice(0, 3).join(', ') + (m.length > 3 ? ' …' : '')); return; } }
@@ -4465,7 +4472,7 @@ a.btn[href="#local"]{opacity:.62}
       var fb = flBlock(c, st); if (fb) { toast(fb); return; }
       if (SIGNED[st[0]] && !attList(c, st[0]).length) { toast('แนบ' + SIGNED[st[0]][1] + 'ก่อนปิดขั้นนี้'); return; }
     }
-    if (!to && st[5] && s === 'done' && STEPS.slice(i + 1).some(function (x) { return stOf(c, x[0]); })) { toast('ย้อนด่านนี้ไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว'); return; }
+    if (!to && st[5] && s === 'done' && STEPS.slice(i + 1).some(function (x) { return stOf(c, x[0]); })) { toast('ย้อนการอนุมัตินี้ไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว'); return; }
     if (to) c.track[st[0]] = { s:to, d:to === 'done' ? todayIso() : '' }; else delete c.track[st[0]];
     logC(c, (to === 'done' ? 'ทำเสร็จ ' : to === 'doing' ? 'เริ่มทำ ' : 'ย้อนสถานะ ') + st[0] + ' ' + st[2]);
     var msg = to === 'done' ? 'บันทึกแล้ว: ' + st[0] + ' เสร็จ' : 'บันทึกแล้ว';
@@ -4483,8 +4490,8 @@ a.btn[href="#local"]{opacity:.62}
   function prog(p) { return '<div class="prog"><div class="bar"><i style="width:' + p + '%"></i></div><small>' + p + '%</small></div>'; }
   function urg(d, done) { if (done) return '<span class="pill ok">เสร็จแล้ว</span>'; return d < 0 ? '<span class="pill late">เลยกำหนด</span>' : d <= 7 ? '<span class="pill soon">ใกล้ถึง</span>' : '<span class="pill ok">ตามแผน</span>'; }
   function dateCell(iso, done) { var d = diff(iso); return '<div class="date">' + dL(iso) + (done ? '' : '<small class="' + (d < 0 ? 'late' : '') + '">' + (d < 0 ? 'เลย ' + (-d) + ' วัน' : d === 0 ? 'วันนี้' : 'อีก ' + d + ' วัน') + '</small>') + '</div>'; }
-  function stText(s, lk) { return s === 'done' ? '<div class="st done">เสร็จแล้ว</div>' : s === 'doing' ? '<div class="st doing">กำลังทำ</div>' : lk ? '<div class="st lock">รอด่าน ' + lk[5] + '</div>' : '<div class="st wait">ยังไม่เริ่ม</div>'; }
-  function chip(s, lk, du) { return s === 'done' ? '<span class="chip done">สำเร็จ</span>' : s === 'doing' ? (diff(du) < 0 ? '<span class="chip late">เลยกำหนด</span>' : '<span class="chip doing">กำลังทำ</span>') : lk ? '<span class="chip lock" title="เริ่มได้เมื่อผ่านด่าน ' + lk[5] + ' ที่ขั้น ' + lk[0] + '">ขั้นตอนถัดไป</span>' : '<span class="chip wait">ยังไม่เริ่ม</span>'; }
+  function stText(s, lk) { return s === 'done' ? '<div class="st done">เสร็จแล้ว</div>' : s === 'doing' ? '<div class="st doing">กำลังทำ</div>' : lk ? '<div class="st lock">รออนุมัติ</div>' : '<div class="st wait">ยังไม่เริ่ม</div>'; }
+  function chip(s, lk, du) { return s === 'done' ? '<span class="chip done">สำเร็จ</span>' : s === 'doing' ? (diff(du) < 0 ? '<span class="chip late">เลยกำหนด</span>' : '<span class="chip doing">กำลังทำ</span>') : lk ? '<span class="chip lock" title="เริ่มได้เมื่อขั้น ' + lk[0] + ' อนุมัติแล้ว">ขั้นตอนถัดไป</span>' : '<span class="chip wait">ยังไม่เริ่ม</span>'; }
   function whoAv(st) { return '<div class="avs">' + st[8].map(function (k) { return av(k); }).join('') + '</div>'; }
   function note(icon, text, cls) { return '<div class="note ' + (cls || '') + '">' + ic(icon) + '<div>' + text + '</div></div>'; }
   function docByCode(code) { for (var i = 0; i < DB.docs.length; i++) if (DB.docs[i].code === code) return DB.docs[i]; return null; }
@@ -4532,7 +4539,7 @@ a.btn[href="#local"]{opacity:.62}
     var c = S.page === 'case' ? caseById(S.cid) : null;
     if (c) return [c.short, c.job || 'ยังไม่มีเลขที่งาน'];
     return { home:['สวัสดี ' + byWho(), 'วันนี้ ' + dL(todayIso())], users:['ผู้ใช้งาน', 'บัญชี บทบาท และคำเชิญ'], cases:[navName('cases'), cases().length + ' เคส'], cal:['ปฏิทินการทวนสอบ', 'นัดลงพื้นที่และจัดคิวงานของทุกเคส'], reg:['ทะเบียน', 'สร้างจากข้อมูลเคสให้เอง'], docs:['เอกสารควบคุม', 'ทะเบียนเอกสารออนไลน์ แก้ไข ยกเลิก และประกาศในที่เดียว'],
-      flow:['ผังกระบวนการ', '23 ขั้น 7 ด่าน ตามเอกสารประกาศใช้ 08/11/2569'], perm:['สิทธิ์ผู้ใช้', 'ใครเห็นอะไร และทำอะไรได้'] }[S.page] || ['', ''];
+      flow:['ผังกระบวนการ', '23 ขั้น · ต้องอนุมัติ 7 ขั้น · ตามเอกสารประกาศใช้ 08/11/2569'], perm:['สิทธิ์ผู้ใช้', 'ใครเห็นอะไร และทำอะไรได้'] }[S.page] || ['', ''];
   }
   function myMails() { var n = 0; cases().forEach(function (c) { c.mail.forEach(function (m) { if (diff(m.at) >= -7) n++; }); }); return n; }
   /* ---------- v9 shell: the top bar carries the logo, the search, the sample role and the mail; the menu is slim rows in
@@ -4590,7 +4597,7 @@ a.btn[href="#local"]{opacity:.62}
     var late = list.filter(function (c) { var k = cur(c); return k && diff(due(c, k)) < 0; }).length;
     if (ks.indexOf('cases') >= 0) cards.push(['cases', 'clip', ext() ? 'เคสที่แชร์ให้' : 'งานที่รอคุณ', ext() ? list.length + ' เคส · อ่านอย่างเดียว' : mine.length + ' งาน · เลยกำหนด ' + late + ' เคส']);
     if (ks.indexOf('cal') >= 0) cards.push(['cal', 'archive', 'ปฏิทินงาน', list.filter(function (c) { var v = visitDate(c); return v && diff(v) >= 0 && diff(v) <= 30; }).length + ' นัดลงพื้นที่ใน 30 วัน']);
-    if (ks.indexOf('flow') >= 0) cards.push(['flow', 'flow', 'ผังกระบวนการ', STEPS.length + ' ขั้น · ' + STEPS.filter(function (st) { return st[5]; }).length + ' ด่านบังคับ']);
+    if (ks.indexOf('flow') >= 0) cards.push(['flow', 'flow', 'ผังกระบวนการ', STEPS.length + ' ขั้น · ต้องอนุมัติ ' + STEPS.filter(function (st) { return st[5]; }).length + ' ขั้น']);
     if (ks.indexOf('docs') >= 0) cards.push(['docs', 'docs', 'เอกสารควบคุม', DB.docs.length + ' ฉบับที่ประกาศใช้']);
     if (ks.indexOf('reg') >= 0) cards.push(['reg', 'archive', 'ทะเบียน', 'F-GCC-25, 27 และ 28']);
     if (ks.indexOf('ca') >= 0) cards.push(['ca', 'msg', 'ร้องเรียนและอุทธรณ์', cxList().length + ' เรื่องในระบบ']);
@@ -4677,23 +4684,23 @@ a.btn[href="#local"]{opacity:.62}
   }
   function fxCard(st, c) {
     var ok = c && stOf(c, st[0]) === 'done';
-    return '<div class="fx-card' + (ok ? ' pass' : '') + '"><div class="fx-ch"><div><small>' + (ok ? 'ผ่านแล้ว ' + esc(dS((c.track[st[0]] || {}).d)) : 'ด่านบังคับ') + '</small><b>ด่าน ' + st[5] + '</b></div><span class="fx-cb">' + ic(ok ? 'check' : 'lock') + '</span></div>' +
-      '<p>' + esc(st[6]) + '</p><div class="fx-cf"><span>ผู้ตัดสิน</span><b>' + esc(role(GATE_BY[st[5]] || 'lv')[1]) + '</b></div></div>';
+    return '<div class="fx-card' + (ok ? ' pass' : '') + '"><div class="fx-ch"><div><small>' + (ok ? 'อนุมัติแล้ว ' + esc(dS((c.track[st[0]] || {}).d)) : 'ต้องอนุมัติ') + '</small><b>ขั้น ' + st[0] + '</b></div><span class="fx-cb">' + ic(ok ? 'check' : 'lock') + '</span></div>' +
+      '<p>' + esc(st[6]) + '</p><div class="fx-cf"><span>ผู้อนุมัติ</span><b>' + esc(role(GATE_BY[st[5]] || 'lv')[1]) + '</b></div></div>';
   }
   function fxCol(i, c, sel, on) {
     var l = STEPS.filter(function (st) { return st[1] === i; }), g = l.filter(function (st) { return st[5]; }).length, ps = c ? phState(c, i) : null, k = c ? cur(c) : null;
     var ns = ps ? (ps.d === ps.n ? ' done' : (k ? k[1] : PH.length) === i ? ' now' : '') : on ? ' now' : '';
     return '<section class="fx-col' + (on ? ' on' : '') + '" id="fxc' + i + '"><button type="button" class="fx-node' + ns + '" data-a="fph" data-v="' + i + '" title="ช่วงที่ ' + i + ' ' + esc(PH[i][0]) + '">' + ic(ns === ' done' ? 'check' : PH[i][1]) + '</button>' +
-      '<div class="fx-ph"><b>' + esc(PH[i][0]) + '</b><span>ช่วงที่ ' + i + ' · ' + l.length + ' ขั้น' + (g ? ' · ' + g + ' ด่าน' : '') + (ps ? ' · เสร็จ ' + ps.d + '/' + ps.n : '') + '</span></div>' +
+      '<div class="fx-ph"><b>' + esc(PH[i][0]) + '</b><span>ช่วงที่ ' + i + ' · ' + l.length + ' ขั้น' + (g ? ' · ต้องอนุมัติ ' + g : '') + (ps ? ' · เสร็จ ' + ps.d + '/' + ps.n : '') + '</span></div>' +
       '<div class="fx-tree">' + l.map(function (st) { return '<div class="fx-row' + (st[5] ? ' g' : '') + (st[8].indexOf('client') >= 0 ? ' cl' : '') + '">' + fxPill(st, c, sel) + (st[5] ? fxCard(st, c) : '') + '</div>'; }).join('') + '</div></section>';
   }
   function flowBoard() {
     var f = S.fxf || 'all', forms = {}, nCl = STEPS.filter(function (st) { return st[8].indexOf('client') >= 0; }).length, nG = STEPS.filter(function (st) { return st[5]; }).length;
     STEPS.forEach(function (st) { (st[3].match(/F-GCC-\d+/g) || []).forEach(function (x) { forms[x] = 1; }); });
     return '<section class="card fx" data-f="' + f + '"><div class="fx-h"><div class="fx-t"><small>กระบวนการหลัก</small><h2>การทวนสอบ CFO</h2></div>' +
-      '<span class="fx-art" aria-hidden="true">' + artC() + '</span><div class="fx-m"><div><small>ขั้นงาน</small><b>' + STEPS.length + '</b></div><div><small>ด่านบังคับ</small><b>' + nG + '</b></div><div><small>ลูกค้ามีส่วน</small><b>' + nCl + '<i>ขั้น</i></b></div><div><small>แบบฟอร์ม</small><b>' + Object.keys(forms).length + '<i>ฉบับ</i></b></div></div></div>' +
-      '<div class="fx-f">' + [['all', 'ทุกขั้น'], ['cl', 'ขั้นที่ลูกค้ามีส่วน'], ['g', 'ด่านบังคับ']].map(function (x) { return '<button type="button" data-a="fxf" data-v="' + x[0] + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + '</button>'; }).join('') +
-      '<span class="fx-lg"><i class="cl"></i>ลูกค้ามีส่วน<i class="g"></i>ด่านบังคับ</span></div>' +
+      '<span class="fx-art" aria-hidden="true">' + artC() + '</span><div class="fx-m"><div><small>ขั้นงาน</small><b>' + STEPS.length + '</b></div><div><small>ต้องอนุมัติ</small><b>' + nG + '</b></div><div><small>ลูกค้ามีส่วน</small><b>' + nCl + '<i>ขั้น</i></b></div><div><small>แบบฟอร์ม</small><b>' + Object.keys(forms).length + '<i>ฉบับ</i></b></div></div></div>' +
+      '<div class="fx-f">' + [['all', 'ทุกขั้น'], ['cl', 'ขั้นที่ลูกค้ามีส่วน'], ['g', 'ต้องอนุมัติ']].map(function (x) { return '<button type="button" data-a="fxf" data-v="' + x[0] + '" aria-pressed="' + (f === x[0]) + '">' + x[1] + '</button>'; }).join('') +
+      '<span class="fx-lg"><i class="cl"></i>ลูกค้ามีส่วน<i class="g"></i>ต้องอนุมัติ</span></div>' +
       '<div class="fx-scroll" id="fxs"><div class="fx-board"><i class="fx-rail"></i>' + PH.map(function (p, i) { return fxCol(i, null, null, S.fph === i); }).join('') +
       '<span class="fx-end" title="ส่งผลและปิดแฟ้ม">' + ic('check') + '</span></div></div>' +
       '<nav class="fx-nav" aria-label="เลือกช่วง"><span class="fx-navb">' + ic('flow') + '</span>' + PH.map(function (p, i) {
@@ -5814,7 +5821,7 @@ a.btn[href="#local"]{opacity:.62}
     var how = '<ol class="at-how"><li><b>1</b>' + (cl ? 'ดาวน์โหลดรายการข้อแก้ไข' : 'ดาวน์โหลดแบบฟอร์ม') + ' ' + forms.slice(0, 3).map(function (x) { return expBtn(x, c.id, 'sm'); }).join(' ') + '</li><li><b>2</b>' +
       (cl ? 'เติมคำตอบในไฟล์' : 'ทำในเครื่องของคุณ') + '</li><li><b>3</b>แนบกลับที่นี่ ระบบเก็บทุกฉบับ</li></ol>';
     var tick = '<label class="fl-tick' + (l.length && (can || on) ? '' : ' off') + '"><input type="checkbox" data-ofs="' + sid + '"' + (on ? ' checked' : '') + (l.length && can ? '' : ' disabled') + '><span>' +
-      (cl ? 'ตอบในไฟล์ที่แนบแทนการพิมพ์ในระบบ' : 'ใช้ไฟล์ที่แนบแทนการกรอกแบบฟอร์มในระบบ') + '<small>' + (cl ? 'GCC อ่านคำตอบจากไฟล์' : 'ด่านที่ใช้ข้อมูลขั้นนี้ ผู้ผ่านด่านจะยืนยันว่าตรวจไฟล์แล้ว') + '</small></span></label>';
+      (cl ? 'ตอบในไฟล์ที่แนบแทนการพิมพ์ในระบบ' : 'ใช้ไฟล์ที่แนบแทนการกรอกแบบฟอร์มในระบบ') + '<small>' + (cl ? 'GCC อ่านคำตอบจากไฟล์' : 'ผู้อนุมัติจะยืนยันว่าตรวจไฟล์แล้ว') + '</small></span></label>';
     return flCard('upload', cl ? 'ตอบในไฟล์แล้วแนบกลับ' : 'ทำนอกระบบแล้วแนบกลับ', cl ? 'ถ้าสะดวกตอบใน Word แนบไฟล์ที่ตอบแล้วที่นี่' : 'ถ้าสะดวกทำใน Word หรือ Excel แนบไฟล์ที่ทำเสร็จไว้ที่นี่ ให้อยู่ในแฟ้มของเคส',
       on ? '<span class="chip doing">ใช้ไฟล์แทน</span>' : l.length ? '<span class="chip done">แนบแล้ว ' + l.length + '</span>' : '', how + flRows(c, l, can) + (can ? flDrop('out', sid, null, null, l.length > 0) : '') + tick);
   }
@@ -5824,7 +5831,7 @@ a.btn[href="#local"]{opacity:.62}
     var off = ofsGate(c, g); if (!off.length) return '';
     var can = GATE_BY[g] === rk() && stOf(c, st[0]) !== 'done' && !jOn(), ok = !!(c.ofsOk || {})[g];
     var rows = off.map(function (sid) { var s1 = stepById(sid); return '<h5 class="fl-h5">ขั้น ' + sid + ' ' + esc(s1[2]) + '</h5>' + flRows(c, outList(c, sid), false); }).join('');
-    return flCard('shield', 'ข้อมูลของด่านนี้อยู่ในไฟล์ที่ทำนอกระบบ', 'ระบบตรวจข้อมูลจากไฟล์ไม่ได้ ' + role(GATE_BY[g])[1] + 'เปิดตรวจแล้วยืนยันก่อนผ่านด่าน ' + g,
+    return flCard('shield', 'ข้อมูลของขั้นนี้อยู่ในไฟล์ที่ทำนอกระบบ', 'ระบบตรวจข้อมูลจากไฟล์ไม่ได้ ' + role(GATE_BY[g])[1] + 'เปิดตรวจแล้วยืนยันก่อนอนุมัติขั้น ' + gateSid(g),
       ok ? '<span class="chip done">ยืนยันแล้ว</span>' : '<span class="chip late">รอยืนยัน</span>',
       rows + '<label class="fl-tick' + (can || ok ? '' : ' off') + '"><input type="checkbox" data-ofsok="' + g + '"' + (ok ? ' checked' : '') + (can ? '' : ' disabled') + '><span>ตรวจไฟล์ที่ทำนอกระบบครบถ้วนแล้ว ใช้แทนข้อมูลในระบบได้<small>บันทึกชื่อผู้ยืนยันและวันที่ไว้ในประวัติของเคส</small></span></label>');
   }
@@ -5968,7 +5975,7 @@ a.btn[href="#local"]{opacity:.62}
       toast(t.checked ? 'ขั้น ' + sid + ' ใช้ไฟล์ที่แนบแทนแบบฟอร์มในระบบ' : 'กลับมาใช้แบบฟอร์มในระบบ');
     } else if (t.hasAttribute('data-ofsok')) {
       var g = +t.getAttribute('data-ofsok'); if (GATE_BY[g] !== rk()) { render(); return; }
-      c.ofsOk = c.ofsOk || {}; c.ofsOk[g] = t.checked; logC(c, (t.checked ? 'ยืนยันว่าตรวจไฟล์ที่ทำนอกระบบแล้ว ด่าน ' : 'ยกเลิกการยืนยันไฟล์ที่ทำนอกระบบ ด่าน ') + g); save(); render();
+      c.ofsOk = c.ofsOk || {}; c.ofsOk[g] = t.checked; logC(c, (t.checked ? 'ยืนยันว่าตรวจไฟล์ที่ทำนอกระบบแล้ว ก่อนอนุมัติขั้น ' : 'ยกเลิกการยืนยันไฟล์ที่ทำนอกระบบ ขั้น ') + gateSid(g)); save(); render();
     }
   });
   document.addEventListener('click', function (e) {
@@ -6223,14 +6230,14 @@ a.btn[href="#local"]{opacity:.62}
   function panel(c, st) {
     if (!st) return '<section class="card panel pad">ไม่มีขั้นที่แสดง</section>';
     var s = stOf(c, st[0]), lk = !s && lockOf(c, idx(st)), du = due(c, st), can = canAct(c, st);
-    var h = '<section class="card panel"><div class="ph"><div><h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ด่าน ' + st[5] + '</span>' : '') + '</h3>' +
+    var h = '<section class="card panel"><div class="ph"><div><h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ต้องอนุมัติ</span>' : '') + '</h3>' +
       '<div class="meta"><span class="who" title="' + esc('ผู้ทำ ' + st[4]) + '">' + st[8].map(function (k) { return av(k); }).join('') + '</span>กำหนดตามแผน ' + dL(du) + '</div></div><div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div>' +
       '<div class="tabs">' + [['form', 'แบบฟอร์ม'], ['flow', 'ผังงาน'], ['files', 'ไฟล์']].map(function (t) { return '<button type="button" data-a="ptab" data-v="' + t[0] + '" aria-selected="' + (S.ptab === t[0]) + '">' + ic(TAB_IC[t[0]]) + '<span>' + t[1] + '</span></button>'; }).join('') + '</div><div class="pb">';
-    if (lk) h += note('lock', 'เริ่มได้เมื่อผ่านด่าน ' + lk[5] + ' ที่ขั้น ' + lk[0] + ': ' + esc(lk[6]), 'warn');
+    if (lk) h += note('lock', 'เริ่มได้เมื่อขั้น ' + lk[0] + ' อนุมัติแล้ว: ' + esc(lk[6]), 'warn');
     if (S.ptab === 'flow') h += flowLane(st[1], c, st[0]);
     else if (S.ptab === 'files') h += filesView(c, st);
     else if (!seeDoc(c, st)) h += note('lock', 'ฝ่ายนี้เห็นเฉพาะสถานะของขั้นนี้ ไม่เห็นเนื้อหาเอกสารทางเทคนิค ตาม P-GCC-07 ข้อ 5.10', 'warn');
-    else { if (st[6]) h += note('info', (st[5] ? 'ผ่านด่าน ' + st[5] + ' เมื่อ: ' : 'ผ่านเมื่อ: ') + esc(st[6])); h += ofsGateBox(c, st) + attBox(c, st) + flBox(c, st) + outBox(c, st) + rvBox(c, st) + formView(c, st, can && !lk && s !== 'done' && !(closed(c) && st[0] !== '5.2')); }
+    else { if (st[6]) h += note('info', (st[5] ? 'อนุมัติเมื่อ: ' : 'ผ่านเมื่อ: ') + esc(st[6])); h += ofsGateBox(c, st) + attBox(c, st) + flBox(c, st) + outBox(c, st) + rvBox(c, st) + formView(c, st, can && !lk && s !== 'done' && !(closed(c) && st[0] !== '5.2')); }
     return h + '</div></section>';
   }
   function stepBtns(c, st, s, lk, can) {
@@ -6238,7 +6245,7 @@ a.btn[href="#local"]{opacity:.62}
     var dn = '<span class="chip done">สำเร็จ ' + dS((c.track[st[0]] || {}).d) + '</span>';
     if (!can || lk || (closed(c) && st[0] !== '5.2')) return b + (s === 'done' ? dn : jOn() && !lk && st[8].indexOf('client') >= 0 ? '<button type="button" class="btn ok" disabled title="ตัวอย่างหน้าจอ ลูกค้ากดปุ่มนี้เมื่อพร้อมส่ง">' + ic('check') + 'ส่ง / ยืนยัน</button>' : '');
     if (s === '') return b + '<button type="button" class="btn pri" data-a="st" data-v="doing">' + ic('play') + 'เริ่มทำ</button>';
-    if (s === 'doing') return b + '<button type="button" class="btn ok" data-a="st" data-v="done">' + ic('check') + (isClient(S.role) ? 'ส่ง / ยืนยัน' : st[5] ? 'ผ่านด่าน ' + st[5] : 'ทำเสร็จ') + '</button>';
+    if (s === 'doing') return b + '<button type="button" class="btn ok" data-a="st" data-v="done">' + ic('check') + (isClient(S.role) ? 'ส่ง / ยืนยัน' : st[5] ? 'อนุมัติ' : 'ทำเสร็จ') + '</button>';
     return b + dn + (isClient(S.role) ? '' : '<button type="button" class="btn sm" data-a="st" data-v="">ย้อนสถานะ</button>');
   }
 
@@ -6343,7 +6350,7 @@ a.btn[href="#local"]{opacity:.62}
       [true, '']];
     return '<div class="sumbar"><span class="chip ' + (n === 5 ? 'done' : 'y') + '">ครบ ' + n + '/5 ข้อ</span></div><div class="fs"><h4><i>4</i>การยืนยันก่อนอนุมัติแผน (Gate Review)</h4>' +
       GATE5.map(function (x, i) { var hn = hint[i]; return chk(c, 'gate.' + i, (i + 1) + '. ' + esc(x) + (hn[1] ? '<small class="hint ' + (hn[0] ? 'ok' : 'bad') + '">' + esc(hn[1]) + '</small>' : ''), !edit); }).join('') + '</div>' +
-      note('alert', 'ข้อใดไม่ครบ ห้ามลงพื้นที่ (P-GCC-08) · ข้อที่ระบบตรวจได้ ด่านจะล็อกไว้จนข้อมูลครบ', 'warn');
+      note('alert', 'ข้อใดไม่ครบ ห้ามลงพื้นที่ (P-GCC-08) · ข้อที่ระบบตรวจได้ จะอนุมัติไม่ได้จนข้อมูลครบ', 'warn');
   }
   function genericView(c, st) {
     var tmpl = codes(st).map(function (code) { var d = docByCode(code); return d ? code + ' Rev.' + d.rev + (d.date ? ' (' + dL(d.date) + ')' : '') : code; }).join(', ');
@@ -6376,14 +6383,14 @@ a.btn[href="#local"]{opacity:.62}
       var fill = s === 'done' ? '#E9F6E7' : s === 'doing' ? '#E3F4FA' : lk ? '#F4F6F8' : '#FFFFFF', stroke = s === 'done' ? '#3AAA35' : s === 'doing' ? '#0B6E9C' : '#CBD3DA';
       out += '<g><rect x="' + bx + '" y="' + y + '" width="' + bw + '" height="' + hg + '" rx="12" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + (sel === st[0] ? 2.8 : 1.3) + '"/>' +
         '<text class="t1" x="' + (bx + 16) + '" y="' + (y + 24) + '">' + esc(st[0] + '  ' + st[2]) + '</text><text class="t2" x="' + (bx + 16) + '" y="' + (y + 44) + '">' + esc(st[4] + '  ·  ' + st[3]) + '</text>' +
-        (st[6] ? '<text class="t3" x="' + (bx + 16) + '" y="' + (y + 64) + '">' + esc((st[5] ? 'ผ่านด่านเมื่อ: ' : '') + st[6]) + '</text>' : '') +
-        (st[5] ? '<rect x="' + (bx + bw - 86) + '" y="' + (y + 12) + '" width="72" height="24" rx="12" fill="#0B6E9C"/><text class="tg" x="' + (bx + bw - 50) + '" y="' + (y + 28.5) + '" text-anchor="middle">ด่าน ' + st[5] + '</text>' : '') +
+        (st[6] ? '<text class="t3" x="' + (bx + 16) + '" y="' + (y + 64) + '">' + esc((st[5] ? 'อนุมัติเมื่อ: ' : '') + st[6]) + '</text>' : '') +
+        (st[5] ? '<rect x="' + (bx + bw - 86) + '" y="' + (y + 12) + '" width="72" height="24" rx="12" fill="#0B6E9C"/><text class="tg" x="' + (bx + bw - 50) + '" y="' + (y + 28.5) + '" text-anchor="middle">อนุมัติ</text>' : '') +
         (c && s === 'done' ? '<text class="t3" x="' + (bx + bw - 16) + '" y="' + (y + hg - 12) + '" text-anchor="end">เสร็จ ' + esc(dS((c.track[st[0]] || {}).d)) + '</text>' : '') + '</g>';
       y += hg;
       if (i < l.length - 1) { out += '<path d="M' + (bx + 40) + ' ' + y + 'v20" stroke="#9AA6B1" stroke-width="1.4" fill="none" marker-end="url(#fa)"/>'; y += 20; }
     });
     return '<svg class="flow" viewBox="0 0 ' + W + ' ' + (y + 12) + '" role="img" aria-label="ผังงานช่วงที่ ' + ph + ' ' + PH[ph][0] + '"><defs><marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9AA6B1"/></marker></defs>' + out + '</svg>' +
-      '<div class="legend"><span><i style="border-color:#3AAA35;background:#E9F6E7"></i>เสร็จแล้ว</span><span><i style="border-color:#0B6E9C;background:#E3F4FA"></i>กำลังทำ</span><span><i style="border-color:#CBD3DA"></i>ยังไม่เริ่ม</span><span><i style="border-color:#0B6E9C;background:#0B6E9C"></i>ด่านที่ระบบบังคับ</span></div>';
+      '<div class="legend"><span><i style="border-color:#3AAA35;background:#E9F6E7"></i>เสร็จแล้ว</span><span><i style="border-color:#0B6E9C;background:#E3F4FA"></i>กำลังทำ</span><span><i style="border-color:#CBD3DA"></i>ยังไม่เริ่ม</span><span><i style="border-color:#0B6E9C;background:#0B6E9C"></i>ต้องอนุมัติ</span></div>';
   }
   function pageFlow() {
     return flowBoard() + '<section class="sec">' + note('flow', 'ผังของกระบวนการอื่นทั้ง 17 เรื่อง (บุคลากร ความเป็นกลาง ร้องเรียน ควบคุมเอกสาร และอื่น ๆ) อยู่บนบอร์ด Miro ของทีม') + '</section>';
@@ -6393,9 +6400,9 @@ a.btn[href="#local"]{opacity:.62}
   function pagePerm() {
     var Y = '<span class="yes">✓</span>', N = '<span class="no">–</span>', L = function (t) { return '<span class="lim">' + t + '</span>'; };
     var rows = [['client', 'เฉพาะเคสตัวเอง', L('ส่วนของลูกค้า'), L('ตอบรับ ยืนยัน'), N, N, Y],
-      ['admin', 'ทุกเคส', L('งานธุรการ'), N, L('ดู'), Y, N], ['sales', L('เห็นสถานะ'), L('ใบเสนอราคา ข้อตกลง'), L('ด่าน 2'), N, N, N],
-      ['mgr', 'ทุกเคส', N, L('ด่าน 1 และ 3'), L('ดู'), Y, N], ['lv', 'เคสที่ได้รับ', L('งานเทคนิค'), L('ด่าน 4 5 6'), L('ดู'), N, N],
-      ['ir', L('ตั้งแต่ขั้นทบทวน'), L('F-GCC-41'), L('ด่าน 7'), L('ดู'), N, N], ['qmr', '<span class="no">ไม่เห็นเคส</span>', N, L('แก้บันทึกที่ปิดแล้ว'), L('ดู'), N, N],
+      ['admin', 'ทุกเคส', L('งานธุรการ'), N, L('ดู'), Y, N], ['sales', L('เห็นสถานะ'), L('ใบเสนอราคา ข้อตกลง'), L('ขั้น 1.4'), N, N, N],
+      ['mgr', 'ทุกเคส', N, L('ขั้น 1.3 และ 1.6'), L('ดู'), Y, N], ['lv', 'เคสที่ได้รับ', L('งานเทคนิค'), L('ขั้น 2.4 3.3 3.5'), L('ดู'), N, N],
+      ['ir', L('ตั้งแต่ขั้นทบทวน'), L('F-GCC-41'), L('ขั้น 4.2'), L('ดู'), N, N], ['qmr', '<span class="no">ไม่เห็นเคส</span>', N, L('แก้บันทึกที่ปิดแล้ว'), L('ดู'), N, N],
       ['dcc', '<span class="no">ไม่เห็นเคส</span>', N, N, Y, N, N], ['md', '<span class="no">ไม่เห็นเคส</span>', N, L('อนุมัติเอกสาร Q P R'), L('อนุมัติ'), N, N], ['tisi', L('เฉพาะที่แชร์'), L('อ่านอย่างเดียว'), N, N, N, N], ['tgo', L('เฉพาะที่แชร์'), L('รายงานและถ้อยแถลง'), N, N, N, N]];
     return '<section class="card"><table class="t perm"><thead><tr><th>บทบาท</th><th>เห็นเคส</th><th>กรอกหรือแก้ในเคส</th><th>อนุมัติ</th><th>เอกสารควบคุม</th><th class="c">แชร์เคส</th><th class="c">รับอีเมลแจ้ง</th><th>ร้องเรียน/อุทธรณ์</th></tr></thead><tbody>' +
       rows.map(function (r) { return '<tr><td><div style="display:flex;align-items:center;gap:10px">' + av(r[0]) + '<b>' + esc(role(r[0])[1]) + '</b></div></td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3] + '</td><td>' + r[4] + '</td><td class="c">' + r[5] + '</td><td class="c">' + r[6] + '</td><td>' + cxPermCell(r[0]) + '</td></tr>'; }).join('') +
