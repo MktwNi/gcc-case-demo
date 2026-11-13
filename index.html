@@ -3579,7 +3579,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     return [
       cxMk({ id:'x1', ask:'complaint', from:'other', cid:'c5', about:true, ch:{ letter:true }, name:'คุณผู้ร้องเรียน (สมมุติ)', org:'กลุ่มเฝ้าระวังสิ่งแวดล้อมตัวอย่าง (สมมุติ)', addr:'ที่อยู่สมมุติ', tel:'02 000 0001',
         subj:'เว็บไซต์ลูกค้าอ้างถ้อยแถลงครอบคลุมทั้งกลุ่มบริษัท', det:'(ข้อมูลสมมุติ) เว็บไซต์ของบริษัท สาธิตเคมี จำกัด ระบุว่าทั้งกลุ่มบริษัทผ่านการทวนสอบคาร์บอนฟุตพริ้นท์ แต่ถ้อยแถลงครอบคลุมเฉพาะโรงงานเดียว แนบภาพหน้าจอเว็บไซต์',
-        recv:d(-20), no:'1/' + cxBE(d(-20)), s2:{ to:'mgr' }, s3:{ txt:'(ข้อมูลสมมุติ) ตรวจเว็บไซต์แล้ว ข้อความอ้างถึงทั้งกลุ่มบริษัทจริง ขณะที่ถ้อยแถลง SATC-CFO-2568-007-01 ครอบคลุมโรงงานเดียว' },
+        recv:d(-20), no:'1/' + cxBE(d(-20)), s2:{ to:'mgr' }, s3:{ txt:'(ข้อมูลสมมุติ) ตรวจเว็บไซต์แล้ว ข้อความอ้างถึงทั้งกลุ่มบริษัทจริง ขณะที่ถ้อยแถลง SAT-CFO-2568-007-01 ครอบคลุมโรงงานเดียว' },
         s4:{ k:'complaint', who:'mgr' }, s5:{ d:d(-15), no:'GCC-VB 045/2569 (สมมุติ)', ld:d(-15) }, logT:'เปิดเรื่อง (ข้อมูลสมมุติ)',
         track:done([['rcv', -20], ['reg', -19], ['pre', -17], ['scr', -16], ['ack', -15], ['inv', 0]]) }),
       cxMk({ id:'x2', ask:'appeal', from:'other', ch:{ letter:true }, name:'คุณผู้อุทธรณ์ (สมมุติ)', org:'บริษัท ทดสอบอุทธรณ์ จำกัด (สมมุติ)', addr:'ที่อยู่สมมุติ', tel:'02 000 0002', notice:d(-16),
@@ -4800,16 +4800,16 @@ html[data-theme=dark] .dc-over>div{background:#122244}
       mkCase({ id:'c1', name:'บริษัท ตัวอย่างอาหาร จำกัด', short:'ตัวอย่างอาหาร', dom:'food', off:-6, upto:'0.1',
         f24:{ sector:{ a:true }, org:'บริษัท ตัวอย่างอาหาร จำกัด', addr:'99 หมู่ 1 ต.ตัวอย่าง อ.เมือง จ.สมมุติ 10000', cName:'คุณลูกค้า ตัวอย่างอาหาร', cPos:'ผู้จัดการฝ่ายสิ่งแวดล้อม', cMail:'contact@food.example', level:'limited' },
         mails:[[-6, 'เชิญกรอกแบบฟอร์มการขอรับการทวนสอบ CFO (F-GCC-24)']] }),
-      mkCase({ id:'c2', name:'บริษัท สมมติพลังงาน จำกัด', short:'สมมติพลังงาน', dom:'energy', job:'SMPL-CFO-2569-003', off:-45, upto:'2.3', rev:ok, f26:signed, gate:[true, true, true, false, false],
+      mkCase({ id:'c2', name:'บริษัท สมมติพลังงาน จำกัด', short:'สมมติพลังงาน', dom:'energy', job:'SMP-CFO-2569-003', off:-45, upto:'2.3', rev:ok, f26:signed, gate:[true, true, true, false, false],
         mails:[[-44, 'เชิญกรอกแบบฟอร์มการขอรับการทวนสอบ CFO (F-GCC-24)'], [-12, 'ถึงขั้นของคุณ: แผนการทวนสอบ ลูกค้ายืนยัน']] }),
-      mkCase({ id:'c3', name:'บริษัท จำลองบรรจุภัณฑ์ จำกัด', short:'จำลองบรรจุภัณฑ์', dom:'pack', job:'JLBJ-CFO-2569-002', off:-80, upto:'3.3', rev:ok, f26:signed, gate:allGate,
+      mkCase({ id:'c3', name:'บริษัท จำลองบรรจุภัณฑ์ จำกัด', short:'จำลองบรรจุภัณฑ์', dom:'pack', job:'JLB-CFO-2569-002', off:-80, upto:'3.3', rev:ok, f26:signed, gate:allGate,
         findings:[{ id:'NC#1', type:'NC', text:'การคำนวณการใช้ไฟฟ้าเดือนมีนาคมไม่ตรงกับใบแจ้งหนี้', reply:'', closed:false },
           { id:'MMS#1', type:'MMS', text:'ความคลาดเคลื่อนรวมเกินร้อยละ 5 จากการบันทึกการใช้ไฟฟ้าซ้ำในเดือนพฤษภาคม', reply:'', closed:false },
           { id:'OBS#1', type:'OBS', text:'หลักฐานการสอบเทียบมิเตอร์ยังไม่ครบทุกเครื่อง', reply:'', closed:false }],
         mails:[[-3, 'แจ้งสิ่งที่พบ ขอให้ตอบภายใน 15 วันทำการ (F-GCC-36)']] }),
-      mkCase({ id:'c4', name:'บริษัท ทดลองโลจิสติกส์ จำกัด', short:'ทดลองโลจิสติกส์', dom:'logis', job:'TDLG-CFO-2569-001', off:-118, upto:'4.1', rev:ok, f26:signed, gate:allGate, findings:closed,
+      mkCase({ id:'c4', name:'บริษัท ทดลองโลจิสติกส์ จำกัด', short:'ทดลองโลจิสติกส์', dom:'logis', job:'TDL-CFO-2569-001', off:-118, upto:'4.1', rev:ok, f26:signed, gate:allGate, findings:closed,
         shares:[{ to:'tisi', scope:'all', until:addDays(t, 30), reason:'สมอ. ขอดูแฟ้มประกอบการตรวจติดตาม (ตัวอย่าง)', by:'ผู้จัดการฝ่ายทวนสอบ', at:addDays(t, -2) }] }),
-      mkCase({ id:'c5', name:'บริษัท สาธิตเคมี จำกัด', short:'สาธิตเคมี', dom:'chem', job:'SATC-CFO-2568-007', off:-150, upto:'4.4', rev:ok, f26:signed, gate:allGate, findings:closed,
+      mkCase({ id:'c5', name:'บริษัท สาธิตเคมี จำกัด', short:'สาธิตเคมี', dom:'chem', job:'SAT-CFO-2568-007', off:-150, upto:'4.4', rev:ok, f26:signed, gate:allGate, findings:closed,
         shares:[{ to:'tgo', scope:'final', until:addDays(t, 60), reason:'อบก. ขอรายงานและถ้อยแถลงเพื่อขึ้นทะเบียน (ตัวอย่าง)', by:'ธุรการฝ่ายทวนสอบ', at:addDays(t, -5) }],
         mails:[[-9, 'รายงานและถ้อยแถลงการทวนสอบพร้อมดาวน์โหลดในระบบ']] })
     ];
@@ -6488,7 +6488,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   function journeyCase() {
     var ok = { items:{}, manday:'4', decision:'accept' };
     REV13.forEach(function (x, i) { ok.items[i] = true; });
-    var c = mkCase({ id:'c6', name:'บริษัท ตัวอย่างครบขั้นตอน จำกัด', short:'ตัวอย่างครบขั้นตอน', dom:'complete', job:'TYKT-CFO-2568-006', off:-175, upto:'5.2', rev:ok,
+    var c = mkCase({ id:'c6', name:'บริษัท ตัวอย่างครบขั้นตอน จำกัด', short:'ตัวอย่างครบขั้นตอน', dom:'complete', job:'TYK-CFO-2568-006', off:-175, upto:'5.2', rev:ok,
       f26:{ price:'92,000', qno:'QT-2569-061', client:true, md:true }, gate:[true, true, true, true, true],
       findings:[{ id:'NC#1', type:'NC', text:'การคำนวณการใช้ไฟฟ้าเดือนมีนาคมไม่ตรงกับใบแจ้งหนี้', reply:'แก้ไขปริมาณไฟฟ้าเดือนมีนาคมใน Verification Sheet ฉบับที่ 2 และแนบใบแจ้งหนี้ (ข้อมูลสมมุติ)', closed:true },
         { id:'OBS#1', type:'OBS', text:'หลักฐานการสอบเทียบมิเตอร์ยังไม่ครบทุกเครื่อง', reply:'รับทราบ จะสอบเทียบให้ครบก่อนรอบถัดไป (ข้อมูลสมมุติ)', closed:true }] });
