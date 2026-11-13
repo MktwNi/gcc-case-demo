@@ -1880,14 +1880,14 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 @media (max-width:1180px){.cbody:has(>.tl-rail){grid-template-columns:minmax(0,1fr)}.tl.tl-rail{flex-direction:row;overflow-x:auto}.tl-rp{width:auto;min-width:64px}}
 @media (prefers-reduced-motion:reduce){.tl-cv{transition:none}}
 /* ---------- the step panel's boxes (13/11/2569): record for the client, skip, assign the lead verifier, send back; own sources in F-GCC-24 3.3 ---------- */
-.rec-box{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 14px;border:1px solid var(--tint-line);border-radius:12px;background:var(--tint)}
+.rec-box{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:0 0 14px;padding:12px 14px;border:1px solid var(--tint-line);border-radius:12px;background:var(--tint)}
 .rec-i{display:grid;flex:none;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--tint-2);color:var(--link)}
 .rec-i .ic{width:16px;height:16px}
-.rec-t{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0;color:var(--ink-2);font-size:13px}
-.rec-t b{color:var(--ink);font-size:13.5px;font-weight:600}
-.rec-a{display:flex;flex:none;align-items:center;gap:8px}
+.rec-t{display:flex;flex:1 1 300px;flex-direction:column;gap:2px;min-width:0;color:var(--ink-2);font-size:13px}
+.rec-t b{overflow:hidden;color:var(--ink);font-size:13.5px;font-weight:600;white-space:nowrap;text-overflow:ellipsis}
+.rec-a{display:flex;flex:0 1 auto;align-items:center;gap:8px;min-width:0;margin-left:auto}
 .rec-a .btn{white-space:nowrap}
-.rec-a select{height:32px;max-width:220px;padding:0 8px;border:1px solid var(--field);border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:13px}
+.rec-a select{height:32px;min-width:0;max-width:220px;padding:0 8px;border:1px solid var(--field);border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:13px}
 .rec-no{color:var(--mut);font-size:13px;white-space:nowrap}
 .srcx-n{display:flex;align-items:center;gap:10px}
 .srcx-n input[type=text]{flex:1;min-width:0;height:32px;padding:0 10px;border:1px solid var(--field);border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:13.5px}
@@ -1898,7 +1898,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .srcx-add .link{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:13px;white-space:nowrap}
 .srcx-add .ic{width:14px;height:14px}
 #roDrop input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
-@media (max-width:700px){.rec-box{flex-wrap:wrap}.rec-a{width:100%;justify-content:flex-end}}
+@media (max-width:700px){.rec-a{width:100%;justify-content:flex-end}.rec-a select{flex:1 1 auto;max-width:none}}
 /* ---------- the app page only: sign-in, who is signed in, saving, accounts and invitations ---------- */
 .ap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 16px}
 .ap-card{width:100%;max-width:420px;padding:28px 28px 24px;border-radius:24px;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}
@@ -3229,7 +3229,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function sitesList(c) { var s = (c.f24 || {}).sites || {}; return [0, 1, 2].map(function (i) { return s[i] || {}; }).filter(function (x) { return x.n; }); }
   function f77Suggest(c) {
     var f = c.f24 || {}, st = sitesList(c), area = st.reduce(function (a, x) { return a + num(x.m); }, 0), src = f.src || {}, on = Object.keys(src).filter(function (k) { return src[k] && src[k].on; });
-    on = on.concat((f.srcx || []).filter(function (x) { return x && x.on && String(x.n || '').trim(); }).map(function (x) { return 'x' + x.g; }));
+    on = on.concat(srcxOf(c).filter(function (x) { return x && x.on && String(x.n || '').trim(); }).map(function (x) { return 'x' + x.g; }));
     var s3 = on.some(function (k) { return /^s3|^x2$/.test(k); }), fug = !!(src.s1d && src.s1d.on);
     return [st.length ? { v:st.length <= 1 ? 1 : st.length <= 11 ? 2 : 3, w:'F-GCC-24 มี ' + st.length + ' สถานที่' } : null,
       area ? { v:area <= 5000 ? 1 : area <= 50000 ? 2 : 3, w:'F-GCC-24 พื้นที่รวม ' + fmt(area, 0) + ' ตร.ม.' } : null,
@@ -4075,8 +4075,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function clientPanel(c, st) {
     if (!st) return '<section class="card panel pad">ยังไม่มีงานที่ต้องทำ</section>';
     var s = stOf(c, st[0]), lk = !s && lockOf(c, idx(st)), can = canAct(c, st) && !(closed(c) && st[0] !== '5.2'), p = clientPart(c, st);
-    var meta = p === 'done' ? (st[0] === '4.4' ? 'ได้รับแล้ว ' : 'ส่งแล้ว ') + dL((c.track[st[0]] || {}).d) : p === 'sent' ? 'ส่งแล้ว ' + dL(flSentAt(c, st[0])) + ' · รอ GCC ตรวจ' : p === 'wait' ? 'GCC กำลังดำเนินการ' : 'กำหนด ' + dL(due(c, st));
-    var form = CLIENT_ALSO[st[0]] ? '' : formView(c, st, can && !lk && s !== 'done'), fl = flBox(c, st), out = outBox(c, st), att = attBox(c, st);
+    var sk = !!(c.track[st[0]] || {}).skip, meta = p === 'done' ? (sk ? 'GCC ปิดขั้นนี้แล้ว ' : st[0] === '4.4' ? 'ได้รับแล้ว ' : 'ส่งแล้ว ') + dL((c.track[st[0]] || {}).d) : p === 'sent' ? 'ส่งแล้ว ' + dL(flSentAt(c, st[0])) + ' · รอ GCC ตรวจ' : p === 'wait' ? 'GCC กำลังดำเนินการ' : 'กำหนด ' + dL(due(c, st));
+    var form = CLIENT_ALSO[st[0]] || sk ? '' : formView(c, st, can && !lk && s !== 'done'), fl = flBox(c, st), out = outBox(c, st), att = attBox(c, st);
     return '<section class="card panel"><div class="ph"><div><h3>' + esc(CLIENT_TASK[st[0]] || st[2]) + '</h3><div class="meta">' + meta + '</div></div>' +
       '<div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div><div class="pb">' + (st[0] === '1.1' && s !== 'done' ? backNote(c, 1) : '') + (st[0] === '3.4' ? form + fl + out : fl + att + out + form) + '</div></section>';
   }
@@ -4364,7 +4364,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
      with more of them, and the group อื่นๆ (ถ้ามี) that has no such line, gets copies of a blank line after its last row */
   var SRC_OWN = [[7, 8], [12, 13], [19, 20], []], SRC_END = [8, 13, 20, 23];
   function f24Own(X, tbl, srcx) {
-    var rs = tbl ? X.rows(tbl) : [], xs = (srcx || []).filter(function (x) { return x && String(x.n || '').trim(); });
+    var rs = tbl ? X.rows(tbl) : [], xs = (Array.isArray(srcx) ? srcx : []).filter(function (x) { return x && typeof x === 'object' && String(x.n || '').trim(); });
     if (!xs.length || rs.length < 24) return;
     var blank = rs[20].cloneNode(true), n = 0;
     [0, 1, 2, 3].forEach(function (gi) {
@@ -4380,7 +4380,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
         }
         last = tr;
         var tc = X.cellsOf(tr)[0], put = false, nm = String(x.n).trim();
-        X.all(tc, 't').forEach(function (t) { if (!put && /[.…]{3,}/.test(t.textContent)) { t.textContent = t.textContent.replace(/[.…]{3,}/, ' ' + nm + ' '); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); put = true; } });
+        X.all(tc, 't').forEach(function (t) { if (!put && /[.…]{3,}/.test(t.textContent)) { t.textContent = t.textContent.replace(/[.…]{3,}/, function () { return ' ' + nm + ' '; }); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); put = true; } });
         if (!put) X.append(tc, ' ' + nm);
         [x.on, x.acc, x.mea, x.cal].forEach(function (b, j) { X.boxIn(tr, j, b); });
       });
@@ -4408,7 +4408,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     X.box('แนบรายงาน CFO', f.attR); X.box('แนบ Verification Sheet', f.attV);
     X.boxIn(X.cell(9, 0, 0), 0, at.org); X.boxIn(X.cell(9, 0, 0), 1, at.plant); X.boxIn(X.cell(9, 0, 0), 2, at.flow);
     Object.keys(SRC_ROW).forEach(function (k) { var v = src[k] || {}, tr = X.rows(T[10])[SRC_ROW[k]]; [v.on, v.acc, v.mea, v.cal].forEach(function (b, j) { X.boxIn(tr, j, b); }); });
-    f24Own(X, T[10], f.srcx);
+    f24Own(X, T[10], srcxOf(c));
     GHG.forEach(function (x, i) { X.boxIn(X.cell(11, 0, i), 0, g[x[0]]); });
     /* the tables from here on are found by their own words, not by a count (F-GCC-24-01 added two tables, and the staff part was one table off before) */
     var tIdx = function (pre, has) { var P = pre.replace(/\s+/g, ''); for (var i = 0; i < T.length; i++) { var s = X.text(T[i]).replace(/\s+/g, ''); if (has ? s.indexOf(P) >= 0 : s.indexOf(P) === 0) return i; } return -1; };
@@ -5049,7 +5049,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       if (SIGNED[st[0]] && !attList(c, st[0]).length) { toast('แนบ' + SIGNED[st[0]][1] + 'ก่อนปิดขั้นนี้'); return; }
     }
     if (!to && st[5] && s === 'done' && STEPS.slice(i + 1).some(function (x) { return stOf(c, x[0]); })) { toast('ย้อนการอนุมัตินี้ไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว'); return; }
-    if (to === 'done' && st[0] === '1.1' && (c.f24 || {}).back) { logC(c, 'ส่งคำขอที่แก้ไขแล้ว ตามที่ GCC ส่งกลับเมื่อ ' + dL(c.f24.back.at)); delete c.f24.back; }
+    var bk = (c.track['1.1'] || {}).back; if (to === 'done' && st[0] === '1.1' && bk) logC(c, 'ส่งคำขอที่แก้ไขแล้ว ตามที่ GCC ส่งกลับเมื่อ ' + dL(bk.at));
     if (to) c.track[st[0]] = { s:to, d:to === 'done' ? todayIso() : '' }; else delete c.track[st[0]];
     logC(c, (to === 'done' ? 'ทำเสร็จ ' : to === 'doing' ? 'เริ่มทำ ' : 'ย้อนสถานะ ') + st[0] + ' ' + st[2]);
     var msg = to === 'done' ? 'บันทึกแล้ว: ' + st[0] + ' เสร็จ' : 'บันทึกแล้ว';
@@ -6104,7 +6104,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       r.onsuccess = function () { ok(r.result); }; r.onerror = function () { no(r.error); };
     }));
   }
-  function attPut(id, blob) { if (APP_ON) return appPut(id, blob); return attDb().then(function (db) { return new Promise(function (ok, no) { var t = db.transaction('f', 'readwrite'); t.objectStore('f').put(blob, id); t.oncomplete = ok; t.onerror = function () { no(t.error); }; }); }); }
+  function attPut(id, blob, cid) { if (APP_ON) return appPut(id, blob, cid); return attDb().then(function (db) { return new Promise(function (ok, no) { var t = db.transaction('f', 'readwrite'); t.objectStore('f').put(blob, id); t.oncomplete = ok; t.onerror = function () { no(t.error); }; }); }); }
   function attGet(id) { if (APP_ON) return appGet(id); return attDb().then(function (db) { return new Promise(function (ok, no) { var g = db.transaction('f').objectStore('f').get(id); g.onsuccess = function () { ok(g.result); }; g.onerror = function () { no(g.error); }; }); }); }
   function attDel(id) { if (APP_ON) return appDel(id).catch(function () {}); return attDb().then(function (db) { db.transaction('f', 'readwrite').objectStore('f').delete(id); }); }
   function attClear() { if (APP_ON) return Promise.resolve(); return attDb().then(function (db) { return new Promise(function (ok, no) { var t = db.transaction('f', 'readwrite'); t.objectStore('f').clear(); t.oncomplete = ok; t.onerror = function () { no(t.error); }; }); }).catch(function () {}); }
@@ -6129,7 +6129,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function attSize(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
   function attBox(c, st) {
     var sg = SIGNED[st[0]]; if (!sg) return '';
-    var l = attList(c, st[0]), cl = isClient(S.role), staff = !cl && !ext(), fin = stOf(c, st[0]) === 'done' && l.some(function (a) { return a.ok; }), canAdd = (cl || staff) && !closed(c) && !fin;
+    var l = attList(c, st[0]), cl = isClient(S.role), staff = !cl && !ext(), fin = stOf(c, st[0]) === 'done' && l.some(function (a) { return a.ok; });
+    var rec = stOf(c, st[0]) === 'done' && !!(c.track[st[0]] || {}).out, canAdd = (staff || (cl && !rec)) && !closed(c) && !fin;
     var steps = '<ol class="at-how"><li><b>1</b>' + (cl ? 'ดาวน์โหลดแบบฟอร์ม' : 'ส่งแบบฟอร์มให้ลูกค้า') + (typeof TPL !== 'undefined' && TPL[sg[0]] && FILL[sg[0]] ? ' ' + expBtn(sg[0], c.id, 'sm') : '') + '</li><li><b>2</b>' + (sg[2] ? (cl ? 'พิมพ์ ลงนาม และประทับตราบริษัท' : 'ลูกค้าพิมพ์ ลงนาม และประทับตรา') : (cl ? 'ตอบรับทางอีเมล หรือพิมพ์และลงชื่อ' : 'ลูกค้าตอบรับทางอีเมล หรือลงชื่อ')) + '</li><li><b>3</b>' + (cl ? (sg[2] ? 'สแกนแล้วแนบไฟล์กลับที่นี่' : 'แนบอีเมลหรือไฟล์ที่ลงชื่อกลับที่นี่') : 'แนบไฟล์ที่ได้รับกลับ แล้วตรวจรับ') + '</li></ol>';
     var files = l.length ? '<ul class="at-l">' + l.map(function (a, i) {
       return '<li><span class="at-ic">' + ic(/pdf/i.test(a.type) ? 'docs' : 'eye') + '</span><div class="nm"><b title="' + esc(a.name) + '">' + esc(a.name) + '</b><span>' + esc(attSize(a.size) + ' · แนบโดย ' + a.by + ' · ' + dL(a.at)) + '</span></div>' +
@@ -6138,8 +6139,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
         (staff && !a.ok ? '<button type="button" class="btn sm ok" data-a="attok" data-v="' + st[0] + ':' + i + '">' + ic('check') + 'ตรวจรับ</button>' : '') +
         (!a.ok && (staff || a.who === S.role) ? '<button type="button" class="link at-x" data-a="attrm" data-v="' + st[0] + ':' + i + '" aria-label="ลบ ' + esc(a.name) + '">' + ic('x') + '</button>' : '') + '</li>';
     }).join('') + '</ul>' : '';
-    return '<section class="at"><div class="at-h"><span class="at-hi">' + ic('award') + '</span><div><b>' + esc(sg[1]) + '</b><small>' + (sg[2] ? 'เอกสารนี้ต้องลงนามและประทับตรา แล้วแนบกลับก่อนปิดขั้น' : 'ยืนยันเป็นลายลักษณ์อักษร ไม่ต้องประทับตรา แนบก่อนปิดขั้น') + '</small></div>' +
-      (l.length ? '<span class="chip ' + (l.some(function (a) { return a.ok; }) ? 'done">ตรวจรับแล้ว' : 'y">แนบแล้ว รอตรวจรับ') + '</span>' : '<span class="chip late">ยังไม่แนบ</span>') + '</div>' + steps + files +
+    return '<section class="at"><div class="at-h"><span class="at-hi">' + ic('award') + '</span><div><b>' + esc(sg[1]) + '</b><small>' + (rec && !l.length ? 'ลูกค้าตอบนอกระบบ GCC บันทึกจากหลักฐานแล้ว' : sg[2] ? 'เอกสารนี้ต้องลงนามและประทับตรา แล้วแนบกลับก่อนปิดขั้น' : 'ยืนยันเป็นลายลักษณ์อักษร ไม่ต้องประทับตรา แนบก่อนปิดขั้น') + '</small></div>' +
+      (l.length ? '<span class="chip ' + (l.some(function (a) { return a.ok; }) ? 'done">ตรวจรับแล้ว' : 'y">แนบแล้ว รอตรวจรับ') + '</span>' : rec ? '<span class="chip done">บันทึกแทนลูกค้าแล้ว</span>' : '<span class="chip late">ยังไม่แนบ</span>') + '</div>' + steps + files +
       (canAdd ? (jOn() ? '<label class="at-drop off" title="ตัวอย่างหน้าจอ แนบไฟล์ไม่ได้ขณะดูย้อนหลัง"><input type="file" disabled>' : '<label class="at-drop" data-drop="' + st[0] + '"><input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple data-att="' + st[0] + '">') + ic('upload') + '<span><b>ลากไฟล์มาวาง หรือกดเพื่อเลือกไฟล์</b><small>' + (sg[2] ? 'PDF, JPG หรือ PNG' : 'อีเมลให้บันทึกเป็น PDF') + ' ไม่เกิน 20 MB ต่อไฟล์</small></span></label>' : '') + '</section>';
   }
   function attAdd(sid, files) {
@@ -6304,7 +6305,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   function clChip(c, st) {
     var p = clientPart(c, st), t = c.track[st[0]] || {};
-    if (p === 'done') return '<span class="chip done">' + (st[0] === '4.4' ? 'ได้รับแล้ว' : 'ส่งแล้ว') + '</span><small>' + dS(t.d) + '</small>';
+    if (p === 'done') return t.skip ? '<span class="chip lock">GCC ปิดขั้นนี้</span><small>' + dS(t.d) + '</small>' : '<span class="chip done">' + (st[0] === '4.4' ? 'ได้รับแล้ว' : 'ส่งแล้ว') + '</span><small>' + dS(t.d) + '</small>';
     if (p === 'sent') return '<span class="chip wait">รอ GCC ตรวจ</span><small>ส่ง ' + dS(flSentAt(c, st[0])) + '</small>';
     if (p === 'wait') return '<span class="chip wait">GCC กำลังทำ</span><small>กำหนด ' + dS(due(c, st)) + '</small>';
     return '<span class="chip doing">รอคุณ</span><small>กำหนด ' + dS(due(c, st)) + '</small>';
@@ -6324,6 +6325,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var st = stepById(sid); if (!st) return false;
     var s = stOf(c, sid); if (s === 'done' || (lockOf(c, idx(st)) && !s)) return false;
     var by = key === 'out' ? st[8].concat(sid === '3.4' ? ['admin'] : []) : key === 'misc' ? ['admin', 'mgr', 'lv'] : (FL[key] || {}).by || [];
+    if (key === 'out' && sid === '1.3' && rk() === 'lv' && !lead(c)) return false;   // a lead verifier works 1.3 once the manager names one
     return by.indexOf(rk()) >= 0;
   }
   function flRow(c, f, i, n, canRm) {
@@ -6481,7 +6483,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function fvAttN(c, f) { var n = fvAttL(c, f).length; return n ? ' · ไฟล์แนบ ' + n : ''; }
   function fvAtt(c, f) {
     return fvAttL(c, f).map(function (o) {
-      var a = o.x, what = o.k === 'att' ? 'ฉบับลงนาม ขั้น ' + o.sid : a.slot === 'misc' ? 'ไฟล์ในแฟ้ม' : a.slot === 'out' ? 'ทำนอกระบบ ขั้น ' + a.sid : (FL[a.slot] ? FL[a.slot].t : '') + (a.round ? ' ฉบับที่ ' + a.round : '');
+      var a = o.x, what = o.k === 'att' ? 'ฉบับลงนาม ขั้น ' + o.sid : a.slot === 'misc' ? 'ไฟล์ในแฟ้ม' : a.slot === 'out' ? 'ทำนอกระบบ ขั้น ' + a.sid : a.slot === 'rec' ? 'หลักฐานจากลูกค้า ขั้น ' + a.sid : (FL[a.slot] ? FL[a.slot].t : '') + (a.round ? ' ฉบับที่ ' + a.round : '');
       return '<li><span class="fv-fi">' + ic(o.k === 'att' ? 'award' : flIc(a)) + '</span><div class="nm"><b title="' + esc(a.name) + '">' + esc(a.name) + '</b><span>' + esc(what + ' · แนบโดย ' + a.by) + '</span></div>' +
         '<span class="chip wait">' + dS(a.at) + '</span><button type="button" class="btn sm" data-a="' + (o.k === 'att' ? 'attview' : 'flview') + '" data-v="' + esc(o.k === 'att' ? o.sid + ':' + o.i : a.id) + '">' + ic('eye') + '<span>เปิดดู</span></button></li>';
     }).join('');
@@ -6807,7 +6809,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function tlSt(c, st) { var s = stOf(c, st[0]); return s === 'done' ? 'done' : s === 'doing' ? (diff(due(c, st)) < 0 ? 'late' : 'doing') : lockOf(c, idx(st)) ? 'lock' : ''; }
   function tlMark(c, st, k) {
     var du = due(c, st), t = c.track[st[0]] || {};
-    if (k === 'done') return t.skip ? '<span class="tl-m" title="' + esc('ข้าม: ' + t.skip.why) + '">ข้าม</span>' :
+    if (k === 'done') return t.skip ? '<span class="tl-m" title="' + esc('ข้าม' + (t.skip.why ? ': ' + t.skip.why : '')) + '">ข้าม</span>' :
       t.out ? '<span class="tl-m ok" title="' + esc('ลูกค้าตอบนอกระบบ ' + dS(t.d)) + '">นอกระบบ</span>' : '<span class="tl-m ok" title="' + esc('สำเร็จ ' + dS(t.d)) + '">' + ic('check') + '</span>';
     if (k === 'late') return '<span class="tl-m bad" title="' + esc('กำหนด ' + dL(du)) + '">เลย ' + (-diff(du)) + ' วัน</span>';
     if (k === 'doing') return '<span class="tl-m on" title="' + esc('กำหนด ' + dL(du)) + '">กำลังทำ</span>';
@@ -6847,10 +6849,20 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
      approval steps never. The database checks the same in step_mark() (server/schema.sql); x on the step keeps the record */
   var CL_REC = { '1.1':'admin', '1.7':'admin', '2.3':'lv', '3.4':'lv', '4.3':'lv' };
   var SKIP_OK = { '1.7':'ลูกค้าไม่ตอบรับภายใน 7 วันทำการ', '5.2':'ลูกค้าไม่ส่งแบบประเมินกลับ' };
-  var REC_X = ['pdf', 'eml', 'msg', 'jpg', 'jpeg', 'png', 'doc', 'docx'], REC_F = null;
+  var REC_X = ['pdf', 'eml', 'msg', 'jpg', 'jpeg', 'png', 'doc', 'docx'], REC_F = null, REC_W = null, REC_BUSY = false;
   function skipRole() { return rk() === 'admin' || rk() === 'mgr'; }
   // 1.7 is skipped only after 7 working days from the team list going to the client (step 1.6 approved)
   function skipAfter(c, sid) { var d6 = (c.track['1.6'] || {}).d; return sid === '1.7' && d6 ? addWorkdays(d6, 7) : ''; }
+  // why a skip cannot be made yet, '' when it can: 5.2 waits for the file to close, when the survey goes to the client
+  function skipWait(c, sid) {
+    if (sid === '5.2' && !closed(c)) return 'ข้ามได้หลังปิดแฟ้ม (ขั้น 5.1)';
+    var af = skipAfter(c, sid); return af && todayIso() <= af ? 'ข้ามได้หลัง ' + dL(af) : '';
+  }
+  // the earliest date the client can have answered: the last approval before the step, when the item went to the client
+  // (step_mark() checks the same)
+  function recFloor(c, st) { var lo = ''; STEPS.slice(0, idx(st)).forEach(function (x) { var t = c.track[x[0]]; if (x[5] && t && t.s === 'done' && (t.d || '') > lo) lo = t.d; }); return lo; }
+  // the date step_mark() checks (today_th(), Asia/Bangkok), whatever the browser's own time zone
+  function todayTh() { return new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10); }
   function markCan(c, st, tk) {
     if (jOn() || ext() || isClient(S.role) || (closed(c) && st[0] !== '5.2')) return false;
     return tk.out ? CL_REC[st[0]] === rk() : tk.skip ? !!SKIP_OK[st[0]] && skipRole() : false;
@@ -6864,71 +6876,80 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (s === 'done' || lk || isClient(S.role) || ext() || jOn() || (closed(c) && st[0] !== '5.2')) return '';
     var rec = CL_REC[st[0]] === rk(), sk = !!SKIP_OK[st[0]] && skipRole();
     if (!rec && !sk) return '';
-    var af = sk ? skipAfter(c, st[0]) : '', early = !!af && todayIso() <= af;
+    var wt = sk ? skipWait(c, st[0]) : '';
     return '<div class="rec-box"><span class="rec-i">' + ic('info') + '</span><div class="rec-t"><b>ลูกค้าไม่ได้ทำในระบบ?</b><span>' +
-      [rec ? 'แนบหลักฐานที่ลูกค้าส่งมา เช่น อีเมลหรือไฟล์ที่ลงนาม แล้วบันทึกแทนลูกค้า' : '', sk ? (early ? 'ถ้าลูกค้าไม่ตอบรับ ข้ามได้หลัง ' + dL(af) : 'ข้ามได้เมื่อ' + SKIP_OK[st[0]]) : ''].filter(Boolean).join(' · ') + '</span></div>' +
+      [rec ? 'แนบหลักฐานที่ลูกค้าส่งมา เช่น อีเมลหรือไฟล์ที่ลงนาม แล้วบันทึกแทนลูกค้า' : '', sk ? (wt ? wt + ' ถ้า' + SKIP_OK[st[0]] : 'ข้ามได้เมื่อ' + SKIP_OK[st[0]]) : ''].filter(Boolean).join(' · ') + '</span></div>' +
       '<div class="rec-a">' + (rec ? '<button type="button" class="btn sm" data-a="recout">' + ic('upload') + 'บันทึกแทนลูกค้า</button>' : '') +
-      (sk ? '<button type="button" class="btn sm" data-a="skipst"' + (early ? ' disabled title="' + esc('ข้ามได้หลัง ' + dL(af)) + '"' : '') + '>ข้ามขั้นนี้</button>' : '') + '</div></div>';
+      (sk ? '<button type="button" class="btn sm" data-a="skipst"' + (wt ? ' disabled title="' + esc(wt) + '"' : '') + '>ข้ามขั้นนี้</button>' : '') + '</div></div>';
   }
   function recList(c, sid) { return flList(c).filter(function (f) { return f.slot === 'rec' && f.sid === sid; }); }
   // a step recorded for the client or skipped: who, when, the channel or the reason, and the evidence
   function markInfo(c, st) {
     var t = c.track[st[0]] || {};
-    if (t.out) return flCard('upload', 'บันทึกแทนลูกค้า', 'ลูกค้าตอบทาง' + t.out.via + ' ' + dL(t.d) + ' · บันทึกโดย ' + (t.out.by || '-') + ' ' + dL(t.out.at) + (t.out.note ? ' · ' + t.out.note : ''),
+    if (t.out) return flCard('upload', 'บันทึกแทนลูกค้า', (t.out.via ? 'ลูกค้าตอบทาง' + t.out.via + ' ' : 'ลูกค้าตอบนอกระบบ ') + dL(t.d) + (t.out.by ? ' · บันทึกโดย ' + t.out.by + ' ' + dL(t.out.at) : '') + (t.out.note ? ' · ' + t.out.note : ''),
       '<span class="chip done">นอกระบบ</span>', flRows(c, recList(c, st[0]), false, true) || '<p class="fls-no">ไม่มีไฟล์หลักฐาน</p>');
-    if (t.skip) return note('alert', '<b>ข้ามขั้นนี้</b> ' + esc(t.skip.why) + (t.skip.note ? ' · ' + esc(t.skip.note) : '') + ' · โดย ' + esc(t.skip.by || '-') + ' ' + dL(t.skip.at || t.d), 'warn');
+    if (t.skip) return note('alert', '<b>ข้ามขั้นนี้</b>' + (t.skip.why ? ' ' + esc(t.skip.why) : '') + (t.skip.note ? ' · ' + esc(t.skip.note) : '') + (t.skip.by ? ' · โดย ' + esc(t.skip.by) + ' ' + dL(t.skip.at || t.d) : ' ' + dL(t.d)), 'warn');
     return '';
   }
   function openRecOut(c, st) {
-    if (!st || CL_REC[st[0]] !== rk()) return;
-    REC_F = null;
-    var m = st[0] === '1.1' ? f24Missing(c) : [];
+    if (!st || CL_REC[st[0]] !== rk() || REC_BUSY) return;
+    REC_F = null; REC_W = {};
+    var m = st[0] === '1.1' ? f24Missing(c) : [], lo = recFloor(c, st), ack = st[0] === '2.3' && !(c.f32 || {}).ackN && !ofs(c, '2.3');
     modal('บันทึกแทนลูกค้า · ' + st[0] + ' ' + st[2], 'upload',
       note('info', 'ใช้เมื่อลูกค้าตอบทางอีเมล จดหมาย หรือส่งไฟล์ที่ลงนามมา แทนการกดในระบบ ระบบเก็บหลักฐาน ผู้บันทึก และวันที่ไว้ในประวัติของเคส') +
       (m.length ? note('alert', 'ข้อมูลคำขอในระบบยังขาด ' + m.length + ' หัวข้อ เช่น ' + esc(m.slice(0, 3).join(', ')) + ' ถ้าบันทึกไปก่อน หัวข้อเหล่านี้จะว่างใน F-GCC-24', 'warn') : '') +
+      (ack ? note('alert', 'ใส่ชื่อผู้แทนลูกค้าที่รับทราบแผนในแบบฟอร์ม F-GCC-32 ของขั้นนี้ก่อน แล้วจึงบันทึกแทนลูกค้า', 'warn') : '') +
       '<div class="fg" style="margin-top:12px"><div class="f w"><label for="roFile">หลักฐานจากลูกค้า <span class="req">*</span></label><label class="at-drop" id="roDrop"><input type="file" id="roFile" accept="' + REC_X.map(function (x) { return '.' + x; }).join(',') + '">' + ic('upload') +
       '<span><b id="roFileN">เลือกไฟล์ หรือลากมาวาง</b><small>อีเมลที่บันทึกเป็น PDF หรือไฟล์ที่ลูกค้าลงนาม ไม่เกิน 50 MB</small></span></label></div>' +
-      '<div class="f"><label for="roD">ลูกค้าตอบเมื่อ <span class="req">*</span></label><input type="date" id="roD" value="' + todayIso() + '" max="' + todayIso() + '"></div>' +
+      '<div class="f"><label for="roD">ลูกค้าตอบเมื่อ <span class="req">*</span></label><input type="date" id="roD" value="' + todayTh() + '"' + (lo ? ' min="' + lo + '"' : '') + ' max="' + todayTh() + '"></div>' +
       '<div class="f"><label for="roVia">ช่องทาง</label><select id="roVia"><option>อีเมล</option><option>จดหมาย</option><option>ไฟล์ที่ลงนาม</option><option>อื่นๆ</option></select></div>' +
       '<div class="f w"><label for="roNote">หมายเหตุ</label><input id="roNote" placeholder="เช่น ลูกค้ายืนยันแผนทางอีเมลของผู้ประสานงาน"></div></div>',
-      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn pri" data-a="recoutok">' + ic('check') + 'บันทึกแทนลูกค้า</button>');
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn pri" id="recOk" data-a="recoutok" data-c="' + esc(c.id) + '" data-v="' + st[0] + '">' + ic('check') + 'บันทึกแทนลูกค้า</button>');
   }
   function recPick(f) { REC_F = f || null; var n = $('roFileN'); if (n) n.textContent = f ? f.name + ' · ' + attSize(f.size) : 'เลือกไฟล์ หรือลากมาวาง'; }
   // after a step is closed another way the case moves on as after ทำเสร็จ: the client hears of its next step, the panel goes on
   function markNext(c, st) {
     var i = idx(st), nx = STEPS[i + 1], m = '';
     if (nx && (nx[8].indexOf('client') >= 0 || nx[0] === '2.1') && !stOf(c, nx[0])) { mailC(c, 'ถึงขั้นของคุณ: ' + (CLIENT_TASK[nx[0]] || nx[2])); m = ' และส่งอีเมลแจ้งลูกค้าแล้ว'; }
-    for (var k = i + 1; k < STEPS.length; k++) if (seeStep(c, STEPS[k])) { S.sid = STEPS[k][0]; break; }
+    if (S.cid === c.id) for (var k = i + 1; k < STEPS.length; k++) if (seeStep(c, STEPS[k])) { S.sid = STEPS[k][0]; break; }
     return m;
   }
   function recOutSave(c, st) {
-    if (!st || CL_REC[st[0]] !== rk() || stOf(c, st[0]) === 'done') return;
-    var f = REC_F, d = ($('roD') || {}).value || '';
+    if (!c || !st || REC_BUSY || CL_REC[st[0]] !== rk() || stOf(c, st[0]) === 'done') return;
+    var f = REC_F, d = ($('roD') || {}).value || '', lo = recFloor(c, st), w = REC_W;
     if (!f) { toast('แนบหลักฐานจากลูกค้าก่อน'); return; }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d > todayIso()) { toast('ใส่วันที่ลูกค้าตอบ ไม่เกินวันนี้'); return; }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d > todayTh()) { toast('ใส่วันที่ลูกค้าตอบ ไม่เกินวันนี้'); return; }
+    if (lo && d < lo) { toast('วันที่ลูกค้าตอบต้องไม่ก่อน ' + dL(lo) + ' ที่ส่งเรื่องให้ลูกค้า'); return; }
+    if (st[0] === '2.3' && !(c.f32 || {}).ackN && !ofs(c, '2.3')) { toast('ใส่ชื่อผู้แทนลูกค้าที่รับทราบแผนใน F-GCC-32 ก่อน'); return; }
     var x = (f.name.split('.').pop() || '').toLowerCase();
     if (REC_X.indexOf(x) < 0) { toast(f.name + ' ไม่ใช่ชนิดที่รับ (' + REC_X.join(', ').toUpperCase() + ')'); return; }
     if (f.size > 50 * 1048576) { toast(f.name + ' ใหญ่เกิน 50 MB'); return; }
     var id = c.id + '-rec-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), via = ($('roVia') || {}).value || 'อีเมล', nt = (($('roNote') || {}).value || '').trim();
-    attPut(id, f).then(function () {
+    var ok = $('recOk'); REC_BUSY = true; if (ok) { ok.disabled = true; ok.textContent = 'กำลังบันทึก…'; }
+    attPut(id, f, c.id).then(function () {
+      REC_BUSY = false; c = caseById(c.id) || c;
+      // the window was closed or opened again while the file was saving: nothing is recorded
+      if (REC_W !== w || !$('roFile')) { attDel(id); return; }
+      // someone closed the step meanwhile (the client in the system, or another member of staff): nothing is recorded twice
+      if (stOf(c, st[0]) === 'done') { attDel(id); REC_F = null; REC_W = null; closeModal(); render(); toast('ขั้น ' + st[0] + ' ปิดไปแล้วระหว่างแนบไฟล์ ไม่ได้บันทึกซ้ำ'); return; }
       flList(c).push({ id:id, slot:'rec', sid:st[0], name:f.name, size:f.size, type:f.type || flType(x), at:todayIso(), by:byWho(), who:S.role });
       c.track[st[0]] = { s:'done', d:d, out:{ via:via, note:nt, by:byWho(), at:todayIso(), f:id }, how:'out' };
-      if (st[0] === '1.1' && c.f24 && c.f24.back) delete c.f24.back;
       logC(c, 'บันทึกแทนลูกค้า ' + st[0] + ' ' + st[2] + ': ลูกค้าตอบทาง' + via + ' ' + dL(d) + (nt ? ' · ' + nt : ''));
-      REC_F = null; closeModal(); var m = markNext(c, st); save(); render(); toast('บันทึกแทนลูกค้าแล้ว: ' + st[0] + ' เสร็จ' + m);
-    }).catch(function () { toast('บันทึกไฟล์ไม่ได้ ลองใหม่อีกครั้ง'); });
+      REC_F = null; REC_W = null; closeModal(); var m = markNext(c, st); save(); render(); toast('บันทึกแทนลูกค้าแล้ว: ' + st[0] + ' เสร็จ' + m);
+    }).catch(function () { REC_BUSY = false; var b = $('recOk'); if (b) { b.disabled = false; b.innerHTML = ic('check') + 'บันทึกแทนลูกค้า'; } toast('บันทึกไฟล์ไม่ได้ ลองใหม่อีกครั้ง'); });
   }
   function openSkip(c, st) {
     if (!st || !SKIP_OK[st[0]] || !skipRole()) return;
-    var af = skipAfter(c, st[0]); if (af && todayIso() <= af) { toast('ข้ามได้หลัง ' + dL(af)); return; }
+    var wt = skipWait(c, st[0]); if (wt) { toast(wt); return; }
     modal('ข้ามขั้น ' + st[0] + ' ' + st[2], 'alert',
       note('alert', 'ขั้นที่ข้ามนับว่าผ่าน งานไปขั้นถัดไปได้ ระบบเก็บเหตุผล ผู้ข้าม และวันที่ไว้ในประวัติ และยกเลิกการข้ามได้', 'warn') +
       '<div class="fg" style="margin-top:12px"><div class="f w"><label for="skWhy">เหตุผล <span class="req">*</span></label><select id="skWhy"><option>' + esc(SKIP_OK[st[0]]) + '</option><option value="other">อื่นๆ (ระบุในหมายเหตุ)</option></select></div>' +
       '<div class="f w"><label for="skNote">หมายเหตุ</label><input id="skNote" placeholder="เช่น ส่งอีเมลติดตามแล้ว 2 ครั้ง ยังไม่ได้รับคำตอบ"></div></div>',
-      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn warn" data-a="skipok">ข้ามขั้นนี้</button>');
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn warn" data-a="skipok" data-c="' + esc(c.id) + '" data-v="' + st[0] + '">ข้ามขั้นนี้</button>');
   }
   function skipSave(c, st) {
-    if (!st || !SKIP_OK[st[0]] || !skipRole() || stOf(c, st[0]) === 'done') return;
+    if (!c || !st || !SKIP_OK[st[0]] || !skipRole() || stOf(c, st[0]) === 'done') return;
+    var wt = skipWait(c, st[0]); if (wt) { closeModal(); toast(wt); return; }
     var w = ($('skWhy') || {}).value || '', nt = (($('skNote') || {}).value || '').trim();
     if (w === 'other' && !nt) { toast('ระบุเหตุผลในหมายเหตุก่อน'); return; }
     var why = w === 'other' ? 'อื่นๆ' : w || SKIP_OK[st[0]];
@@ -6957,20 +6978,20 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     modal('ส่งคำขอกลับให้ลูกค้าแก้ไข', 'back',
       note('info', 'ขั้น 1.1 จะเปิดให้ลูกค้าแก้แล้วกดส่งใหม่ ระบบส่งอีเมลแจ้งลูกค้า และเก็บเหตุผลไว้ในประวัติของเคส') +
       '<div class="fg" style="margin-top:12px"><div class="f w"><label for="b11Note">สิ่งที่ต้องแก้ <span class="req">*</span></label><textarea id="b11Note" rows="3" placeholder="เช่น ปริมาณรวมในข้อ 3.1 ไม่ตรงกับรายงาน CFO">' + esc(m.length ? 'ยังขาด: ' + m.join(', ') : '') + '</textarea></div></div>',
-      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn warn" data-a="back11ok">' + ic('back') + 'ส่งกลับให้ลูกค้า</button>');
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn warn" data-a="back11ok" data-c="' + esc(c.id) + '">' + ic('back') + 'ส่งกลับให้ลูกค้า</button>');
   }
   function back11Save(c) {
     var bn = (($('b11Note') || {}).value || '').trim();
+    if (!c) return;
     if (!bn) { toast('ใส่สิ่งที่ต้องแก้ก่อน'); return; }
     if (stOf(c, '1.1') !== 'done' || stOf(c, '1.3') === 'done') { closeModal(); toast('ส่งกลับไม่ได้ คำขอนี้ผ่านการทบทวนแล้ว'); return; }
-    c.f24 = c.f24 || {}; c.f24.back = { at:todayIso(), by:byWho(), note:bn };
-    c.track['1.1'] = { s:'doing', d:'', how:'back' };
+    c.track['1.1'] = { s:'doing', d:'', how:'back', back:{ at:todayIso(), by:byWho(), note:bn } };
     logC(c, 'ส่งคำขอกลับให้ลูกค้าแก้ไข: ' + bn);
     mailC(c, 'GCC ส่งคำขอรับการทวนสอบกลับให้แก้ไข: ' + bn.slice(0, 150));
     closeModal(); save(); render(); toast('ส่งคำขอกลับให้ลูกค้าแล้ว และส่งอีเมลแจ้งลูกค้า');
   }
   function backNote(c, cl) {
-    var b = (c.f24 || {}).back; if (!b) return '';
+    var b = (c.track['1.1'] || {}).back; if (!b || !b.note) return '';
     return note('back', '<b>GCC ส่งคำขอกลับให้แก้ไข</b> ' + dL(b.at) + ': ' + esc(b.note) + (cl ? ' · แก้แล้วกด "ส่ง / ยืนยัน" อีกครั้ง' : ' · รอลูกค้าแก้แล้วส่งใหม่'), 'warn');
   }
   /* the manager names the lead verifier who reviews the request at step 1.3 (P-GCC-07-01 ข้อ 5.4); the same person leads the
@@ -6982,7 +7003,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     return Object.keys(n).sort();
   }
   function asgBox(c) {
-    var nm = lead(c), can = S.role === 'mgr' && !jOn() && !closed(c) && stOf(c, '1.6') !== 'done';
+    var nm = c.lv || lead(c), can = S.role === 'mgr' && !jOn() && !closed(c) && stOf(c, '1.3') !== 'done' && stOf(c, '1.6') !== 'done';
     if (nm && !(can && S.asgEd === c.id)) return note('people', 'หัวหน้าผู้ทวนสอบที่ทบทวนคำขอ <b>' + esc(nm) + '</b> · ผู้จัดการฝ่ายมอบหมาย' + (can ? ' · <button type="button" class="link" data-a="asgre">เปลี่ยน</button>' : ''));
     if (!can) return note('lock', 'รอผู้จัดการฝ่ายมอบหมายหัวหน้าผู้ทวนสอบให้ทบทวนคำขอนี้ (P-GCC-07 ข้อ 5.4)', 'warn');
     var pool = lvPool();
@@ -6992,10 +7013,12 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   function asgSave(c) {
     var nm = (($('asgLv') || {}).value || '').trim();
-    if (!nm || S.role !== 'mgr' || stOf(c, '1.6') === 'done') return;
+    if (!nm || S.role !== 'mgr' || stOf(c, '1.3') === 'done' || stOf(c, '1.6') === 'done') return;
     c.lv = nm; c.team = c.team || [];
     var ld = c.team.filter(function (m) { return m.r === 'หัวหน้าผู้ทวนสอบ'; })[0];
-    if (ld) ld.n = nm; else c.team.unshift({ n:nm, r:'หัวหน้าผู้ทวนสอบ', comp:'', ext:'ภายใน', f08:false, f09:false });
+    // another person in the head row gives their own F-GCC-08/09, so the row starts afresh
+    if (!ld) c.team.unshift({ n:nm, r:'หัวหน้าผู้ทวนสอบ', comp:'', ext:'ภายใน', f08:false, f09:false });
+    else if (ld.n !== nm) { ld.n = nm; ld.comp = ''; ld.ext = 'ภายใน'; ld.f08 = false; ld.f09 = false; }
     S.asgEd = null; logC(c, 'ผู้จัดการฝ่ายมอบหมาย ' + nm + ' เป็นหัวหน้าผู้ทวนสอบ ทบทวนคำขอ (ขั้น 1.3)');
     save(); render(); toast('มอบหมาย ' + nm + ' แล้ว');
   }
@@ -7021,8 +7044,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var b = seeDoc(c, st) ? printCodes(c, st).filter(function (pc) { return !isClient(S.role) || CLIENT_DOCS.indexOf(pc) >= 0; }).map(function (pc) { return expBtn(pc, c.id); }).join('') : '';
     var tk = isClient(S.role) ? { d:(c.track[st[0]] || {}).d } : c.track[st[0]] || {};
     var un = s === 'done' && markCan(c, st, tk) ? '<button type="button" class="btn sm" data-a="markundo" title="' + (tk.skip ? 'ยกเลิกการข้ามขั้นนี้' : 'ยกเลิกการบันทึกแทนลูกค้า') + '">ยกเลิก</button>' : '';
-    var dn = (tk.skip ? '<span class="chip lock" title="' + esc('ข้าม: ' + tk.skip.why + (tk.skip.note ? ' · ' + tk.skip.note : '')) + '">ข้าม ' + dS(tk.d) + '</span>' :
-      '<span class="chip done"' + (tk.out ? ' title="' + esc('ลูกค้าตอบนอกระบบ ทาง' + tk.out.via + (tk.out.note ? ' · ' + tk.out.note : '')) + '"' : '') + '>สำเร็จ' + (tk.out ? ' (นอกระบบ)' : '') + ' ' + dS(tk.d) + '</span>') + un;
+    var dn = (tk.skip ? '<span class="chip lock" title="' + esc('ข้าม' + (tk.skip.why ? ': ' + tk.skip.why : '') + (tk.skip.note ? ' · ' + tk.skip.note : '')) + '">ข้าม ' + dS(tk.d) + '</span>' :
+      '<span class="chip done"' + (tk.out ? ' title="' + esc('ลูกค้าตอบนอกระบบ' + (tk.out.via ? ' ทาง' + tk.out.via : '') + (tk.out.note ? ' · ' + tk.out.note : '')) + '"' : '') + '>สำเร็จ' + (tk.out ? ' (นอกระบบ)' : '') + ' ' + dS(tk.d) + '</span>') + un;
     if (!can || lk || (closed(c) && st[0] !== '5.2')) return b + (s === 'done' ? dn : jOn() && !lk && st[8].indexOf('client') >= 0 ? '<button type="button" class="btn ok" disabled title="ตัวอย่างหน้าจอ ลูกค้ากดปุ่มนี้เมื่อพร้อมส่ง">' + ic('check') + 'ส่ง / ยืนยัน</button>' : '');
     if (s === '') return b + '<button type="button" class="btn pri" data-a="st" data-v="doing">' + ic('play') + 'เริ่มทำ</button>';
     if (s === 'doing') return b + '<button type="button" class="btn ok" data-a="st" data-v="done">' + ic('check') + (isClient(S.role) ? 'ส่ง / ยืนยัน' : st[5] ? 'อนุมัติ' : 'ทำเสร็จ') + '</button>';
@@ -7121,10 +7144,11 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   /* own emission sources: rows the client adds under a scope when an activity is not in the fixed list (the "อื่น ๆ (ถ้ามี)"
      lines of F-GCC-24), kept in f24.srcx as { g: the scope's place in SRC, n: the activity, on, acc, mea, cal } */
+  function srcxOf(c) { var l = (c.f24 || {}).srcx; return Array.isArray(l) ? l : []; }
   function srcxRows(c, p, gi, r) {
-    var xs = (c.f24 || {}).srcx || [], h = '';
+    var xs = srcxOf(c), h = '';
     xs.forEach(function (x, i) {
-      if (!x || +x.g !== gi || (r && !String(x.n || '').trim())) return;
+      if (!x || typeof x !== 'object' || +x.g !== gi || (r && !String(x.n || '').trim())) return;
       var q = p + 'srcx.' + i + '.';
       h += '<tr class="srcx"><td><div class="srcx-n">' + box(c, q + 'on', r) + '<input type="text" id="' + idOf(q + 'n') + '" data-f="' + q + 'n" value="' + esc(x.n || '') + '" placeholder="ชื่อกิจกรรมที่เป็นแหล่งปล่อย" aria-label="ชื่อกิจกรรมที่เป็นแหล่งปล่อย"' + (r ? ' disabled' : '') + '>' +
         (r ? '' : '<button type="button" class="link srcx-del" data-a="srcdel" data-v="' + i + '" title="ลบแถวนี้" aria-label="ลบแถวนี้">' + ic('x') + '</button>') + '</div></td><td class="c">' + box(c, q + 'acc', r) + '</td><td class="c">' + box(c, q + 'mea', r) + '</td><td class="c">' + box(c, q + 'cal', r) + '</td></tr>';
@@ -7134,11 +7158,11 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   function srcAdd(c, g) {
     if (!(g >= 0 && g < SRC.length)) return;
-    c.f24 = c.f24 || {}; var l = c.f24.srcx = c.f24.srcx || [];
+    c.f24 = c.f24 || {}; var l = c.f24.srcx = srcxOf(c);
     l.push({ g:g, n:'', on:true }); save(); render();
     var el = $(idOf('f24.srcx.' + (l.length - 1) + '.n')); if (el) el.focus();
   }
-  function srcDel(c, i) { var l = (c.f24 || {}).srcx || []; if (!l[i]) return; l.splice(i, 1); save(); render(); }
+  function srcDel(c, i) { var l = srcxOf(c); if (!l[i]) return; l.splice(i, 1); save(); render(); }
   function box(c, path, r) { return '<input type="checkbox" id="' + idOf(path) + '" data-f="' + path + '"' + (fv(c, path) ? ' checked' : '') + (r ? ' disabled' : '') + ' aria-label="เลือก">'; }
   function confirmView(c, st, edit) {
     var what = { '1.7':['หนังสือแจ้งรายชื่อคณะผู้ทวนสอบและกำหนดการ', 0], '2.3':['แผนการทวนสอบ (F-GCC-32)', 12], '4.3':['ร่างถ้อยแถลงการทวนสอบ (F-GCC-39)', 21] }[st[0]] || [st[2], 0];
@@ -7266,7 +7290,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       '<h3>3.2 ขอบเขตและกิจกรรมการดำเนินงานขององค์กร</h3><div class="pf-o">' + bx(at.org) + ' แผนผังโครงสร้างองค์กร (Organization Chart)&nbsp;&nbsp; ' + bx(at.plant) + ' แผนผังโรงงาน (Plant Layout)&nbsp;&nbsp; ' + bx(at.flow) + ' แผนผังกระบวนการผลิต (Process Flowchart)</div>' +
       '<div class="keep"><h3>3.3 แหล่งปล่อยและการจัดทำบัญชีรายการก๊าซเรือนกระจก</h3><table><thead><tr><th>กิจกรรมที่เป็นแหล่งปล่อยก๊าซเรือนกระจก</th><th class="c">ระบบบัญชี</th><th class="c">การวัด</th><th class="c">การคำนวณ</th></tr></thead><tbody>' +
       SRC.map(function (gr, gi) { return '<tr><th colspan="4">' + gr[0] + '</th></tr>' + gr[1].map(function (x) { var v = src[x[0]] || {}; return '<tr><td>' + bx(v.on) + ' ' + esc(x[1]) + '</td><td class="c">' + bx(v.acc) + '</td><td class="c">' + bx(v.mea) + '</td><td class="c">' + bx(v.cal) + '</td></tr>'; }).join('') +
-        (f.srcx || []).filter(function (x) { return x && +x.g === gi && String(x.n || '').trim(); }).map(function (x) { return '<tr><td>' + bx(x.on) + ' อื่น ๆ (ถ้ามี) ' + esc(String(x.n).trim()) + '</td><td class="c">' + bx(x.acc) + '</td><td class="c">' + bx(x.mea) + '</td><td class="c">' + bx(x.cal) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
+        srcxOf(c).filter(function (x) { return x && +x.g === gi && String(x.n || '').trim(); }).map(function (x) { return '<tr><td>' + bx(x.on) + ' อื่น ๆ (ถ้ามี) ' + esc(String(x.n).trim()) + '</td><td class="c">' + bx(x.acc) + '</td><td class="c">' + bx(x.mea) + '</td><td class="c">' + bx(x.cal) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
       '<h3>ก๊าซเรือนกระจกที่ครอบคลุมในการทวนสอบ</h3><div class="pf-o">' + GHG.map(function (x) { return bx(g[x[0]]) + ' ' + x[1]; }).join('&nbsp;&nbsp;&nbsp; ') + '</div>' +
       '<div class="keep"><h2><b>4</b> ข้อมูลสำหรับประเมิน Manday</h2>' +
       '<div class="pf-o">ตอบตามสภาพจริงขององค์กร ข้อ 4.1–4.4 เลือกข้อละ 1 ช่อง</div><table class="pf-md"><tbody>' +
@@ -7299,12 +7323,12 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     else if (a === 'step') { S.sid = v; S.ptab = 'form'; var stp = stepById(v); if (stp) (S.tlo = S.tlo || {})[stp[1]] = true; render(); }
     else if (a === 'tlph') { S.tlo = S.tlo || {}; S.tlo[v] = !S.tlo[v]; render(); }
     else if (a === 'recout' && c) openRecOut(c, stepById(S.sid));
-    else if (a === 'recoutok' && c) recOutSave(c, stepById(S.sid));
+    else if (a === 'recoutok') recOutSave(caseById(t.getAttribute('data-c')), stepById(v));
     else if (a === 'skipst' && c) openSkip(c, stepById(S.sid));
-    else if (a === 'skipok' && c) skipSave(c, stepById(S.sid));
+    else if (a === 'skipok') skipSave(caseById(t.getAttribute('data-c')), stepById(v));
     else if (a === 'markundo' && c) markUndo(c, stepById(S.sid));
     else if (a === 'back11' && c) openBack11(c);
-    else if (a === 'back11ok' && c) back11Save(c);
+    else if (a === 'back11ok') back11Save(caseById(t.getAttribute('data-c')));
     else if (a === 'asgre' && c) { S.asgEd = c.id; render(); }
     else if (a === 'asglv' && c) asgSave(c);
     else if (a === 'srcadd' && c) srcAdd(c, +v);
@@ -7686,14 +7710,15 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       appAll('profiles', 'id,email,name,role,active,is_admin,created_at', 'created_at'),
       appAll('cases', 'id,name,stage,closed,created_at', 'created_at'),
       appAll('case_parts', 'case_id,part,data,version', 'case_id'),
-      appAll('case_steps', 'case_id,sid,s,d,x', 'case_id').catch(function () { return appAll('case_steps', 'case_id,sid,s,d', 'case_id'); }),   // x since 13/11/2569
+      appAll('case_steps', 'case_id,sid,s,d', 'case_id'),
       appAll('case_files', 'id,case_id,kind,sid,slot,data,created_at', 'created_at'),
       appAll('case_mail', 'id,case_id,at,to,subj,status,kind,err,sent_at', 'id'),
       appAll('case_log', 'id,case_id,at,who,t', 'id'),
       appAll('registers', 'key,data,version', 'key'),
       staff ? appAll('case_members', 'case_id,user_id,kind', 'case_id') : Promise.resolve([]),
       cl ? rpc('ca_mine') : staff ? appAll('ca_records', 'id,data,version,created_at', 'created_at') : Promise.resolve([]),
-      appRulesRows()
+      appRulesRows(),
+      rpc('step_marks').then(function (m) { return Array.isArray(m) ? m : []; }, function () { return []; })   // older schema.sql: none
     ]).then(function (r) { appBuild(r); RULES = r[10]; rulesApply(); APP.loaded = Date.now(); });
   }
   /* the permissions (page สิทธิ์ผู้ใช้): role_rules, part_rules and step_rules; a project whose schema.sql is older than the
@@ -7724,6 +7749,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   function appBuild(r) {
     var db = appEmptyDb(), sy = appSync0(), by = function (rows) { var o = {}; rows.forEach(function (x) { (o[x.case_id] = o[x.case_id] || []).push(x); }); return o; };
+    var mk = {}; (r[11] || []).forEach(function (m) { if (m && m.x) mk[m.case_id + '|' + m.sid] = m.x; });
+    r[3].forEach(function (s) { var x = mk[s.case_id + '|' + s.sid]; if (x) s.x = x; });
     var parts = by(r[2]), steps = by(r[3]), files = by(r[4]), mail = by(r[5]), log = by(r[6]);
     USERS = r[0]; MEMBERS = r[8];
     r[7].forEach(function (x) { db[x.key] = x.data; sy.reg[x.key] = { v:x.version, j:JSON.stringify(x.data) }; });
@@ -7752,7 +7779,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (!p.f31 && cv.f31) c.f31.sites = cv.f31.sites || '';
     if (!p.f41 && cv.f41) { c.f41.op = cv.f41.op || ''; c.f41.opWhy = cv.f41.opWhy || ''; }
     var st = SYNC.steps[id] = {};
-    steps.forEach(function (s) { var t = c.track[s.sid] = { s:s.s, d:s.d || '' }, x = s.x || {}; if (x.out) t.out = x.out; if (x.skip) t.skip = x.skip; st[s.sid] = stKey(t); });
+    steps.forEach(function (s) { var t = c.track[s.sid] = { s:s.s, d:s.d || '' }, x = s.x || {}; if (x.out) t.out = x.out; if (x.skip) t.skip = x.skip; if (x.back) t.back = x.back; st[s.sid] = stKey(t); });
     var fs = SYNC.files[id] = {};
     files.forEach(function (f) {
       var d = f.data || {}; d.id = d.id || f.id; SYNC.fcase[f.id] = id; fs[f.id] = JSON.stringify(d);
@@ -7764,9 +7791,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     return c;
   }
   // a step as last loaded or saved: its state and date, and how it was closed when not the usual way (recorded for the client, skipped)
-  function stKey(v) { var x = v.out ? { out:v.out } : v.skip ? { skip:v.skip } : null; return v.s + '|' + (v.d || '') + (x ? '|' + JSON.stringify(x) : ''); }
+  function stKey(v) { var x = v.out ? { out:v.out } : v.skip ? { skip:v.skip } : v.back ? { back:v.back } : null; return v.s + '|' + (v.d || '') + (x ? '|' + JSON.stringify(x) : ''); }
   function appRefresh(why) {
-    if (!APP.ready || APP.saving || APP.dirty) return Promise.resolve();
+    if (!APP.ready || APP.saving || APP.dirty || REC_BUSY) return Promise.resolve();
     return appLoad().then(function () { render(); if (why) toast(why); }).catch(function (e) { APP.err = thErr(e); apStatus(); });
   }
   window.addEventListener('focus', function () { if (APP_ON && APP.ready && Date.now() - APP.loaded > 20000) appRefresh(); });
@@ -7840,7 +7867,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       if (reload) return appLoad().then(function () { render(); toast(reload === 'ca' ? 'ส่งเรื่องแล้ว GCC จะแจ้งรับเรื่องภายใน 7 วันทำการ' : 'มีผู้อื่นบันทึกข้อมูลเดียวกันก่อน ระบบแสดงฉบับล่าสุดแล้ว ตรวจและกรอกซ้ำถ้าจำเป็น'); });
     }).then(function () { apStatus(); if (APP.again) appFlush(); }).catch(function (e) {
       APP.saving = false; APP.err = thErr(e);
-      if (rulesErr(e)) { toast('บันทึกไม่ได้: ' + APP.err); return appLoad().then(function () { APP.err = ''; render(); }); }
+      if (rulesErr(e) || /^2[23]/.test(String((e && e.code) || ''))) { toast('บันทึกไม่ได้: ' + APP.err); return appLoad().then(function () { APP.err = ''; render(); }); }
       APP.dirty = true; apStatus(); clearTimeout(APP.t); APP.t = setTimeout(appFlush, 8000);
     }).catch(function (e) { APP.err = thErr(e); apStatus(); });
   }
@@ -7865,26 +7892,27 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
         if (pt === 'core') jobs.push(function () { return SB.from('cases').update({ name:c.name || '' }).eq('id', id).then(sbOk); });
       });
       if (team && appCanPart(c, 'team')) jobs.push(function () { return appMembers(c); });
+      // file rows before the steps: a step recorded for the client points at its evidence row (step_mark checks it)
+      var f0 = SYNC.files[id], f1 = appFiles(c);
+      Object.keys(f1).forEach(function (fid) {
+        var x = f1[fid], j = JSON.stringify(x.data); if (f0[fid] === j) return;
+        jobs.push(function () {
+          var q = f0[fid] === undefined ? SB.from('case_files').insert({ id:fid, case_id:id, kind:x.kind, sid:x.sid, data:x.data }).then(function (r) { return r && r.error && r.error.code === '23505' ? SB.from('case_files').update({ data:x.data }).eq('id', fid) : r; }) : SB.from('case_files').update({ data:x.data }).eq('id', fid);
+          return q.then(sbOk).then(function () { f0[fid] = j; SYNC.fcase[fid] = id; });
+        });
+      });
       var s0 = SYNC.steps[id], s1 = c.track || {};
       Object.keys(s1).forEach(function (sid) {
         var v = s1[sid] || {}, k = stKey(v), old = s0[sid] ? s0[sid].split('|')[0] : '';
         if (s0[sid] === k || (v.s !== 'doing' && v.s !== 'done')) return;
         // recorded for the client, skipped, sent back or taken back: the database checks these in step_mark() (schema.sql)
-        if (v.how) { jobs.push(function () { return rpc('step_mark', { cid:id, step:sid, how:v.how, day:v.d || '', info:v.out ? { out:v.out } : v.skip ? { skip:v.skip } : {} }).then(function () { delete v.how; s0[sid] = stKey(v); }); }); return; }
+        if (v.how) { jobs.push(function () { return rpc('step_mark', { cid:id, step:sid, how:v.how, day:v.d || '', info:v.out ? { out:v.out } : v.skip ? { skip:v.skip } : v.back ? { back:v.back } : {} }).then(function () { delete v.how; s0[sid] = stKey(v); }); }); return; }
         if (!appCanStep(c, sid, v.s, old)) return;
         jobs.push(function () { return SB.from('case_steps').upsert({ case_id:id, sid:sid, s:v.s, d:v.d || '' }).then(sbOk).then(function () { s0[sid] = k; }); });
       });
       Object.keys(s0).forEach(function (sid) {
         if (s1[sid] || !appCanStep(c, sid, '', s0[sid].split('|')[0])) return;
         jobs.push(function () { return SB.from('case_steps').delete().eq('case_id', id).eq('sid', sid).then(sbOk).then(function () { delete s0[sid]; }); });
-      });
-      var f0 = SYNC.files[id], f1 = appFiles(c);
-      Object.keys(f1).forEach(function (fid) {
-        var x = f1[fid], j = JSON.stringify(x.data); if (f0[fid] === j) return;
-        jobs.push(function () {
-          var q = f0[fid] === undefined ? SB.from('case_files').insert({ id:fid, case_id:id, kind:x.kind, sid:x.sid, data:x.data }) : SB.from('case_files').update({ data:x.data }).eq('id', fid);
-          return q.then(sbOk).then(function () { f0[fid] = j; SYNC.fcase[fid] = id; });
-        });
       });
       Object.keys(f0).forEach(function (fid) {
         if (f1[fid]) return;
@@ -7922,7 +7950,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var want = {}, have = {}, byName = {};
     USERS.forEach(function (u) { if (u.active && u.name) byName[u.name.trim()] = u; });
     (c.team || []).forEach(function (m) { var u = byName[String(m.n || '').trim()]; if (u) want[u.id + '|' + (m.r === 'ผู้ทบทวนอิสระ' ? 'ir' : 'team')] = 1; });
-    var l = byName[String(c.lv || '').trim()], ir = byName[String(c.ir || '').trim()];
+    var l = byName[String(lead(c) || '').trim()], ir = byName[String(c.ir || '').trim()];
     if (l) want[l.id + '|team'] = 1; if (ir) want[ir.id + '|ir'] = 1;
     MEMBERS.forEach(function (m) { if (m.case_id === c.id && m.kind !== 'client') have[m.user_id + '|' + m.kind] = 1; });
     var add = Object.keys(want).filter(function (k) { return !have[k]; }), del = Object.keys(have).filter(function (k) { return !want[k]; });
@@ -7958,10 +7986,10 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   /* ---------- files: Storage bucket case-files, at <case>/<file id>; the document page's files (dar-… a change
      request's file, dcf-… a controlled copy, src/js/55-doc-upload.js) in bucket doc-files, at <file id> ---------- */
   function appDocFile(id) { return /^(dar|dcf)-[a-z0-9-]+$/.test(id); }
-  function appPut(id, blob) {
+  function appPut(id, blob, cid0) {
     var opt = { upsert:false, contentType:blob.type || 'application/octet-stream' };
     if (appDocFile(id)) return SB.storage.from('doc-files').upload(id, blob, opt).then(sbOk);
-    var c = curCase(), cid = c && c.id && c.track ? c.id : ''; if (!cid) return Promise.reject(new Error('no case'));
+    var c = cid0 ? caseById(cid0) : curCase(), cid = c && c.id && c.track ? c.id : ''; if (!cid) return Promise.reject(new Error('no case'));
     SYNC.fcase[id] = cid;
     return SB.storage.from('case-files').upload(cid + '/' + id, blob, opt).then(sbOk);
   }
