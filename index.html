@@ -1877,7 +1877,27 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .stnav{display:inline-flex;flex:none;gap:2px}
 .stnav .prev .ic{transform:rotate(180deg)}
 @media (max-width:1180px){.cbody:has(>.tl-rail){grid-template-columns:minmax(0,1fr)}.tl.tl-rail{flex-direction:row;overflow-x:auto}.tl-rp{width:auto;min-width:64px}}
-@media (prefers-reduced-motion:reduce){.tl-cv{transition:none}}
+/* a phase's rows slide open and shut (grid rows 0fr to 1fr, tlFold in 44-cases.js) and fade in after the slide starts;
+   the chevron turns with them. The margins keep every gap of the list as it was drawn before: 2px under a phase header,
+   1px between rows, 4px above the next header, and the list ends 2px under the last header (1px under its last row when
+   that phase is open), also while the search box hides some rows. min-width:0 keeps long names ending in ... */
+.tl-g{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.2,.7,.2,1)}
+.tl-g.on{grid-template-rows:1fr}
+.tl2 .tl-ph2{margin-bottom:0}
+.tl-gi{min-width:0;min-height:0;overflow:hidden;opacity:0;transition:opacity .16s ease}
+.tl-g.on .tl-gi{opacity:1;transition:opacity .24s ease .06s}
+.tl-g.set .tl-gi{overflow:visible}
+.tl-gi>.it:first-child{margin-top:2px}
+.tl-gi>.it:last-child{margin-bottom:0}
+.tl-gi>.it:nth-child(1 of :not([style*=none])){margin-top:2px}
+.tl-gi>.it:nth-last-child(1 of :not([style*=none])){margin-bottom:0}
+.tl2>.tl-g:last-child{margin-bottom:2px}
+.tl2>.tl-g.on:last-child{margin-bottom:1px}
+.tl-cv{transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+/* folding into the rail and back: the new list or rail fades in while its column eases (tlMorph), clipped sideways */
+.tl.tl-in{overflow-x:hidden;animation:tlIn .3s ease both}
+@keyframes tlIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tl-cv,.tl-g,.tl-gi,.tl-g.on .tl-gi{transition:none}.tl.tl-in{animation:none}}
 /* ---------- the step panel's boxes (13/11/2569): record for the client, skip, assign the lead verifier, send back; own sources in F-GCC-24 3.3 ---------- */
 .rec-box{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:0 0 14px;padding:12px 14px;border:1px solid var(--tint-line);border-radius:12px;background:var(--tint)}
 .rec-i{display:grid;flex:none;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--tint-2);color:var(--link)}
@@ -6045,6 +6065,14 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     MO.key = k;
     if (APP_ON) appAfter();
   }
+  // the step list moved without a redraw (a phase slid open or shut, tlFold in 44-cases.js): note where the picked row
+  // stands now, so the next pick slides the white card from there; a picked row that is not drawn has no place
+  function moTlNote() {
+    var tl = document.querySelector('.main .tl'), it = tl && tl.querySelector('.it[aria-current=true]');
+    if (!tl || !it || !(it.offsetWidth > 0)) { MO.tl = null; return; }
+    var tr = tl.getBoundingClientRect(), ir = it.getBoundingClientRect();
+    MO.tl = { cid:S.cid, sid:S.sid, x:ir.left - tr.left + tl.scrollLeft, y:ir.top - tr.top + tl.scrollTop, w:ir.width, h:ir.height };
+  }
 
   /* ---------- v10 dark mode: a switch in the top bar, remembered in this browser ---------- */
   try { if (localStorage.getItem('gcc-theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) { /* light */ }
@@ -6790,6 +6818,7 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
   }
   function timeline(c, vis) {
     var open = tlOpen(c), sel = stepById(S.sid), ph = PH.map(function (p, i) { return vis.filter(function (st) { return st[1] === i; }); });
+    TLV = { c:c, ph:ph };   // what the list is drawn from, so a phase can open in place (tlFold)
     var dn = function (l) { return l.filter(function (st) { return stOf(c, st[0]) === 'done'; }).length; };
     if (S.tlc) return '<aside class="card tl tl-rail" aria-label="ช่วงของงาน"><button type="button" class="tl-tog" data-a="tlc" data-v="0" title="แสดงรายการขั้นตอน" aria-label="แสดงรายการขั้นตอน">' + ic('side') + '</button>' +
       PH.map(function (p, i) {
@@ -6800,14 +6829,58 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     PH.forEach(function (p, i) {
       var l = ph[i]; if (!l.length) return;
       var on = !!open[i];
-      h += '<button type="button" class="tl-ph2' + (on ? ' on' : '') + '" data-a="tlph" data-v="' + i + '" aria-expanded="' + on + '" title="' + esc('ช่วงที่ ' + i + ' · ' + p[0]) + '"><span class="tl-pi">' + ic(p[1]) + '</span><span class="tl-pn">' + esc(p[0]) + '</span>' + tlBar(c, l) + '<span class="tl-pc">' + dn(l) + '/' + l.length + '</span><span class="tl-cv">' + ic('chev') + '</span></button>';
-      if (on) l.forEach(function (st) {
-        var k = tlSt(c, st);
-        h += '<button type="button" class="it ' + k + '" data-a="step" data-v="' + st[0] + '" title="' + esc(st[0] + ' ' + st[2] + ' · ' + st[4]) + '"' + (S.sid === st[0] ? ' aria-current="true"' : '') + '>' +
-          '<span class="k">' + st[0] + '</span><span class="n">' + esc(st[2]) + '</span>' + tlMark(c, st, k) + '</button>';
-      });
+      h += '<button type="button" class="tl-ph2' + (on ? ' on' : '') + '" data-a="tlph" data-v="' + i + '" aria-expanded="' + on + '" aria-controls="tlg' + i + '" title="' + esc('ช่วงที่ ' + i + ' · ' + p[0]) + '"><span class="tl-pi">' + ic(p[1]) + '</span><span class="tl-pn">' + esc(p[0]) + '</span>' + tlBar(c, l) + '<span class="tl-pc">' + dn(l) + '/' + l.length + '</span><span class="tl-cv">' + ic('chev') + '</span></button>';
+      h += '<div class="tl-g' + (on ? ' on set' : '') + '" id="tlg' + i + '"' + (on ? '' : ' inert') + '><div class="tl-gi">' + (on ? tlRows(c, l) : '') + '</div></div>';
     });
     return h + '</aside>';
+  }
+  // the step rows of one phase
+  function tlRows(c, l) {
+    return l.map(function (st) {
+      var k = tlSt(c, st);
+      return '<button type="button" class="it ' + k + '" data-a="step" data-v="' + st[0] + '" title="' + esc(st[0] + ' ' + st[2] + ' · ' + st[4]) + '"' + (S.sid === st[0] ? ' aria-current="true"' : '') + '>' +
+        '<span class="k">' + st[0] + '</span><span class="n">' + esc(st[2]) + '</span>' + tlMark(c, st, k) + '</button>';
+    }).join('');
+  }
+  /* a phase opens or shuts in place, without drawing the page again: its rows slide open or shut (grid rows 0fr to 1fr,
+     15-step-list.css), the rest of the list eases down or up and the header clicked stays where it is. As after a full
+     redraw, a shut phase holds no rows: they are drawn when it opens and taken out when the slide shut ends. While moving,
+     the group clips its rows; once open ("set") it lets the picked row's shadow show. Only the latest fold of a group
+     finishes it (tlk), and the sliding card of the step list (MO.tl) forgets the picked row's place until no group moves */
+  var TLV = null;
+  function tlFold(i, on) {
+    var g = $('tlg' + i), b = document.querySelector('.main .tl .tl-ph2[data-v="' + i + '"]'), gi = g && g.firstElementChild;
+    if (!g || !b || !gi || !TLV) { render(); return; }
+    var k = (g.tlk || 0) + 1, fin = false; g.tlk = k; g.tlm = 1; MO.tl = null;
+    b.classList.toggle('on', on); b.setAttribute('aria-expanded', on ? 'true' : 'false');
+    g.classList.remove('set');
+    if (on) { if (!gi.firstChild) { gi.innerHTML = tlRows(TLV.c, TLV.ph[i] || []); gqApply(); } g.removeAttribute('inert'); }
+    else g.setAttribute('inert', '');
+    g.classList.toggle('on', on);
+    var end = function () {
+      if (fin || g.tlk !== k || !g.isConnected) return;
+      fin = true; g.tlm = 0;
+      if (on) g.classList.add('set'); else gi.innerHTML = '';
+      if (![].some.call(document.querySelectorAll('.main .tl .tl-g'), function (x) { return x.tlm; })) moTlNote();
+    };
+    if (moReduced()) { end(); return; }
+    g.addEventListener('transitionend', function f(e) { if (e.target === g) { g.removeEventListener('transitionend', f); end(); } });
+    setTimeout(end, 420);
+  }
+  // the list folds into the rail and back: the first column eases from its old width to the new one and the new list or
+  // rail fades in (only while list and panel sit side by side; on a narrow screen the rail sits above the panel)
+  function tlMorph() {
+    var b0 = document.querySelector('.main .cbody'), t0 = b0 && b0.firstElementChild, w0 = t0 && t0.classList.contains('tl') ? t0.getBoundingClientRect().width : 0;
+    render();
+    var b = document.querySelector('.main .cbody'), t = b && b.firstElementChild;
+    if (!w0 || !t || !t.classList.contains('tl') || moReduced() || window.getComputedStyle(b).gridTemplateColumns.split(' ').length < 2) return;
+    var w1 = t.getBoundingClientRect().width; if (Math.abs(w1 - w0) < 2) return;
+    b.style.transition = 'none'; b.style.gridTemplateColumns = w0 + 'px minmax(0,1fr)'; b.offsetWidth;
+    b.style.transition = 'grid-template-columns .34s cubic-bezier(.2,.7,.2,1)'; b.style.gridTemplateColumns = w1 + 'px minmax(0,1fr)';
+    t.classList.add('tl-in');
+    var end = function () { b.style.transition = ''; b.style.gridTemplateColumns = ''; };
+    b.addEventListener('transitionend', function f(e) { if (e.target === b) { b.removeEventListener('transitionend', f); end(); } });
+    setTimeout(end, 540);
   }
   /* ---------- steps closed another way, the lead verifier of the request review, and a request sent back (13/11/2569) ----------
      A client step the client answered outside the system (an e-mail, a letter, a signed file) is recorded by GCC from the
@@ -7287,7 +7360,7 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     if (a === 'nav') { S.page = v; S.cid = null; render(); toTop(); }
     else if (a === 'case') { S.page = 'case'; S.cid = v; S.sid = t.getAttribute('data-s') || null; S.ctab = 'docs'; S.ptab = 'form'; S.hf = 'all'; S.hq = ''; S.hn = 20; render(); toTop(); }
     else if (a === 'step') { S.sid = v; S.ptab = 'form'; var stp = stepById(v); if (stp) (S.tlo = S.tlo || {})[stp[1]] = true; render(); }
-    else if (a === 'tlph') { S.tlo = S.tlo || {}; S.tlo[v] = !S.tlo[v]; render(); }
+    else if (a === 'tlph') { S.tlo = S.tlo || {}; S.tlo[v] = !S.tlo[v]; tlFold(v, S.tlo[v]); }
     else if (a === 'recout' && c) openRecOut(c, stepById(S.sid));
     else if (a === 'recoutok') recOutSave(caseById(t.getAttribute('data-c')), stepById(v));
     else if (a === 'skipst' && c) openSkip(c, stepById(S.sid));
@@ -7299,7 +7372,7 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     else if (a === 'asglv' && c) asgSave(c);
     else if (a === 'srcadd' && c) srcAdd(c, +v);
     else if (a === 'srcdel' && c) srcDel(c, +v);
-    else if (a === 'tlc' || a === 'tlfp') { S.tlc = a === 'tlc' && v === '1'; if (a === 'tlfp') (S.tlo = S.tlo || {})[v] = true; try { localStorage.setItem('gcc-tlc', S.tlc ? '1' : '0'); } catch (e) { /* this view only */ } render(); }
+    else if (a === 'tlc' || a === 'tlfp') { S.tlc = a === 'tlc' && v === '1'; if (a === 'tlfp') (S.tlo = S.tlo || {})[v] = true; try { localStorage.setItem('gcc-tlc', S.tlc ? '1' : '0'); } catch (e) { /* this view only */ } tlMorph(); }
     else if (a === 'cft') { S.cft = v; render(); }
     else if (a === 'cy') { S.cy = v; render(); }
     else if (a === 'ctab') { S.ctab = v; render(); }
