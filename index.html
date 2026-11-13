@@ -1652,7 +1652,7 @@ details.rv>summary small{display:block}
 .mp-dr .mut{color:var(--mut)}
 .mp-dr .dch{flex:none;width:150px}
 .mp-tw{overflow-x:auto;border-top:1px solid var(--line)}
-.mp-t{table-layout:fixed;min-width:1000px}
+.mp-t{table-layout:fixed;min-width:1050px}
 .mp-t td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mp-t th:first-child,.mp-t td:first-child{padding-right:0}
 .mp-t td.date{font-variant-numeric:tabular-nums}
@@ -1719,8 +1719,8 @@ details.rv>summary small{display:block}
    while the time line scrolls inside the card; the page itself never scrolls sideways ---------- */
 .mpo-card{padding:0;overflow:hidden}
 .mpo-w{overflow-x:auto;scrollbar-width:thin}
-.mpo{table-layout:fixed;min-width:calc(560px + var(--mpo-min, 600px))}
-.mpo col.mpo-c1{width:236px}.mpo col.mpo-c2{width:200px}.mpo col.mpo-c3{width:124px}
+.mpo{table-layout:fixed;min-width:calc(592px + var(--mpo-min, 600px))}
+.mpo col.mpo-c1{width:268px}.mpo col.mpo-c2{width:200px}.mpo col.mpo-c3{width:124px}
 .mpo td{height:60px;padding-top:0;padding-bottom:0;overflow:hidden;white-space:nowrap}
 .mpo th.mpo-c,.mpo td.mpo-c{position:sticky;left:0;z-index:2;background:#fff}
 .mpo td.mpo-c .nm b,.mpo td.mpo-c .nm span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1745,11 +1745,29 @@ details.rv>summary small{display:block}
 .mpo-site.lg{position:static;width:10px;height:10px;margin:0 2px;box-shadow:none}
 .mpo-nw{display:inline-block;width:2px;height:14px;background:var(--bad)}
 .mpo-lg .mpo-hint{color:var(--mut);white-space:normal}
+/* fold-out rows (13/11/2569): a case row opens its 16 activities in place on the same months; the chevron turns down */
+.mpo-tg{display:grid;flex:none;place-items:center;width:16px;height:16px;margin-right:-4px;color:var(--mut);transition:transform .15s ease}
+.mpo-tg .ic{width:16px;height:16px}
+.mpo tr.mpo-r[aria-expanded=true] .mpo-tg{color:var(--ink);transform:rotate(90deg)}
+.mpo tr.mpo-a td{height:34px;background:#F7FAFD;font-size:13px}
+.mpo tr.mpo-a.mpo-ph td{border-top-color:var(--line)}
+.mpo-an{display:flex;align-items:center;gap:8px;min-width:0;padding-left:40px}
+.mpo-n{flex:none;width:24px;color:var(--mut);font-variant-numeric:tabular-nums;text-align:center}
+.mpo-at{overflow:hidden;color:var(--ink-2);text-overflow:ellipsis;white-space:nowrap}
+.mpo-dt{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.mpo tr.mpo-a .mpo-lane{height:34px}
+.mpo-bar{position:absolute;top:13px;height:8px;min-width:8px;border-radius:999px;background:#C9CFDD}
+.mpo-bar.done{background:var(--brand)}.mpo-bar.doing{background:#7DD3FC}
+.mpo-all{align-self:center}.mpo-all .ic{transition:transform .15s ease}.mpo-all[aria-pressed=true] .ic{transform:rotate(90deg)}
+@media (prefers-reduced-motion:reduce){.mpo-tg,.mpo-all .ic{transition:none}}
 html[data-theme=dark] .mpo td.mpo-c{background:#122244}
 html[data-theme=dark] .mpo-seg,html[data-theme=dark] .mpo-site{box-shadow:0 0 0 2px #122244}
 html[data-theme=dark] .mpo-seg:not(.done):not(.doing),html[data-theme=dark] .mpo-sw:not(.done):not(.doing){background:#3A4D72}
 html[data-theme=dark] .mpo-site{background:#E7EEF9}
-@media (max-width:760px){.mpo col.mpo-c1{width:176px}.mpo col.mpo-c2{width:150px}.mpo col.mpo-c3{width:112px}.mpo{min-width:calc(438px + var(--mpo-min, 600px))}.mpo .ct-ava{display:none}.mpo-lg{padding:12px 16px}}
+html[data-theme=dark] .mpo tr.mpo-a td{background:#0F1D3B}
+html[data-theme=dark] .mpo tr.mpo-a:hover td{background:var(--tint)}
+html[data-theme=dark] .mpo-bar:not(.done):not(.doing){background:#3A4D72}
+@media (max-width:760px){.mpo col.mpo-c1{width:176px}.mpo col.mpo-c2{width:150px}.mpo col.mpo-c3{width:112px}.mpo{min-width:calc(438px + var(--mpo-min, 600px))}.mpo .ct-ava{display:none}.mpo-lg{padding:12px 16px}.mpo-an{padding-left:0}}
 /* ---------- documents dropped into the document page (src/js/55-doc-upload.js): one drop strip above the type tiles,
    the chosen file as a chip inside the request form ---------- */
 .dc-drop{margin:16px 0 18px}
@@ -4009,8 +4027,11 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   /* ---------- search box in the top bar: filters the rows on the page ---------- */
   function gqApply() {
     var q = (S.gq || '').trim().toLowerCase();
-    var rows = document.querySelectorAll('.main table.t tbody tr:not(.ct-band):not(.ct-gap), .main table.ft tbody tr, .main .tl .it, .main ul.rows li');
+    var rows = document.querySelectorAll('.main table.t tbody tr:not(.ct-band):not(.ct-gap):not(.mpo-a), .main table.ft tbody tr, .main .tl .it, .main ul.rows li');
     for (var i = 0; i < rows.length; i++) rows[i].style.display = !q || rows[i].textContent.toLowerCase().indexOf(q) >= 0 ? '' : 'none';
+    var off = {}, acts = document.querySelectorAll('.main tr.mpo-a');   // Master Plan page: an activity row shows and hides with its case row
+    [].forEach.call(document.querySelectorAll('.main tr.mpo-r'), function (r) { off[r.getAttribute('data-v')] = r.style.display === 'none'; });
+    for (var k = 0; k < acts.length; k++) acts[k].style.display = off[acts[k].getAttribute('data-c')] ? 'none' : '';
     var bands = document.querySelectorAll('.main tr.ct-band');
     for (var j = 0; j < bands.length; j++) {
       var n = bands[j].nextElementSibling, any = false;
@@ -7226,6 +7247,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     else if (a === 'st' && c) setStep(c, stepById(S.sid), v);
     else if (a === 'f77use' && c) f77Use(c);
     else if (a === 'mpgo') { S.page = 'case'; S.cid = v; S.sid = null; S.ctab = 'plan'; S.mped = false; render(); toTop(); }
+    else if (a === 'mpx') mpoFold(v);
     else if (a === 'mped') { S.mped = v === '1'; render(); }
     else if (a === 'mpiss' && c) { mpIssue(c); render(); }
     else if (a === 'mppdf' && c) mpPdf(c, v);
@@ -7688,7 +7710,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
       '<div class="mp-sub"><span>' + esc(f.org || c.name) + '</span><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span><span>หัวหน้าผู้ทวนสอบ ' + esc(lead(c) || '-') + '</span><span>' + esc(periodTxt(c) || '') + '</span></div>';
     var h = '<section class="card sec mp-card"><div class="mp-head"><div class="mp-ti"><h3>Master Plan</h3>' + stat + (bad.length ? '<span class="chip late">วันเสร็จก่อนวันเริ่ม · กิจกรรม ' + mpNums(bad) + '</span>' : '') + '</div>' +
       '<div class="acts">' + acts2 + '</div></div>' + line2 +
-      '<div class="mp-tw"><table class="t mp-t"><colgroup><col style="width:52px"><col><col style="width:100px"><col style="width:316px"><col style="width:100px"><col style="width:22%"></colgroup>' +
+      '<div class="mp-tw"><table class="t mp-t"><colgroup><col style="width:52px"><col style="width:260px"><col style="width:100px"><col style="width:316px"><col style="width:100px"><col></colgroup>' +
       '<thead><tr><th>#</th><th>กิจกรรม</th><th>ผู้รับผิดชอบ</th><th><div class="mp-dd"><span>เริ่ม</span><span></span><span>เสร็จ</span></div></th><th>สถานะ</th><th>แผนเวลา</th></tr></thead><tbody>';
     a.forEach(function (x, i) {
       var n = i + 1, ph = MP_PH.filter(function (p) { return p[1] === n; })[0], s = mpSt(c, n), l = mpDays(lo, x.s) / span * 100, w = Math.max(1.5, mpDays(x.s, x.e) / span * 100), chg = df && df.indexOf(n) >= 0;
@@ -7800,9 +7822,9 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     }).join('') + '</div>' : '';
     var h = '<div class="ct-bar"><div class="tabs" role="tablist">' + [['open', 'กำลังทำ', open.length, 'play'], ['closed', 'ปิดแฟ้มแล้ว', shut.length, 'archive'], ['all', 'ทั้งหมด', all.length, 'docs']].map(function (t) {
       return '<button type="button" role="tab" data-a="cft" data-v="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + ic(t[3]) + '<span>' + t[1] + '<span class="n">' + t[2] + '</span></span></button>';
-    }).join('') + '</div><div class="sp"></div>' + ysel + '</div>';
+    }).join('') + '</div><div class="sp"></div>', h1 = ysel + '</div>';
     var list = (tab === 'closed' ? shut : tab === 'all' ? all : open).slice();
-    if (!list.length) return h + '<section class="card pad empty">' + (all.length ? 'ไม่มีเคสในแท็บนี้' : every.length ? 'ไม่มีเคสของปีนี้' : 'ไม่มีเคสที่บทบาทนี้เห็น') + '</section>';
+    if (!list.length) return h + h1 + '<section class="card pad empty">' + (all.length ? 'ไม่มีเคสในแท็บนี้' : every.length ? 'ไม่มีเคสของปีนี้' : 'ไม่มีเคสที่บทบาทนี้เห็น') + '</section>';
     var A = {}, lo = todayIso(), hi = todayIso();
     list.forEach(function (c) { A[c.id] = acts(c); A[c.id].forEach(function (x) { if (x.s < lo) lo = x.s; if (x.e > hi) hi = x.e; }); });
     list.sort(function (a, b) { var x = A[a.id][0].s, y = A[b.id][0].s; return x < y ? -1 : x > y ? 1 : String(a.short).localeCompare(String(b.short), 'th'); });
@@ -7812,21 +7834,44 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     var td = todayIso(), now = '<b class="mpo-now" style="left:' + pc(td) + '" aria-hidden="true"></b>';
     var lines = months.slice(1).map(function (mm) { return '<i class="mpo-ml" style="left:' + pc(mm + '-01') + '"></i>'; }).join('');
     var head = '<div class="mpo-mh">' + months.map(function (mm) { var w = mpDays(mm + '-01', addMonths(mm, 1) + '-01') / total * 100; return '<span style="left:' + pc(mm + '-01') + ';width:' + w.toFixed(3) + '%">' + TH_M[+mm.slice(5) - 1] + ' ' + mpYY(mm + '-01') + '</span>'; }).join('') + '</div>';
+    var X = S.mpx || {}, allOn = list.every(function (c) { return X[c.id]; });
+    var allBtn = '<button type="button" class="btn sm mpo-all" data-a="mpx" data-v="all" aria-pressed="' + allOn + '">' + ic('chev') + '<span>' + (allOn ? 'พับทั้งหมด' : 'กางทั้งหมด') + '</span></button>';
     var rows = list.map(function (c) {
-      var a = A[c.id], k = cur(c), last = mpLast(c), df = mpDiff(c), vd = visitDate(c), ph = mpoPhases(c, a);
+      var a = A[c.id], k = cur(c), last = mpLast(c), df = mpDiff(c), vd = visitDate(c), ph = mpoPhases(c, a), on = !!X[c.id];
       var chip = !last ? '<span class="chip wait">ยังไม่ออก</span>' : df && df.length ? '<span class="chip y" title="แก้วันหลังออกครั้งที่ ' + last.n + ' · กิจกรรม ' + mpNums(df) + '">แก้หลังครั้งที่ ' + last.n + '</span>' :
         '<span class="chip done" title="ออก ' + dL(last.d) + '">ครั้งที่ ' + last.n + '</span>';
       var bar = ph.map(function (p) { return '<i class="mpo-seg ' + p.st + '" style="left:' + pc(p.from) + ';width:calc(' + pc(addDays(p.to, 1)) + ' - ' + pc(p.from) + ')" title="' + esc(p.name + ' · ' + mpRange(p.s, p.e) + ' · ' + MP_ST[p.st]) + '"></i>'; }).join('');
       var site = vd ? '<em class="mpo-site" style="left:' + pc(vd) + '" title="' + esc('ลงพื้นที่ ' + dL(vd)) + '"></em>' : '';
-      return '<tr class="click" data-a="mpgo" data-v="' + c.id + '" title="' + esc(c.name + ' · ' + mpRange(a[0].s, ph[3].to)) + '">' +
-        '<td class="mpo-c"><div class="ct-co"><span class="ct-ava" aria-hidden="true">' + esc(ctIni(c)) + '</span><div class="nm"><b>' + esc(c.short || c.name) + '</b><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span></div></div></td>' +
+      return '<tr class="click mpo-r" data-a="mpx" data-v="' + c.id + '" aria-expanded="' + on + '" title="' + esc(c.name + ' · ' + mpRange(a[0].s, ph[3].to)) + '">' +
+        '<td class="mpo-c"><div class="ct-co"><span class="mpo-tg" aria-hidden="true">' + ic('chev') + '</span><span class="ct-ava" aria-hidden="true">' + esc(ctIni(c)) + '</span><div class="nm"><b>' + esc(c.short || c.name) + '</b><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span></div></div></td>' +
         '<td>' + (k ? '<span class="mpo-step"><b>' + k[0] + '</b>' + esc(k[2]) + '</span>' : '<span class="mpo-step fin">' + (closed(c) ? 'ปิดแฟ้มแล้ว' : 'ครบทุกขั้น') + '</span>') + '</td>' +
-        '<td>' + chip + '</td><td class="mpo-tl"><div class="mpo-lane">' + lines + bar + site + now + '</div></td></tr>';
+        '<td>' + chip + '</td><td class="mpo-tl"><div class="mpo-lane">' + lines + bar + site + now + '</div></td></tr>' + mpoActs(c, a, on, pc, lines, now);
     }).join('');
     var lg = '<div class="mpo-lg"><span><i class="mpo-sw done"></i>เสร็จแล้ว</span><span><i class="mpo-sw doing"></i>กำลังทำ</span><span><i class="mpo-sw"></i>ตามแผน</span>' +
-      '<span><em class="mpo-site lg"></em>ลงพื้นที่</span><span><b class="mpo-nw"></b>วันนี้</span><span class="mpo-hint">แถบแบ่ง 4 ช่วง: รับงาน วางแผน ทวนสอบ ออกผล · กดแถวเพื่อเปิด Master Plan ของเคส</span></div>';
-    return h + '<section class="card mpo-card"><div class="mpo-w"><table class="t mpo" style="--mpo-min:' + Math.max(480, months.length * 84) + 'px"><colgroup><col class="mpo-c1"><col class="mpo-c2"><col class="mpo-c3"><col></colgroup>' +
+      '<span><em class="mpo-site lg"></em>ลงพื้นที่</span><span><b class="mpo-nw"></b>วันนี้</span><span class="mpo-hint">แถบแบ่ง 4 ช่วง: รับงาน วางแผน ทวนสอบ ออกผล · กดแถวเคสเพื่อกางดู 16 กิจกรรม · กดกิจกรรมเพื่อเปิด Master Plan ของเคส</span></div>';
+    return h + allBtn + h1 + '<section class="card mpo-card"><div class="mpo-w"><table class="t mpo" style="--mpo-min:' + Math.max(480, months.length * 84) + 'px"><colgroup><col class="mpo-c1"><col class="mpo-c2"><col class="mpo-c3"><col></colgroup>' +
       '<thead><tr><th class="mpo-c">เคส</th><th>ขั้นตอนถัดไป</th><th>Master Plan</th><th class="mpo-tl">' + head + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + lg + '</section>';
+  }
+  /* the 16 activities under a case row: shown while the row is open (S.mpx), drawn on the same months as the row; a click
+     opens the case's Master Plan tab (13/11/2569) */
+  function mpoActs(c, a, on, pc, lines, now) {
+    return a.map(function (x, i) {
+      var n = i + 1, s = mpSt(c, n), cut = n > 1 && MP_PH.some(function (p) { return p[1] === n; });
+      return '<tr class="click mpo-a' + (cut ? ' mpo-ph' : '') + '" data-c="' + c.id + '" data-a="mpgo" data-v="' + c.id + '"' + (on ? '' : ' hidden') + ' title="' + esc(MP[i] + ' · ' + mpRange(x.s, x.e) + ' · ' + MP_ST[s]) + '">' +
+        '<td class="mpo-c"><div class="mpo-an"><span class="mpo-n">' + n + '</span><span class="mpo-at">' + esc(MP[i]) + '</span></div></td>' +
+        '<td><span class="mpo-dt">' + mpRange(x.s, x.e) + '</span></td><td><span class="chip ' + (s || 'wait') + '">' + MP_ST[s] + '</span></td>' +
+        '<td class="mpo-tl"><div class="mpo-lane">' + lines + '<i class="mpo-bar ' + s + '" style="left:' + pc(x.s) + ';width:calc(' + pc(addDays(x.e, 1)) + ' - ' + pc(x.s) + ')"></i>' + now + '</div></td></tr>';
+    }).join('');
+  }
+  /* open or close one case row (v = case id) or every row (v = 'all') in place, without a redraw: the page and the time
+     line stay where they are */
+  function mpoFold(v) {
+    var X = S.mpx = S.mpx || {}, rows = [].slice.call(document.querySelectorAll('.main tr.mpo-r')), isOn = function (r) { return !!X[r.getAttribute('data-v')]; };
+    if (v === 'all') { var to = !rows.every(isOn); rows.forEach(function (r) { X[r.getAttribute('data-v')] = to; }); } else X[v] = !X[v];
+    rows.forEach(function (r) { var id = r.getAttribute('data-v'), on = isOn(r); r.setAttribute('aria-expanded', on);
+      [].forEach.call(document.querySelectorAll('.main tr.mpo-a[data-c="' + id + '"]'), function (x) { x.hidden = !on; }); });
+    var b = document.querySelector('.main .mpo-all'), all = rows.every(isOn);
+    if (b) { b.setAttribute('aria-pressed', all); b.querySelector('span').textContent = all ? 'พับทั้งหมด' : 'กางทั้งหมด'; }
   }
   /* after each draw (moAfter): the time line opens with today in view; it scrolls inside its card, never the page */
   function mpoAfter() {
