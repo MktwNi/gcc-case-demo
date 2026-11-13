@@ -1717,8 +1717,8 @@ details.rv>summary small{display:block}
 .pf.mp .mp-dbox{margin:0 0 0 14pt;padding:2pt 10pt;border:1.2pt solid #3A4650;color:#1E2A33;font-size:13pt;font-weight:700;white-space:nowrap}
 
 /* ---------- page Master Plan in the menu: every case on one time line (54-master-plan.js pageMpo), drawn like the overview of
-   the old Master Plan page (13/11/2569): a card per case in its colour, the share done, and one bar a case in a window of
-   1, 3, 6 or 12 months. The page itself never scrolls sideways; on a phone the time line scrolls inside the card while the
+   the old Master Plan page (13/11/2569): a card per case with a deep-blue edge, the share done, and one bar a case in a
+   window of 1, 3, 6 or 12 months, all in the system's one tone. The page itself never scrolls sideways; on a phone the time line scrolls inside the card while the
    case column stays put ---------- */
 .mpo-card{padding:0;overflow:hidden}
 .mpo-w{overflow-x:auto;scrollbar-width:thin}
@@ -1775,8 +1775,9 @@ details.rv>summary small{display:block}
 .mpo-mk.next{top:50%;margin-top:-6px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--ink)}
 .mpo tr.mpo-r{--rb:#fff}.mpo tr.mpo-a{--rb:#F7FAFD}.mpo tbody tr.click:hover{--rb:var(--tint)}
 .mpo-out{position:absolute;top:50%;left:8px;z-index:4;margin-left:-4px;padding:0 4px;background:var(--rb);color:var(--mut);font-size:12px;transform:translateY(-50%)}   /* over today's line, on the row's own colour */
-/* the case colours (5, see mpoCols): --cs for the share done and the card edge, --cl for the rest of the bar */
-.mpo .k0{--cs:#2FA6DE;--cl:#C9E8F6}.mpo .k1{--cs:#3D9A3D;--cl:#CDE5CD}.mpo .k2{--cs:#E3A600;--cl:#F8E8BD}.mpo .k3{--cs:#D9648F;--cl:#F5D7E2}.mpo .k4{--cs:#3D63B8;--cl:#CDD6ED}
+/* one tone for every case, the system's own (13/11/2569, the user: fewer colours, the same tone as the rest): deep blue for
+   what is done and the card edge, light sky blue for the rest, as in the step list and the progress bars */
+.mpo{--cs:var(--brand);--cl:#CFE6FA}
 /* fold-out rows: a case row opens its 16 activities in place in the same window; the chevron turns up */
 .mpo tr.mpo-a td{height:34px;background:#F7FAFD;font-size:13px}
 .mpo tr.mpo-a td.mpo-c{padding:0 16px 0 20px}
@@ -1787,14 +1788,14 @@ details.rv>summary small{display:block}
 .mpo-ss{color:var(--mut);font-size:12px}.mpo-ss.late{color:var(--bad);font-weight:600}
 .mpo-ab{position:absolute;top:50%;z-index:2;height:12px;margin-top:-6px;min-width:6px;border-radius:3px;background:var(--cl)}
 .mpo-ab.done{background:var(--cs)}
-.mpo-ab.doing{background:linear-gradient(rgba(255,255,255,.45),rgba(255,255,255,.45)),var(--cs)}
+.mpo-ab.doing{background:#38BDF8}   /* in progress: the sky of the step list's current step */
 .mpo-ab.late{box-shadow:inset 0 0 0 2px #D92D20}
 .mpo tr.mpo-a .mpo-out{font-size:11.5px}
 /* the legend, the counts beside the tabs and the open-all button */
 .mpo-lg{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:12px 24px 14px;border-top:1px solid var(--line);color:var(--ink-2);font-size:13px}
 .mpo-lg>span{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.mpo-sw{display:inline-block;width:22px;height:10px;border-radius:3px;background:var(--mut)}
-.mpo-sw.lt{background:var(--line2)}
+.mpo-sw{display:inline-block;width:22px;height:10px;border-radius:3px;background:var(--brand)}
+.mpo-sw.lt{background:#CFE6FA}
 .mpo-lg .mpo-mk{position:static;margin:0}
 .mpo-lg .mpo-mk.next{width:10px;height:10px;margin:0 2px}
 .mpo-nw{display:inline-block;width:2px;height:14px;background:var(--ink)}
@@ -1818,9 +1819,7 @@ html[data-theme=dark] .mpo-mk.late{box-shadow:0 0 0 2px #122244}
 html[data-theme=dark] .mpo-mk.next{background:#122244}
 html[data-theme=dark] .mpo tr.mpo-a td{background:#0F1D3B}
 html[data-theme=dark] .mpo tr.mpo-a:hover td{background:var(--tint)}
-html[data-theme=dark] .mpo-ab.doing{background:linear-gradient(rgba(18,34,68,.45),rgba(18,34,68,.45)),var(--cs)}
-html[data-theme=dark] .mpo .k0{--cs:#1C9BD2;--cl:#154B74}html[data-theme=dark] .mpo .k1{--cs:#117817;--cl:#123F35}html[data-theme=dark] .mpo .k2{--cs:#B68617;--cl:#4A4435}
-html[data-theme=dark] .mpo .k3{--cs:#D7628D;--cl:#5F3544}html[data-theme=dark] .mpo .k4{--cs:#395EB3;--cl:#1F366A}
+html[data-theme=dark] .mpo{--cl:#1F3A6E}html[data-theme=dark] .mpo-sw.lt{background:#1F3A6E}
 @media (max-width:760px){.mpo col.mpo-c1{width:200px}.mpo col.mpo-c2{width:0}.mpo th.mpo-pg,.mpo td.mpo-pg{padding:0;visibility:hidden}.mpo{min-width:calc(200px + var(--mpo-min, 500px))}
   .mpo-cm{flex-wrap:wrap;row-gap:0}.mpo-job{flex:1 1 100%}.mpo-pcm{display:block;margin-left:auto;color:var(--ink);font-size:12px;font-weight:600}
   .mpo-ssm{display:block;flex:none;margin-left:auto;padding-left:8px;color:var(--mut);font-size:11.5px}.mpo-ssm.late{color:var(--bad);font-weight:600}
@@ -8855,28 +8854,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
 
   /* ---------- page Master Plan in the menu (13/11/2569; redrawn the same evening on the user's ask, to look like the
-     overview of the old Master Plan page): one row a case. The case card carries the case's colour, its job number and
-     its state (late N, N days left, on plan); then the share of the 16 activities done, and one bar from the plan's first
+     overview of the old Master Plan page): one row a case. The case card carries its job number and its state (late N,
+     N days left, on plan); then the share of the 16 activities done, and one bar from the plan's first
      to last date, dark for the share done and light for the rest, with a red ! on each late due date and a ring on the
      next one. The window is 1, 3, 6 or 12 months (S.mpw) with today's line. The tabs and years are those of page
      เคสลูกค้า, and the search box filters the rows. A click on a case opens its 16 activities in place; a click on an
      activity opens the case's Master Plan tab ---------- */
   IC.clk = '<circle class="ac" cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/>';
-  /* five case colours (classes k0–k4 in 12-master-plan.css), checked as a set for colour-blind and normal vision in light
-     and dark mode. A case keeps its colour whatever the tabs, years or search show: it follows the case id */
-  function mpoCols(all) {
-    var taken = {}, out = {}, N = 5;
-    all.map(function (c) { return String(c.id); }).sort().forEach(function (id) {
-      var n = 0;
-      for (var i = 0; i < id.length; i++) n = (n * 31 + id.charCodeAt(i)) % 9973;
-      var k = n % N;
-      for (var t = 0; t < N && taken[k]; t++) k = (k + 1) % N;
-      taken[k] = 1;
-      if (Object.keys(taken).length === N) taken = {};
-      out[id] = 'k' + k;
-    });
-    return out;
-  }
   /* what a case row says: first and last date, activities done, the late ones, the next due one, and its state */
   function mpoInfo(c, a) {
     var td = todayIso(), shut = closed(c), i = { s:a[0].s, e:a[0].e, done:0, late:[], next:null, nextAll:[], soon:0 };
@@ -8964,7 +8948,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     }).join('') + '</div>';
     var list = (tab === 'closed' ? shut : tab === 'all' ? all : open).slice();
     if (!list.length) return tabs + '<div class="sp"></div>' + ysel + '</div><section class="card pad empty">' + (all.length ? 'ไม่มีเคสในแท็บนี้' : every.length ? 'ไม่มีเคสของปีนี้' : 'ไม่มีเคสที่บทบาทนี้เห็น') + '</section>';
-    var w = mpoWin(), A = {}, I = {}, K = mpoCols(every), R = { late:0, soon:1, ok:2, fin:3, shut:4 };
+    var w = mpoWin(), A = {}, I = {}, R = { late:0, soon:1, ok:2, fin:3, shut:4 };
     list.forEach(function (c) { A[c.id] = acts(c); I[c.id] = mpoInfo(c, A[c.id]); });
     list.sort(function (a, b) { var x = I[a.id], y = I[b.id]; return R[x.st] - R[y.st] || (x.key < y.key ? -1 : x.key > y.key ? 1 : 0) || String(a.short || a.name).localeCompare(String(b.short || b.name), 'th'); });
     var lateN = 0, soonN = 0;
@@ -8977,7 +8961,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var ticks = mpoTicks(w), lines = ticks.filter(function (d) { return d.slice(8) !== '01'; }).map(function (d) { return '<i class="mpo-gl" style="left:' + mpoX(w, d).toFixed(3) + '%"></i>'; }).join('') +
       w.ms.slice(1).map(function (m) { return '<i class="mpo-gl m" style="left:' + mpoX(w, m + '-01').toFixed(3) + '%"></i>'; }).join('');
     var rows = list.map(function (c) {
-      var a = A[c.id], i = I[c.id], on = !!X[c.id], k = K[String(c.id)], last = mpLast(c), df = mpDiff(c), sp = mpoSpan(w, i.s, i.e), pct = Math.round(i.done / a.length * 100);
+      var a = A[c.id], i = I[c.id], on = !!X[c.id], last = mpLast(c), df = mpDiff(c), sp = mpoSpan(w, i.s, i.e), pct = Math.round(i.done / a.length * 100);
       var iss = !last ? 'ยังไม่ออก Master Plan' : 'ออก Master Plan ครั้งที่ ' + last.n + ' · ' + dL(last.d) + (df && df.length ? ' · แก้วันหลังออก กิจกรรม ' + mpNums(df) : '');
       var lane = sp ? '<i class="mpo-pb' + sp.cls + '" style="' + sp.css + '"><i class="mpo-pf" style="width:' + mpoFill(w, i.s, i.e, i.done / a.length).toFixed(2) + '%"></i></i>' : '<span class="mpo-out">' + mpRange(i.s, i.e) + '</span>';
       if (sp) {
@@ -8986,11 +8970,11 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
         ds.forEach(function (e) { lane += mpoMark(w, by[e], 'late'); });
         if (i.next) lane += mpoMark(w, i.nextAll, 'next');
       }
-      return '<tr class="click mpo-r ' + k + '" data-a="mpx" data-v="' + c.id + '" aria-expanded="' + on + '" title="' + esc(c.name + ' · ' + (c.job || 'ยังไม่มีเลขที่งาน') + ' · ' + mpRange(i.s, i.e) + ' · เสร็จ ' + i.done + ' จาก ' + a.length + ' กิจกรรม · ' + iss) + '">' +
+      return '<tr class="click mpo-r" data-a="mpx" data-v="' + c.id + '" aria-expanded="' + on + '" title="' + esc(c.name + ' · ' + (c.job || 'ยังไม่มีเลขที่งาน') + ' · ' + mpRange(i.s, i.e) + ' · เสร็จ ' + i.done + ' จาก ' + a.length + ' กิจกรรม · ' + iss) + '">' +
         '<td class="mpo-c"><div class="mpo-cd"><b>' + esc(c.short || c.name) + '</b><span class="mpo-tg" aria-hidden="true">' + ic('chev') + '</span>' +
           '<div class="mpo-cm"><span class="mpo-job" title="' + esc(c.job || '') + '">' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span>' + mpoState(i) + '<b class="mpo-pcm">' + pct + '%</b></div></div></td>' +
         '<td class="mpo-pg"><b>' + pct + '%</b></td>' +
-        '<td class="mpo-tl"><div class="mpo-lane">' + lines + lane + now + '</div></td></tr>' + mpoActs(c, a, on, w, k, lines, now);
+        '<td class="mpo-tl"><div class="mpo-lane">' + lines + lane + now + '</div></td></tr>' + mpoActs(c, a, on, w, lines, now);
     }).join('');
     var lg = '<div class="mpo-lg"><span><i class="mpo-sw"></i>เสร็จแล้ว</span><span><i class="mpo-sw lt"></i>ยังเหลือ</span><span><b class="mpo-mk late">!</b>เลยกำหนด</span>' +
       '<span><b class="mpo-mk next"></b>ครบกำหนดถัดไป</span><span><b class="mpo-nw"></b>วันนี้</span><span class="mpo-hint">กดเคสเพื่อกางดู 16 กิจกรรม · กดกิจกรรมเพื่อเปิด Master Plan ของเคส</span></div>';
@@ -8999,12 +8983,12 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   /* the 16 activities under a case row: shown while the row is open (S.mpx), drawn in the same window as the row; a
      click opens the case's Master Plan tab (13/11/2569) */
-  function mpoActs(c, a, on, w, k, lines, now) {
+  function mpoActs(c, a, on, w, lines, now) {
     var td = todayIso(), shut = closed(c);
     return a.map(function (x, j) {
       var n = j + 1, s = mpSt(c, n), d = mpDays(td, x.e), late = !shut && s !== 'done' && d < 0, cut = n > 1 && MP_PH.some(function (p) { return p[1] === n; }), sp = mpoSpan(w, x.s, x.e);
       var cl = s === 'done' ? 'done' : late ? 'late' : s === 'doing' ? 'doing' : 'plan', tx = s === 'done' ? 'เสร็จแล้ว' : late ? 'เลย ' + (-d) + ' วัน' : s === 'doing' ? 'กำลังทำ' : 'ตามแผน';
-      return '<tr class="click mpo-a ' + k + (cut ? ' mpo-ph' : '') + '" data-c="' + c.id + '" data-a="mpgo" data-v="' + c.id + '"' + (on ? '' : ' hidden') + ' title="' + esc(n + '. ' + MP[j] + ' · ' + mpRange(x.s, x.e) + ' · ' + tx) + '">' +
+      return '<tr class="click mpo-a' + (cut ? ' mpo-ph' : '') + '" data-c="' + c.id + '" data-a="mpgo" data-v="' + c.id + '"' + (on ? '' : ' hidden') + ' title="' + esc(n + '. ' + MP[j] + ' · ' + mpRange(x.s, x.e) + ' · ' + tx) + '">' +
         '<td class="mpo-c"><div class="mpo-an"><span class="mpo-n">' + n + '</span><span class="mpo-at">' + esc(MP[j]) + '</span><span class="mpo-ssm ' + cl + '">' + tx + '</span></div></td>' +
         '<td class="mpo-pg"><span class="mpo-ss ' + cl + '">' + tx + '</span></td>' +
         '<td class="mpo-tl"><div class="mpo-lane">' + lines + (sp ? '<i class="mpo-ab ' + cl + sp.cls + '" style="' + sp.css + '"></i>' : '<span class="mpo-out">' + mpRange(x.s, x.e) + '</span>') + now + '</div></td></tr>';
