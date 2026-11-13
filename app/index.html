@@ -440,7 +440,7 @@ body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;bac
 .topbar>.av{width:38px;height:38px;border:0;font-size:13px;box-shadow:0 0 0 3px #fff}
 .frame-body{position:relative;display:flex;flex:1;min-height:0}
 .content{flex:1;min-width:0;height:100%;overflow:auto;scrollbar-width:thin;scrollbar-color:#C9D1E6 transparent}
-.main{max-width:1400px;margin:0 auto;padding:6px 28px 48px}
+.main{max-width:1920px;margin:0 auto;padding:6px 28px 48px}
 
 /* ---- the menu: an indigo capsule on the window's left edge that flows out of it; each item an icon over its short name
    (the full name is the tooltip), the open page a white tile; hairlines between the groups */
@@ -1822,6 +1822,45 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .dr-rail li.back b{color:var(--warn)}
 @media (max-width:900px){.nav-n{position:static;margin-left:6px}}
 @media (max-width:760px){.dk-row .dk{flex:0 0 auto}}
+/* ---------- the case page's step list (trial 13/11/2569): short rows, folding phases, a rail when folded ---------- */
+.tl.tl2{padding:12px 10px 8px}
+.tl2 .tl-h{display:flex;align-items:center;justify-content:space-between;padding:0 4px 6px 8px}
+.tl-tog{display:grid;flex:none;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:9px;background:none;color:var(--mut);cursor:pointer}
+.tl-tog:hover:not(:disabled){background:var(--tint);color:var(--link)}
+.tl-tog:disabled{opacity:.35;cursor:default}
+.tl-tog .ic{width:18px;height:18px}
+.tl-ph2{display:flex;align-items:center;gap:9px;width:100%;margin:4px 0 2px;padding:7px 8px;border:0;border-radius:10px;background:none;color:var(--navy);font:inherit;font-size:13.5px;font-weight:600;text-align:left;cursor:pointer}
+.tl-ph2:hover{background:var(--tint)}
+.tl2 .tl-pi,.tl-rail .tl-pi{width:24px;height:24px;border-radius:8px}
+.tl2 .tl-pi .ic,.tl-rail .tl-pi .ic{width:14px;height:14px}
+.tl-pn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-bar{display:flex;flex:none;width:56px;height:5px;overflow:hidden;border-radius:3px;background:var(--line2)}
+.tl-bar i{flex:none;height:100%}
+.tl-bar i.done{background:var(--brand)}.tl-bar i.doing{background:#60A5FA}.tl-bar i.late{background:var(--bad)}
+.tl-pc{flex:none;width:30px;color:var(--mut);font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;text-align:right}
+.tl-cv{display:grid;flex:none;place-items:center;width:16px;color:var(--mut);transition:transform .16s ease}
+.tl-cv .ic{width:14px;height:14px}
+.tl-ph2.on .tl-cv{transform:rotate(90deg)}
+.tl.tl2 .it{display:flex;align-items:center;gap:8px;width:100%;min-height:34px;margin:0 0 1px;padding:6px 10px 6px 12px}
+.tl.tl2 .it:before,.tl.tl2 .it:after{display:none}
+.tl.tl2 .it .k{flex:none;width:30px;color:var(--mut);font-size:12.5px;font-variant-numeric:tabular-nums}
+.tl.tl2 .it .n{flex:1;min-width:0;font-size:13.5px;line-height:1.4}
+.tl.tl2 .it.lock{opacity:.55}
+.tl-m{flex:none;color:var(--mut);font-size:12px;white-space:nowrap}
+.tl-m .ic{display:block;width:15px;height:15px}
+.tl-m.ok{color:var(--brand)}.tl-m.on{color:var(--brand);font-weight:600}.tl-m.bad{color:var(--bad);font-weight:600}
+.cbody:has(>.tl-rail){grid-template-columns:76px minmax(0,1fr)}
+.tl.tl-rail{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px}
+.tl-rp{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;padding:9px 4px 7px;border:0;border-radius:12px;background:none;color:var(--mut);font:inherit;cursor:pointer}
+.tl-rp:hover{background:var(--tint)}
+.tl-rp.on{background:var(--tint-2)}
+.tl-rp .tl-bar{width:40px}
+.tl-rp small{font-size:11.5px;font-variant-numeric:tabular-nums}
+.ph-tt{display:flex;align-items:center;gap:10px;min-width:0}
+.stnav{display:inline-flex;flex:none;gap:2px}
+.stnav .prev .ic{transform:rotate(180deg)}
+@media (max-width:1180px){.cbody:has(>.tl-rail){grid-template-columns:minmax(0,1fr)}.tl.tl-rail{flex-direction:row;overflow-x:auto}.tl-rp{width:auto;min-width:64px}}
+@media (prefers-reduced-motion:reduce){.tl-cv{transition:none}}
 /* ---------- the app page only: sign-in, who is signed in, saving, accounts and invitations ---------- */
 .ap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 16px}
 .ap-card{width:100%;max-width:420px;padding:28px 28px 24px;border-radius:24px;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}
@@ -3211,7 +3250,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function f25View(c, edit) {
     var r = !edit, f = c.f24 || {}, mt = f28Match(c), act = mt.filter(function (x) { return x.active; });
     var h = AUTO_NOTE + '<div class="fs"><h4><i>1</i>บันทึกลงทะเบียนรายชื่อผู้ขอรับการทวนสอบ (F-GCC-25)</h4><div class="fg">' + auto('วันที่ติดต่อ', dL(contactDate(c))) + auto('ชื่อผู้ขอรับการทวนสอบ', f.org) +
-      inp(c, 'code', 'รหัสลูกค้า (ชื่อย่อภาษาอังกฤษ ใช้ขึ้นต้นเลขที่งาน)', { ro:r, ph:'เช่น ABCD' }) + auto('ความครบถ้วนและความพร้อม (จาก F-GCC-24)', completeTxt(c)) + inp(c, 'f25.note', 'หมายเหตุ', { ro:r, w:1 }) + '</div></div>';
+      inp(c, 'code', 'รหัสลูกค้า (อักษรอังกฤษ 3 ตัว)', { ro:r, ph:'เช่น API' }) +
+      '<div class="f auto"><label>เลขที่งาน' + (c.job ? '' : ' (ออกจริงที่ขั้น 1.5)') + '</label><div class="tv" id="jobPrev">' + esc(c.job || suggestJob(c) || 'ใส่รหัสลูกค้าก่อน') + '</div></div>' +
+      auto('ความครบถ้วนและความพร้อม (จาก F-GCC-24)', completeTxt(c), 1) + inp(c, 'f25.note', 'หมายเหตุ', { ro:r, w:1 }) + '</div></div>';
     h += '<div class="fs"><h4><i>2</i>ความเป็นกลาง: ตารางควบคุมการไม่รับงาน (F-GCC-28)</h4>' +
       (act.length ? note('alert', 'พบในตาราง F-GCC-28: ' + act.map(function (x) { return esc(x.r.n) + ' (' + esc(x.r.x) + (x.r.after ? ' ถึง ' + dL(x.r.after) : '') + ')'; }).join(', ') + ' ห้ามรับงานจนกว่าจะพ้นวันที่กำหนด', 'bad') :
         mt.length ? note('check', 'พบชื่อในตาราง F-GCC-28 แต่พ้นวันที่ห้ามรับแล้ว: ' + mt.map(function (x) { return esc(x.r.n) + ' (ให้บริการได้หลัง ' + dL(x.r.after) + ')'; }).join(', '), 'okn') :
@@ -4617,6 +4658,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     leaf:'<path class="ac" d="M5 19c0-8 5.5-13 15-14-1 9.5-6 15-15 14z"/><path d="M5 19c0-8 5.5-13 15-14-1 9.5-6 15-15 14z"/><path d="M5 19c3.5-4.5 7.5-8 11-10"/>',
     chart:'<path class="ac" d="M6 20v-5h3v5zM11 20v-8h3v8zM16 20V9h3v11z"/><path d="M3.5 20.5h17M6 20v-5h3v5M11 20v-8h3v8M16 20V9h3v11"/><path d="m4 11 5-4 4 2.5L19.5 4"/><path d="M16 4h3.5v3.5"/>',
     back:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    chev:'<path d="m9.5 6 6 6-6 6"/>',
+    side:'<rect class="ac" x="4" y="5" width="5.5" height="14" rx="1"/><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M9.5 4.5v15"/>',
     eye:'<circle class="ac" cx="12" cy="12" r="3"/><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
     plus:'<path d="M12 5v14M5 12h14"/>',
     x:'<path d="M6 6l12 12M18 6 6 18"/>',
@@ -6682,25 +6725,60 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (!isClient(S.role) && !ext()) b += '<button type="button" class="btn" data-a="folder">' + ic('cloud') + 'แฟ้มงาน</button>';
     return b;
   }
+  /* the step list: one short line per step; a phase folds open or shut from its own row, picking a step opens its
+     phase, and nothing folds by itself, so a click never moves the list. The whole list folds into a rail of phases
+     (remembered in this browser) and the step panel then steps back and forth on its own */
+  try { S.tlc = localStorage.getItem('gcc-tlc') === '1'; } catch (e) { /* unfolded */ }
+  function tlOpen(c) {
+    if (S.tloc !== c.id) { S.tloc = c.id; S.tlo = {}; }
+    var st = stepById(S.sid); if (st && S.tlo[st[1]] === undefined) S.tlo[st[1]] = true;
+    return S.tlo;
+  }
+  function tlSt(c, st) { var s = stOf(c, st[0]); return s === 'done' ? 'done' : s === 'doing' ? (diff(due(c, st)) < 0 ? 'late' : 'doing') : lockOf(c, idx(st)) ? 'lock' : ''; }
+  function tlMark(c, st, k) {
+    var du = due(c, st), t = c.track[st[0]] || {};
+    if (k === 'done') return '<span class="tl-m ok" title="' + esc('สำเร็จ ' + dS(t.d)) + '">' + ic('check') + '</span>';
+    if (k === 'late') return '<span class="tl-m bad" title="' + esc('กำหนด ' + dL(du)) + '">เลย ' + (-diff(du)) + ' วัน</span>';
+    if (k === 'doing') return '<span class="tl-m on" title="' + esc('กำหนด ' + dL(du)) + '">กำลังทำ</span>';
+    if (k === 'lock') return '<span class="tl-m" title="' + esc('ขั้นตอนถัดไป · กำหนด ' + dL(du)) + '">' + ic('lock') + '</span>';
+    return '<span class="tl-m">' + dS(du) + '</span>';
+  }
+  // one continuous bar per phase (never dots or dashes): done in deep blue, then the step under way, red when it is late
+  function tlBar(c, l) {
+    var k = { done:0, doing:0, late:0 }; l.forEach(function (st) { var x = tlSt(c, st); if (k[x] !== undefined) k[x]++; });
+    var w = function (x) { return (100 * x / l.length).toFixed(1) + '%'; };
+    return '<span class="tl-bar" aria-hidden="true"><i class="done" style="width:' + w(k.done) + '"></i><i class="' + (k.late ? 'late' : 'doing') + '" style="width:' + w(k.late + k.doing) + '"></i></span>';
+  }
   function timeline(c, vis) {
-    var h = '<aside class="card tl"><div class="tl-h">ขั้นตอนการทำเอกสาร <small>' + doneN(c) + '/' + STEPS.length + '</small></div>';
+    var open = tlOpen(c), sel = stepById(S.sid), ph = PH.map(function (p, i) { return vis.filter(function (st) { return st[1] === i; }); });
+    var dn = function (l) { return l.filter(function (st) { return stOf(c, st[0]) === 'done'; }).length; };
+    if (S.tlc) return '<aside class="card tl tl-rail" aria-label="ช่วงของงาน"><button type="button" class="tl-tog" data-a="tlc" data-v="0" title="แสดงรายการขั้นตอน" aria-label="แสดงรายการขั้นตอน">' + ic('side') + '</button>' +
+      PH.map(function (p, i) {
+        var l = ph[i]; if (!l.length) return '';
+        return '<button type="button" class="tl-rp' + (sel && sel[1] === i ? ' on' : '') + '" data-a="tlfp" data-v="' + i + '" title="' + esc('ช่วงที่ ' + i + ' · ' + p[0] + ' ' + dn(l) + '/' + l.length) + '"><span class="tl-pi">' + ic(p[1]) + '</span>' + tlBar(c, l) + '<small>' + dn(l) + '/' + l.length + '</small></button>';
+      }).join('') + '</aside>';
+    var h = '<aside class="card tl tl2"><div class="tl-h"><span>ขั้นตอน <small>' + doneN(c) + '/' + STEPS.length + '</small></span><button type="button" class="tl-tog" data-a="tlc" data-v="1" title="ซ่อนรายการขั้นตอน" aria-label="ซ่อนรายการขั้นตอน">' + ic('side') + '</button></div>';
     PH.forEach(function (p, i) {
-      var l = vis.filter(function (st) { return st[1] === i; });
-      if (!l.length) return;
-      h += '<div class="tl-ph"><span class="tl-pi">' + ic(p[1]) + '</span><span>ช่วงที่ ' + i + ' · ' + esc(p[0]) + '</span><i>' + phState(c, i).d + '/' + phState(c, i).n + '</i></div>';
-      l.forEach(function (st) {
-        var s = stOf(c, st[0]), lk = !s && lockOf(c, idx(st)), du = due(c, st), t = c.track[st[0]] || {}, cd = codes(st)[0];
-        // the row carries only the step and its state; who holds it shows on hover and in the step's own panel
-        h += '<button type="button" class="it ' + (s || (lk ? 'lock' : '')) + '" data-a="step" data-v="' + st[0] + '" title="' + esc(st[0] + ' ' + st[2] + ' · ' + st[4]) + '"' + (S.sid === st[0] ? ' aria-current="true"' : '') + '>' +
-          '<span class="n">' + st[0] + ' ' + esc(st[2]) + '</span><span class="d">' + chip(s, lk, du) + '<small>' + (s === 'done' && t.d ? dS(t.d) : dS(du)) + '</small></span></button>';
+      var l = ph[i]; if (!l.length) return;
+      var on = !!open[i];
+      h += '<button type="button" class="tl-ph2' + (on ? ' on' : '') + '" data-a="tlph" data-v="' + i + '" aria-expanded="' + on + '" title="' + esc('ช่วงที่ ' + i + ' · ' + p[0]) + '"><span class="tl-pi">' + ic(p[1]) + '</span><span class="tl-pn">' + esc(p[0]) + '</span>' + tlBar(c, l) + '<span class="tl-pc">' + dn(l) + '/' + l.length + '</span><span class="tl-cv">' + ic('chev') + '</span></button>';
+      if (on) l.forEach(function (st) {
+        var k = tlSt(c, st);
+        h += '<button type="button" class="it ' + k + '" data-a="step" data-v="' + st[0] + '" title="' + esc(st[0] + ' ' + st[2] + ' · ' + st[4]) + '"' + (S.sid === st[0] ? ' aria-current="true"' : '') + '>' +
+          '<span class="k">' + st[0] + '</span><span class="n">' + esc(st[2]) + '</span>' + tlMark(c, st, k) + '</button>';
       });
     });
     return h + '</aside>';
   }
+  function stepNav(c, st) {
+    var vis = STEPS.filter(function (x) { return seeStep(c, x); }), i = vis.indexOf(st), p = vis[i - 1], n = vis[i + 1];
+    var b = function (x, cls, lab) { return '<button type="button" class="tl-tog ' + cls + '"' + (x ? ' data-a="step" data-v="' + x[0] + '" title="' + esc(lab + ' ' + x[0] + ' ' + x[2]) + '"' : ' disabled') + ' aria-label="' + lab + '">' + ic('chev') + '</button>'; };
+    return '<span class="stnav">' + b(p, 'prev', 'ขั้นก่อนหน้า') + b(n, 'next', 'ขั้นถัดไป') + '</span>';
+  }
   function panel(c, st) {
     if (!st) return '<section class="card panel pad">ไม่มีขั้นที่แสดง</section>';
     var s = stOf(c, st[0]), lk = !s && lockOf(c, idx(st)), du = due(c, st), can = canAct(c, st);
-    var h = '<section class="card panel"><div class="ph"><div><h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ต้องอนุมัติ</span>' : '') + '</h3>' +
+    var h = '<section class="card panel"><div class="ph"><div><div class="ph-tt">' + (S.tlc ? stepNav(c, st) : '') + '<h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ต้องอนุมัติ</span>' : '') + '</h3></div>' +
       '<div class="meta"><span class="who" title="' + esc('ผู้ทำ ' + st[4]) + '">' + st[8].map(function (k) { return av(k); }).join('') + '</span>กำหนดตามแผน ' + dL(du) + '</div></div><div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div>' +
       '<div class="tabs">' + [['form', 'แบบฟอร์ม'], ['flow', 'ผังงาน'], ['files', 'ไฟล์']].map(function (t) { return '<button type="button" data-a="ptab" data-v="' + t[0] + '" aria-selected="' + (S.ptab === t[0]) + '">' + ic(TAB_IC[t[0]]) + '<span>' + t[1] + '</span></button>'; }).join('') + '</div><div class="pb">';
     if (lk) h += note('lock', 'เริ่มได้เมื่อขั้น ' + lk[0] + ' อนุมัติแล้ว: ' + esc(lk[6]), 'warn');
@@ -6965,7 +7043,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if ((a === 'case' || a === 'cxopen') && t.closest('#modal')) closeModal();
     if (a === 'nav') { S.page = v; S.cid = null; render(); toTop(); }
     else if (a === 'case') { S.page = 'case'; S.cid = v; S.sid = t.getAttribute('data-s') || null; S.ctab = 'docs'; S.ptab = 'form'; S.hf = 'all'; S.hq = ''; S.hn = 20; render(); toTop(); }
-    else if (a === 'step') { S.sid = v; S.ptab = 'form'; render(); }
+    else if (a === 'step') { S.sid = v; S.ptab = 'form'; var stp = stepById(v); if (stp) (S.tlo = S.tlo || {})[stp[1]] = true; render(); }
+    else if (a === 'tlph') { S.tlo = S.tlo || {}; S.tlo[v] = !S.tlo[v]; render(); }
+    else if (a === 'tlc' || a === 'tlfp') { S.tlc = a === 'tlc' && v === '1'; if (a === 'tlfp') (S.tlo = S.tlo || {})[v] = true; try { localStorage.setItem('gcc-tlc', S.tlc ? '1' : '0'); } catch (e) { /* this view only */ } render(); }
     else if (a === 'cft') { S.cft = v; render(); }
     else if (a === 'cy') { S.cy = v; render(); }
     else if (a === 'ctab') { S.ctab = v; render(); }
@@ -7104,6 +7184,8 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (t.hasAttribute('data-g') && t.tagName !== 'SELECT' && t.type !== 'date') { setv(DB, t.getAttribute('data-g'), t.value); save(); return; }
     if (!t.hasAttribute('data-f') || t.type === 'checkbox' || t.type === 'radio' || t.type === 'date' || t.tagName === 'SELECT') return;
     var c = curCase(); if (!c) return;
+    // the client code (step 1.2): three letters A-Z, upper case, and the job number preview follows it
+    if (t.getAttribute('data-f') === 'code') { var cv = t.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3); if (t.value !== cv) t.value = cv; setv(c, 'code', cv); save(); var jp = $('jobPrev'); if (jp && !c.job) jp.textContent = suggestJob(c) || 'ใส่รหัสลูกค้าก่อน'; return; }
     setv(c, t.getAttribute('data-f'), t.value); save();
     var mn = $('missN'); if (mn) { var m = f24Missing(c); mn.textContent = m.length ? 'ยังขาด ' + m.length + ' หัวข้อบังคับ' : 'ครบทุกหัวข้อบังคับแล้ว'; }
   });
