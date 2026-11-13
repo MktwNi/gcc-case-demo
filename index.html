@@ -1860,6 +1860,26 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .stnav .prev .ic{transform:rotate(180deg)}
 @media (max-width:1180px){.cbody:has(>.tl-rail){grid-template-columns:minmax(0,1fr)}.tl.tl-rail{flex-direction:row;overflow-x:auto}.tl-rp{width:auto;min-width:64px}}
 @media (prefers-reduced-motion:reduce){.tl-cv{transition:none}}
+/* ---------- the step panel's boxes (13/11/2569): record for the client, skip, assign the lead verifier, send back; own sources in F-GCC-24 3.3 ---------- */
+.rec-box{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 14px;border:1px solid var(--tint-line);border-radius:12px;background:var(--tint)}
+.rec-i{display:grid;flex:none;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--tint-2);color:var(--link)}
+.rec-i .ic{width:16px;height:16px}
+.rec-t{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0;color:var(--ink-2);font-size:13px}
+.rec-t b{color:var(--ink);font-size:13.5px;font-weight:600}
+.rec-a{display:flex;flex:none;align-items:center;gap:8px}
+.rec-a .btn{white-space:nowrap}
+.rec-a select{height:32px;max-width:220px;padding:0 8px;border:1px solid var(--field);border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:13px}
+.rec-no{color:var(--mut);font-size:13px;white-space:nowrap}
+.srcx-n{display:flex;align-items:center;gap:10px}
+.srcx-n input[type=text]{flex:1;min-width:0;height:32px;padding:0 10px;border:1px solid var(--field);border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:13.5px}
+.srcx-n input[type=text]:disabled{border-color:transparent;padding:0}
+.srcx-del{display:grid;flex:none;place-items:center;width:28px;height:28px;color:var(--mut)}
+.srcx-del .ic{width:15px;height:15px}
+.srcx-add td{padding-top:4px!important;padding-bottom:4px!important}
+.srcx-add .link{display:inline-flex;align-items:center;gap:6px;color:var(--link);font-size:13px;white-space:nowrap}
+.srcx-add .ic{width:14px;height:14px}
+#roDrop input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
+@media (max-width:700px){.rec-box{flex-wrap:wrap}.rec-a{width:100%;justify-content:flex-end}}
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -3121,7 +3141,8 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   function sitesList(c) { var s = (c.f24 || {}).sites || {}; return [0, 1, 2].map(function (i) { return s[i] || {}; }).filter(function (x) { return x.n; }); }
   function f77Suggest(c) {
     var f = c.f24 || {}, st = sitesList(c), area = st.reduce(function (a, x) { return a + num(x.m); }, 0), src = f.src || {}, on = Object.keys(src).filter(function (k) { return src[k] && src[k].on; });
-    var s3 = on.some(function (k) { return /^s3/.test(k); }), fug = !!(src.s1d && src.s1d.on);
+    on = on.concat((f.srcx || []).filter(function (x) { return x && x.on && String(x.n || '').trim(); }).map(function (x) { return 'x' + x.g; }));
+    var s3 = on.some(function (k) { return /^s3|^x2$/.test(k); }), fug = !!(src.s1d && src.s1d.on);
     return [st.length ? { v:st.length <= 1 ? 1 : st.length <= 11 ? 2 : 3, w:'F-GCC-24 มี ' + st.length + ' สถานที่' } : null,
       area ? { v:area <= 5000 ? 1 : area <= 50000 ? 2 : 3, w:'F-GCC-24 พื้นที่รวม ' + fmt(area, 0) + ' ตร.ม.' } : null,
       on.length ? { v:fug || on.length > 15 ? 3 : !s3 && on.length <= 5 ? 1 : 2, w:'F-GCC-24 แหล่งปล่อย ' + on.length + ' ประเภท' + (fug ? ' มีสารทำความเย็นรั่วไหล (Fugitive)' : '') } : null, null];
@@ -3969,7 +3990,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     var meta = p === 'done' ? (st[0] === '4.4' ? 'ได้รับแล้ว ' : 'ส่งแล้ว ') + dL((c.track[st[0]] || {}).d) : p === 'sent' ? 'ส่งแล้ว ' + dL(flSentAt(c, st[0])) + ' · รอ GCC ตรวจ' : p === 'wait' ? 'GCC กำลังดำเนินการ' : 'กำหนด ' + dL(due(c, st));
     var form = CLIENT_ALSO[st[0]] ? '' : formView(c, st, can && !lk && s !== 'done'), fl = flBox(c, st), out = outBox(c, st), att = attBox(c, st);
     return '<section class="card panel"><div class="ph"><div><h3>' + esc(CLIENT_TASK[st[0]] || st[2]) + '</h3><div class="meta">' + meta + '</div></div>' +
-      '<div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div><div class="pb">' + (st[0] === '3.4' ? form + fl + out : fl + att + out + form) + '</div></section>';
+      '<div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div><div class="pb">' + (st[0] === '1.1' && s !== 'done' ? backNote(c, 1) : '') + (st[0] === '3.4' ? form + fl + out : fl + att + out + form) + '</div></section>';
   }
   function pageClientCase() {
     var c = caseById(S.cid || myCase(S.role));
@@ -4248,6 +4269,32 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   /* ---------- F-GCC-24 แบบฟอร์มการขอรับการทวนสอบ ---------- */
   var TH_ML = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
   var SRC_ROW = { s1a:3, s1b:4, s1c:5, s1d:6, s2a:10, s2b:11, s3a:15, s3b:16, s3c:17, s3d:18, o1:22, o2:23 };
+  /* own emission sources (f24.srcx) on the "อื่น ๆ (ถ้ามี)" lines of their scope (rows 7-8, 12-13 and 19-20 of the 3.3 table); a scope
+     with more of them, and the group อื่นๆ (ถ้ามี) that has no such line, gets copies of a blank line after its last row */
+  var SRC_OWN = [[7, 8], [12, 13], [19, 20], []], SRC_END = [8, 13, 20, 23];
+  function f24Own(X, tbl, srcx) {
+    var rs = tbl ? X.rows(tbl) : [], xs = (srcx || []).filter(function (x) { return x && String(x.n || '').trim(); });
+    if (!xs.length || rs.length < 24) return;
+    var blank = rs[20].cloneNode(true), n = 0;
+    [0, 1, 2, 3].forEach(function (gi) {
+      var last = rs[SRC_END[gi]];
+      xs.filter(function (x) { return +x.g === gi; }).forEach(function (x, k) {
+        var tr = SRC_OWN[gi][k] != null ? rs[SRC_OWN[gi][k]] : null;
+        if (!tr) {
+          tr = blank.cloneNode(true);
+          // a copy gets new ids for its tick boxes and none for its paragraphs (Word gives them)
+          X.all(tr, 'id').forEach(function (e) { e.setAttributeNS(W_NS, 'w:val', String(900000 + (n++))); });
+          [tr].concat(X.all(tr, 'p')).forEach(function (e) { e.removeAttributeNS(W14_NS, 'paraId'); e.removeAttributeNS(W14_NS, 'textId'); });
+          last.parentNode.insertBefore(tr, last.nextSibling);
+        }
+        last = tr;
+        var tc = X.cellsOf(tr)[0], put = false, nm = String(x.n).trim();
+        X.all(tc, 't').forEach(function (t) { if (!put && /[.…]{3,}/.test(t.textContent)) { t.textContent = t.textContent.replace(/[.…]{3,}/, ' ' + nm + ' '); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); put = true; } });
+        if (!put) X.append(tc, ' ' + nm);
+        [x.on, x.acc, x.mea, x.cal].forEach(function (b, j) { X.boxIn(tr, j, b); });
+      });
+    });
+  }
   FILL['F-GCC-24'] = { fill:function (X, c) {
     var f = c.f24 || {}, s = f.sector || {}, p = f.purpose || {}, cr = f.crit || {}, at = f.att || {}, g = f.ghg || {}, src = f.src || {}, sites = f.sites || {}, T = X.tables(), o = { bold:false };
     ['a', 'b', 'c'].forEach(function (k, i) { X.boxIn(X.cell(1, 0, 1), i, s[k]); });
@@ -4270,6 +4317,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     X.box('แนบรายงาน CFO', f.attR); X.box('แนบ Verification Sheet', f.attV);
     X.boxIn(X.cell(9, 0, 0), 0, at.org); X.boxIn(X.cell(9, 0, 0), 1, at.plant); X.boxIn(X.cell(9, 0, 0), 2, at.flow);
     Object.keys(SRC_ROW).forEach(function (k) { var v = src[k] || {}, tr = X.rows(T[10])[SRC_ROW[k]]; [v.on, v.acc, v.mea, v.cal].forEach(function (b, j) { X.boxIn(tr, j, b); }); });
+    f24Own(X, T[10], f.srcx);
     GHG.forEach(function (x, i) { X.boxIn(X.cell(11, 0, i), 0, g[x[0]]); });
     /* the tables from here on are found by their own words, not by a count (F-GCC-24-01 added two tables, and the staff part was one table off before) */
     var tIdx = function (pre, has) { var P = pre.replace(/\s+/g, ''); for (var i = 0; i < T.length; i++) { var s = X.text(T[i]).replace(/\s+/g, ''); if (has ? s.indexOf(P) >= 0 : s.indexOf(P) === 0) return i; } return -1; };
@@ -4910,6 +4958,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
       if (SIGNED[st[0]] && !attList(c, st[0]).length) { toast('แนบ' + SIGNED[st[0]][1] + 'ก่อนปิดขั้นนี้'); return; }
     }
     if (!to && st[5] && s === 'done' && STEPS.slice(i + 1).some(function (x) { return stOf(c, x[0]); })) { toast('ย้อนการอนุมัตินี้ไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว'); return; }
+    if (to === 'done' && st[0] === '1.1' && (c.f24 || {}).back) { logC(c, 'ส่งคำขอที่แก้ไขแล้ว ตามที่ GCC ส่งกลับเมื่อ ' + dL(c.f24.back.at)); delete c.f24.back; }
     if (to) c.track[st[0]] = { s:to, d:to === 'done' ? todayIso() : '' }; else delete c.track[st[0]];
     logC(c, (to === 'done' ? 'ทำเสร็จ ' : to === 'doing' ? 'เริ่มทำ ' : 'ย้อนสถานะ ') + st[0] + ' ' + st[2]);
     var msg = to === 'done' ? 'บันทึกแล้ว: ' + st[0] + ' เสร็จ' : 'บันทึกแล้ว';
@@ -6145,7 +6194,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     '2.3':'ตรวจแผนการทวนสอบ แล้วตอบรับทางอีเมลหรือลงชื่อรับทราบ แล้วแนบกลับ', '3.4':'ตอบสิ่งที่พบทีละข้อ แล้วแนบเล่มรายงานและ V-Sheet ฉบับแก้ไข',
     '4.3':'ตรวจร่างถ้อยแถลง แล้วแนบอีเมลหรือหนังสือเห็นชอบ', '4.4':'ดาวน์โหลดรายงานและถ้อยแถลงฉบับลงนาม', '5.2':'ตอบแบบประเมินความพึงพอใจ' };
   var FL_KIND = { quote:'ใบเสนอราคา', rep:'รายงานการปล่อยและดูดกลับก๊าซเรือนกระจกขององค์กร', vs:'Verification Sheet', ev:'หลักฐานประกอบ', drep:'ร่างรายงานการทวนสอบ',
-    dstm:'ร่างถ้อยแถลงการทวนสอบ', frep:'รายงานการทวนสอบ', fstm:'ถ้อยแถลงการทวนสอบ', out:'แบบฟอร์มที่ทำนอกระบบ', misc:'ไฟล์ในแฟ้มงาน' };
+    dstm:'ร่างถ้อยแถลงการทวนสอบ', frep:'รายงานการทวนสอบ', fstm:'ถ้อยแถลงการทวนสอบ', out:'แบบฟอร์มที่ทำนอกระบบ', rec:'หลักฐานจากลูกค้า', misc:'ไฟล์ในแฟ้มงาน' };
   function flList(c) { if (!c.fl) { c.fl = []; if (!APP_ON) flSeed(c); } return c.fl; }
   function flOf(c, slot, round) { return flList(c).filter(function (f) { return f.slot === slot && (!round || (f.round || 1) === round); }); }
   function flLast(c, slot, round) { var l = flOf(c, slot, round); return l.length ? l[l.length - 1] : null; }
@@ -6638,7 +6687,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     if (!tabs.some(function (t) { return t[0] === S.ctab; })) S.ctab = 'docs';
     var h = '<section class="card"><div class="chead"><div><button type="button" class="link" data-a="nav" data-v="cases">' + esc(navName('cases')) + '</button><h2>' + esc(c.name) + '</h2>' +
       '<div class="meta"><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span><span class="chip doing">CFO</span><span class="chip wait">ระดับความเชื่อมั่นแบบจำกัด</span>' + (closed(c) ? '<span class="chip lock">ปิดแฟ้มแล้ว อ่านอย่างเดียว</span>' : '') +
-      (staff ? '<span title="หัวหน้าผู้ทวนสอบ">LV ' + esc(lead(c)) + '</span><span title="ผู้ทบทวนอิสระ">IR ' + esc(irName(c)) + '</span>' : '') + '</div></div><div class="acts">' + caseActions(c) + '</div></div>' +
+      (staff ? '<span title="หัวหน้าผู้ทวนสอบ">LV ' + esc(lead(c) || 'ยังไม่มอบหมาย') + '</span><span title="ผู้ทบทวนอิสระ">IR ' + esc(irName(c)) + '</span>' : '') + '</div></div><div class="acts">' + caseActions(c) + '</div></div>' +
       (sh ? '<div style="padding:0 20px">' + note('share', 'แชร์ให้ ' + esc(role(S.role)[1]) + ' ถึง ' + dL(sh.until) + ' · ' + (sh.scope === 'all' ? 'ทั้งแฟ้ม' : 'เฉพาะรายงานและถ้อยแถลง') + ' · อ่านอย่างเดียว · ทุกการเปิดดูถูกบันทึก', 'warn') + '</div>' : '') +
       stepper(c) + '<div class="tabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-a="ctab" data-v="' + t[0] + '" aria-selected="' + (S.ctab === t[0]) + '">' + ic(TAB_IC[t[0]] || 'docs') + '<span>' + t[1] + '</span></button>'; }).join('') + '</div></section>';
     if (S.ctab === 'plan') h += planView(c);
@@ -6667,7 +6716,8 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   function tlSt(c, st) { var s = stOf(c, st[0]); return s === 'done' ? 'done' : s === 'doing' ? (diff(due(c, st)) < 0 ? 'late' : 'doing') : lockOf(c, idx(st)) ? 'lock' : ''; }
   function tlMark(c, st, k) {
     var du = due(c, st), t = c.track[st[0]] || {};
-    if (k === 'done') return '<span class="tl-m ok" title="' + esc('สำเร็จ ' + dS(t.d)) + '">' + ic('check') + '</span>';
+    if (k === 'done') return t.skip ? '<span class="tl-m" title="' + esc('ข้าม: ' + t.skip.why) + '">ข้าม</span>' :
+      t.out ? '<span class="tl-m ok" title="' + esc('ลูกค้าตอบนอกระบบ ' + dS(t.d)) + '">นอกระบบ</span>' : '<span class="tl-m ok" title="' + esc('สำเร็จ ' + dS(t.d)) + '">' + ic('check') + '</span>';
     if (k === 'late') return '<span class="tl-m bad" title="' + esc('กำหนด ' + dL(du)) + '">เลย ' + (-diff(du)) + ' วัน</span>';
     if (k === 'doing') return '<span class="tl-m on" title="' + esc('กำหนด ' + dL(du)) + '">กำลังทำ</span>';
     if (k === 'lock') return '<span class="tl-m" title="' + esc('ขั้นตอนถัดไป · กำหนด ' + dL(du)) + '">' + ic('lock') + '</span>';
@@ -6700,6 +6750,164 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     });
     return h + '</aside>';
   }
+  /* ---------- steps closed another way, the lead verifier of the request review, and a request sent back (13/11/2569) ----------
+     A client step the client answered outside the system (an e-mail, a letter, a signed file) is recorded by GCC from the
+     client's own evidence, with the date the client answered and the channel. A few steps may be skipped with a reason;
+     approval steps never. The database checks the same in step_mark() (server/schema.sql); x on the step keeps the record */
+  var CL_REC = { '1.1':'admin', '1.7':'admin', '2.3':'lv', '3.4':'lv', '4.3':'lv' };
+  var SKIP_OK = { '1.7':'ลูกค้าไม่ตอบรับภายใน 7 วันทำการ', '5.2':'ลูกค้าไม่ส่งแบบประเมินกลับ' };
+  var REC_X = ['pdf', 'eml', 'msg', 'jpg', 'jpeg', 'png', 'doc', 'docx'], REC_F = null;
+  function skipRole() { return rk() === 'admin' || rk() === 'mgr'; }
+  // 1.7 is skipped only after 7 working days from the team list going to the client (step 1.6 approved)
+  function skipAfter(c, sid) { var d6 = (c.track['1.6'] || {}).d; return sid === '1.7' && d6 ? addWorkdays(d6, 7) : ''; }
+  function markCan(c, st, tk) {
+    if (jOn() || ext() || isClient(S.role) || (closed(c) && st[0] !== '5.2')) return false;
+    return tk.out ? CL_REC[st[0]] === rk() : tk.skip ? !!SKIP_OK[st[0]] && skipRole() : false;
+  }
+  function stepExtra(c, st, s, lk) {
+    var h = st[0] === '1.3' ? asgBox(c) : '';
+    if (st[0] === '1.1' && s !== 'done') h += backNote(c);
+    return h + (s === 'done' ? markInfo(c, st) : recBox(c, st, s, lk) + back11Box(c, st, s));
+  }
+  function recBox(c, st, s, lk) {
+    if (s === 'done' || lk || isClient(S.role) || ext() || jOn() || (closed(c) && st[0] !== '5.2')) return '';
+    var rec = CL_REC[st[0]] === rk(), sk = !!SKIP_OK[st[0]] && skipRole();
+    if (!rec && !sk) return '';
+    var af = sk ? skipAfter(c, st[0]) : '', early = !!af && todayIso() <= af;
+    return '<div class="rec-box"><span class="rec-i">' + ic('info') + '</span><div class="rec-t"><b>ลูกค้าไม่ได้ทำในระบบ?</b><span>' +
+      [rec ? 'แนบหลักฐานที่ลูกค้าส่งมา เช่น อีเมลหรือไฟล์ที่ลงนาม แล้วบันทึกแทนลูกค้า' : '', sk ? (early ? 'ถ้าลูกค้าไม่ตอบรับ ข้ามได้หลัง ' + dL(af) : 'ข้ามได้เมื่อ' + SKIP_OK[st[0]]) : ''].filter(Boolean).join(' · ') + '</span></div>' +
+      '<div class="rec-a">' + (rec ? '<button type="button" class="btn sm" data-a="recout">' + ic('upload') + 'บันทึกแทนลูกค้า</button>' : '') +
+      (sk ? '<button type="button" class="btn sm" data-a="skipst"' + (early ? ' disabled title="' + esc('ข้ามได้หลัง ' + dL(af)) + '"' : '') + '>ข้ามขั้นนี้</button>' : '') + '</div></div>';
+  }
+  function recList(c, sid) { return flList(c).filter(function (f) { return f.slot === 'rec' && f.sid === sid; }); }
+  // a step recorded for the client or skipped: who, when, the channel or the reason, and the evidence
+  function markInfo(c, st) {
+    var t = c.track[st[0]] || {};
+    if (t.out) return flCard('upload', 'บันทึกแทนลูกค้า', 'ลูกค้าตอบทาง' + t.out.via + ' ' + dL(t.d) + ' · บันทึกโดย ' + (t.out.by || '-') + ' ' + dL(t.out.at) + (t.out.note ? ' · ' + t.out.note : ''),
+      '<span class="chip done">นอกระบบ</span>', flRows(c, recList(c, st[0]), false, true) || '<p class="fls-no">ไม่มีไฟล์หลักฐาน</p>');
+    if (t.skip) return note('alert', '<b>ข้ามขั้นนี้</b> ' + esc(t.skip.why) + (t.skip.note ? ' · ' + esc(t.skip.note) : '') + ' · โดย ' + esc(t.skip.by || '-') + ' ' + dL(t.skip.at || t.d), 'warn');
+    return '';
+  }
+  function openRecOut(c, st) {
+    if (!st || CL_REC[st[0]] !== rk()) return;
+    REC_F = null;
+    var m = st[0] === '1.1' ? f24Missing(c) : [];
+    modal('บันทึกแทนลูกค้า · ' + st[0] + ' ' + st[2], 'upload',
+      note('info', 'ใช้เมื่อลูกค้าตอบทางอีเมล จดหมาย หรือส่งไฟล์ที่ลงนามมา แทนการกดในระบบ ระบบเก็บหลักฐาน ผู้บันทึก และวันที่ไว้ในประวัติของเคส') +
+      (m.length ? note('alert', 'ข้อมูลคำขอในระบบยังขาด ' + m.length + ' หัวข้อ เช่น ' + esc(m.slice(0, 3).join(', ')) + ' ถ้าบันทึกไปก่อน หัวข้อเหล่านี้จะว่างใน F-GCC-24', 'warn') : '') +
+      '<div class="fg" style="margin-top:12px"><div class="f w"><label for="roFile">หลักฐานจากลูกค้า <span class="req">*</span></label><label class="at-drop" id="roDrop"><input type="file" id="roFile" accept="' + REC_X.map(function (x) { return '.' + x; }).join(',') + '">' + ic('upload') +
+      '<span><b id="roFileN">เลือกไฟล์ หรือลากมาวาง</b><small>อีเมลที่บันทึกเป็น PDF หรือไฟล์ที่ลูกค้าลงนาม ไม่เกิน 50 MB</small></span></label></div>' +
+      '<div class="f"><label for="roD">ลูกค้าตอบเมื่อ <span class="req">*</span></label><input type="date" id="roD" value="' + todayIso() + '" max="' + todayIso() + '"></div>' +
+      '<div class="f"><label for="roVia">ช่องทาง</label><select id="roVia"><option>อีเมล</option><option>จดหมาย</option><option>ไฟล์ที่ลงนาม</option><option>อื่นๆ</option></select></div>' +
+      '<div class="f w"><label for="roNote">หมายเหตุ</label><input id="roNote" placeholder="เช่น ลูกค้ายืนยันแผนทางอีเมลของผู้ประสานงาน"></div></div>',
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn pri" data-a="recoutok">' + ic('check') + 'บันทึกแทนลูกค้า</button>');
+  }
+  function recPick(f) { REC_F = f || null; var n = $('roFileN'); if (n) n.textContent = f ? f.name + ' · ' + attSize(f.size) : 'เลือกไฟล์ หรือลากมาวาง'; }
+  // after a step is closed another way the case moves on as after ทำเสร็จ: the client hears of its next step, the panel goes on
+  function markNext(c, st) {
+    var i = idx(st), nx = STEPS[i + 1], m = '';
+    if (nx && (nx[8].indexOf('client') >= 0 || nx[0] === '2.1') && !stOf(c, nx[0])) { mailC(c, 'ถึงขั้นของคุณ: ' + (CLIENT_TASK[nx[0]] || nx[2])); m = ' และส่งอีเมลแจ้งลูกค้าแล้ว'; }
+    for (var k = i + 1; k < STEPS.length; k++) if (seeStep(c, STEPS[k])) { S.sid = STEPS[k][0]; break; }
+    return m;
+  }
+  function recOutSave(c, st) {
+    if (!st || CL_REC[st[0]] !== rk() || stOf(c, st[0]) === 'done') return;
+    var f = REC_F, d = ($('roD') || {}).value || '';
+    if (!f) { toast('แนบหลักฐานจากลูกค้าก่อน'); return; }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d > todayIso()) { toast('ใส่วันที่ลูกค้าตอบ ไม่เกินวันนี้'); return; }
+    var x = (f.name.split('.').pop() || '').toLowerCase();
+    if (REC_X.indexOf(x) < 0) { toast(f.name + ' ไม่ใช่ชนิดที่รับ (' + REC_X.join(', ').toUpperCase() + ')'); return; }
+    if (f.size > 50 * 1048576) { toast(f.name + ' ใหญ่เกิน 50 MB'); return; }
+    var id = c.id + '-rec-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), via = ($('roVia') || {}).value || 'อีเมล', nt = (($('roNote') || {}).value || '').trim();
+    attPut(id, f).then(function () {
+      flList(c).push({ id:id, slot:'rec', sid:st[0], name:f.name, size:f.size, type:f.type || flType(x), at:todayIso(), by:byWho(), who:S.role });
+      c.track[st[0]] = { s:'done', d:d, out:{ via:via, note:nt, by:byWho(), at:todayIso(), f:id }, how:'out' };
+      if (st[0] === '1.1' && c.f24 && c.f24.back) delete c.f24.back;
+      logC(c, 'บันทึกแทนลูกค้า ' + st[0] + ' ' + st[2] + ': ลูกค้าตอบทาง' + via + ' ' + dL(d) + (nt ? ' · ' + nt : ''));
+      REC_F = null; closeModal(); var m = markNext(c, st); save(); render(); toast('บันทึกแทนลูกค้าแล้ว: ' + st[0] + ' เสร็จ' + m);
+    }).catch(function () { toast('บันทึกไฟล์ไม่ได้ ลองใหม่อีกครั้ง'); });
+  }
+  function openSkip(c, st) {
+    if (!st || !SKIP_OK[st[0]] || !skipRole()) return;
+    var af = skipAfter(c, st[0]); if (af && todayIso() <= af) { toast('ข้ามได้หลัง ' + dL(af)); return; }
+    modal('ข้ามขั้น ' + st[0] + ' ' + st[2], 'alert',
+      note('alert', 'ขั้นที่ข้ามนับว่าผ่าน งานไปขั้นถัดไปได้ ระบบเก็บเหตุผล ผู้ข้าม และวันที่ไว้ในประวัติ และยกเลิกการข้ามได้', 'warn') +
+      '<div class="fg" style="margin-top:12px"><div class="f w"><label for="skWhy">เหตุผล <span class="req">*</span></label><select id="skWhy"><option>' + esc(SKIP_OK[st[0]]) + '</option><option value="other">อื่นๆ (ระบุในหมายเหตุ)</option></select></div>' +
+      '<div class="f w"><label for="skNote">หมายเหตุ</label><input id="skNote" placeholder="เช่น ส่งอีเมลติดตามแล้ว 2 ครั้ง ยังไม่ได้รับคำตอบ"></div></div>',
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn warn" data-a="skipok">ข้ามขั้นนี้</button>');
+  }
+  function skipSave(c, st) {
+    if (!st || !SKIP_OK[st[0]] || !skipRole() || stOf(c, st[0]) === 'done') return;
+    var w = ($('skWhy') || {}).value || '', nt = (($('skNote') || {}).value || '').trim();
+    if (w === 'other' && !nt) { toast('ระบุเหตุผลในหมายเหตุก่อน'); return; }
+    var why = w === 'other' ? 'อื่นๆ' : w || SKIP_OK[st[0]];
+    c.track[st[0]] = { s:'done', d:todayIso(), skip:{ why:why, note:nt, by:byWho(), at:todayIso() }, how:'skip' };
+    logC(c, 'ข้ามขั้น ' + st[0] + ' ' + st[2] + ': ' + why + (nt ? ' · ' + nt : ''));
+    closeModal(); var m = markNext(c, st); save(); render(); toast('ข้ามขั้น ' + st[0] + ' แล้ว' + m);
+  }
+  // taking a record or a skip back: the step waits again for whoever acts on it; the evidence stays in the case
+  function markUndo(c, st) {
+    var t = st ? c.track[st[0]] || {} : {};
+    if (!st || !markCan(c, st, t)) { toast('บทบาทนี้ยกเลิกไม่ได้'); return; }
+    if (!window.confirm(t.skip ? 'ยกเลิกการข้ามขั้น ' + st[0] + '?' : 'ยกเลิกการบันทึกแทนลูกค้าของขั้น ' + st[0] + '? ไฟล์หลักฐานยังเก็บไว้ในเคส')) return;
+    c.track[st[0]] = { s:'doing', d:'', how:'undo' };
+    logC(c, (t.skip ? 'ยกเลิกการข้ามขั้น ' : 'ยกเลิกการบันทึกแทนลูกค้า ') + st[0] + ' ' + st[2]);
+    save(); render(); toast('ยกเลิกแล้ว ขั้น ' + st[0] + ' กลับไปรอ' + (st[8].indexOf('client') >= 0 ? 'ลูกค้า' : 'ดำเนินการ'));
+  }
+  /* the admin office (1.2) or the lead verifier (1.3) sends an incomplete request back to the client (P-GCC-07 5.4):
+     step 1.1 opens again for the client, the reason stays on the request (f24.back) until the client sends it again */
+  function back11Box(c, st, s) {
+    if (s === 'done' || jOn() || closed(c) || stOf(c, '1.1') !== 'done' || stOf(c, '1.3') === 'done' || !((st[0] === '1.2' && rk() === 'admin') || (st[0] === '1.3' && rk() === 'lv' && lead(c)))) return '';
+    return '<div class="rec-box"><span class="rec-i">' + ic('back') + '</span><div class="rec-t"><b>คำขอยังไม่ครบหรือไม่ถูกต้อง?</b><span>ส่งกลับให้ลูกค้าแก้ไขแล้วส่งใหม่ ตาม P-GCC-07 ข้อ 5.4 ไม่แก้แทนลูกค้า</span></div>' +
+      '<div class="rec-a"><button type="button" class="btn sm warn" data-a="back11">' + ic('back') + 'ส่งกลับให้ลูกค้าแก้ไข</button></div></div>';
+  }
+  function openBack11(c) {
+    var m = f24Missing(c);
+    modal('ส่งคำขอกลับให้ลูกค้าแก้ไข', 'back',
+      note('info', 'ขั้น 1.1 จะเปิดให้ลูกค้าแก้แล้วกดส่งใหม่ ระบบส่งอีเมลแจ้งลูกค้า และเก็บเหตุผลไว้ในประวัติของเคส') +
+      '<div class="fg" style="margin-top:12px"><div class="f w"><label for="b11Note">สิ่งที่ต้องแก้ <span class="req">*</span></label><textarea id="b11Note" rows="3" placeholder="เช่น ปริมาณรวมในข้อ 3.1 ไม่ตรงกับรายงาน CFO">' + esc(m.length ? 'ยังขาด: ' + m.join(', ') : '') + '</textarea></div></div>',
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn warn" data-a="back11ok">' + ic('back') + 'ส่งกลับให้ลูกค้า</button>');
+  }
+  function back11Save(c) {
+    var bn = (($('b11Note') || {}).value || '').trim();
+    if (!bn) { toast('ใส่สิ่งที่ต้องแก้ก่อน'); return; }
+    if (stOf(c, '1.1') !== 'done' || stOf(c, '1.3') === 'done') { closeModal(); toast('ส่งกลับไม่ได้ คำขอนี้ผ่านการทบทวนแล้ว'); return; }
+    c.f24 = c.f24 || {}; c.f24.back = { at:todayIso(), by:byWho(), note:bn };
+    c.track['1.1'] = { s:'doing', d:'', how:'back' };
+    logC(c, 'ส่งคำขอกลับให้ลูกค้าแก้ไข: ' + bn);
+    mailC(c, 'GCC ส่งคำขอรับการทวนสอบกลับให้แก้ไข: ' + bn.slice(0, 150));
+    closeModal(); save(); render(); toast('ส่งคำขอกลับให้ลูกค้าแล้ว และส่งอีเมลแจ้งลูกค้า');
+  }
+  function backNote(c, cl) {
+    var b = (c.f24 || {}).back; if (!b) return '';
+    return note('back', '<b>GCC ส่งคำขอกลับให้แก้ไข</b> ' + dL(b.at) + ': ' + esc(b.note) + (cl ? ' · แก้แล้วกด "ส่ง / ยืนยัน" อีกครั้ง' : ' · รอลูกค้าแก้แล้วส่งใหม่'), 'warn');
+  }
+  /* the manager names the lead verifier who reviews the request at step 1.3 (P-GCC-07-01 ข้อ 5.4); the same person leads the
+     team at step 1.6. On the app page the names are the open accounts in the role lv, and naming one gives them the case */
+  function lvPool() {
+    var n = {};
+    if (APP_ON) USERS.forEach(function (u) { if (u.active && u.role === 'lv' && u.name) n[u.name.trim()] = 1; });
+    else DB.cases.forEach(function (x) { if (x.lv) n[x.lv] = 1; (x.team || []).forEach(function (m) { if (m.r === 'หัวหน้าผู้ทวนสอบ' && m.n) n[m.n] = 1; }); });
+    return Object.keys(n).sort();
+  }
+  function asgBox(c) {
+    var nm = lead(c), can = S.role === 'mgr' && !jOn() && !closed(c) && stOf(c, '1.6') !== 'done';
+    if (nm && !(can && S.asgEd === c.id)) return note('people', 'หัวหน้าผู้ทวนสอบที่ทบทวนคำขอ <b>' + esc(nm) + '</b> · ผู้จัดการฝ่ายมอบหมาย' + (can ? ' · <button type="button" class="link" data-a="asgre">เปลี่ยน</button>' : ''));
+    if (!can) return note('lock', 'รอผู้จัดการฝ่ายมอบหมายหัวหน้าผู้ทวนสอบให้ทบทวนคำขอนี้ (P-GCC-07 ข้อ 5.4)', 'warn');
+    var pool = lvPool();
+    return '<div class="rec-box"><span class="rec-i">' + ic('people') + '</span><div class="rec-t"><b>มอบหมายหัวหน้าผู้ทวนสอบให้ทบทวนคำขอ</b><span>ตาม P-GCC-07 ข้อ 5.4 LV ที่คุณมอบหมายเป็นผู้ทบทวนและคำนวณ Manday แล้วคุณอนุมัติ ชื่อนี้เป็นหัวหน้าผู้ทวนสอบในขั้น 1.6 ด้วย</span></div>' +
+      '<div class="rec-a">' + (pool.length ? '<select id="asgLv" aria-label="หัวหน้าผู้ทวนสอบ">' + pool.map(function (n) { return '<option' + (n === nm ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('') + '</select>' +
+      '<button type="button" class="btn sm pri" data-a="asglv">มอบหมาย</button>' : '<span class="rec-no">ยังไม่มีบัญชีหัวหน้าผู้ทวนสอบ</span>') + '</div></div>';
+  }
+  function asgSave(c) {
+    var nm = (($('asgLv') || {}).value || '').trim();
+    if (!nm || S.role !== 'mgr' || stOf(c, '1.6') === 'done') return;
+    c.lv = nm; c.team = c.team || [];
+    var ld = c.team.filter(function (m) { return m.r === 'หัวหน้าผู้ทวนสอบ'; })[0];
+    if (ld) ld.n = nm; else c.team.unshift({ n:nm, r:'หัวหน้าผู้ทวนสอบ', comp:'', ext:'ภายใน', f08:false, f09:false });
+    S.asgEd = null; logC(c, 'ผู้จัดการฝ่ายมอบหมาย ' + nm + ' เป็นหัวหน้าผู้ทวนสอบ ทบทวนคำขอ (ขั้น 1.3)');
+    save(); render(); toast('มอบหมาย ' + nm + ' แล้ว');
+  }
   function stepNav(c, st) {
     var vis = STEPS.filter(function (x) { return seeStep(c, x); }), i = vis.indexOf(st), p = vis[i - 1], n = vis[i + 1];
     var b = function (x, cls, lab) { return '<button type="button" class="tl-tog ' + cls + '"' + (x ? ' data-a="step" data-v="' + x[0] + '" title="' + esc(lab + ' ' + x[0] + ' ' + x[2]) + '"' : ' disabled') + ' aria-label="' + lab + '">' + ic('chev') + '</button>'; };
@@ -6707,7 +6915,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   }
   function panel(c, st) {
     if (!st) return '<section class="card panel pad">ไม่มีขั้นที่แสดง</section>';
-    var s = stOf(c, st[0]), lk = !s && lockOf(c, idx(st)), du = due(c, st), can = canAct(c, st);
+    var s = stOf(c, st[0]), lk = !s && lockOf(c, idx(st)), du = due(c, st), can = canAct(c, st) && !(st[0] === '1.3' && rk() === 'lv' && !lead(c));
     var h = '<section class="card panel"><div class="ph"><div><div class="ph-tt">' + (S.tlc ? stepNav(c, st) : '') + '<h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ต้องอนุมัติ</span>' : '') + '</h3></div>' +
       '<div class="meta"><span class="who" title="' + esc('ผู้ทำ ' + st[4]) + '">' + st[8].map(function (k) { return av(k); }).join('') + '</span>กำหนดตามแผน ' + dL(du) + '</div></div><div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div>' +
       '<div class="tabs">' + [['form', 'แบบฟอร์ม'], ['flow', 'ผังงาน'], ['files', 'ไฟล์']].map(function (t) { return '<button type="button" data-a="ptab" data-v="' + t[0] + '" aria-selected="' + (S.ptab === t[0]) + '">' + ic(TAB_IC[t[0]]) + '<span>' + t[1] + '</span></button>'; }).join('') + '</div><div class="pb">';
@@ -6715,16 +6923,19 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     if (S.ptab === 'flow') h += flowLane(st[1], c, st[0]);
     else if (S.ptab === 'files') h += filesView(c, st);
     else if (!seeDoc(c, st)) h += note('lock', 'ฝ่ายนี้เห็นเฉพาะสถานะของขั้นนี้ ไม่เห็นเนื้อหาเอกสารทางเทคนิค ตาม P-GCC-07 ข้อ 5.10', 'warn');
-    else { if (st[6]) h += note('info', (st[5] ? 'อนุมัติเมื่อ: ' : 'ผ่านเมื่อ: ') + esc(st[6])); h += ofsGateBox(c, st) + attBox(c, st) + flBox(c, st) + outBox(c, st) + rvBox(c, st) + formView(c, st, can && !lk && s !== 'done' && !(closed(c) && st[0] !== '5.2') && stepEdit(st)); }
+    else { h += stepExtra(c, st, s, lk); if (st[6]) h += note('info', (st[5] ? 'อนุมัติเมื่อ: ' : 'ผ่านเมื่อ: ') + esc(st[6])); h += ofsGateBox(c, st) + attBox(c, st) + flBox(c, st) + outBox(c, st) + rvBox(c, st) + formView(c, st, can && !lk && s !== 'done' && !(closed(c) && st[0] !== '5.2') && stepEdit(st)); }
     return h + '</div></section>';
   }
   function stepBtns(c, st, s, lk, can) {
     var b = seeDoc(c, st) ? printCodes(c, st).filter(function (pc) { return !isClient(S.role) || CLIENT_DOCS.indexOf(pc) >= 0; }).map(function (pc) { return expBtn(pc, c.id); }).join('') : '';
-    var dn = '<span class="chip done">สำเร็จ ' + dS((c.track[st[0]] || {}).d) + '</span>';
+    var tk = isClient(S.role) ? { d:(c.track[st[0]] || {}).d } : c.track[st[0]] || {};
+    var un = s === 'done' && markCan(c, st, tk) ? '<button type="button" class="btn sm" data-a="markundo" title="' + (tk.skip ? 'ยกเลิกการข้ามขั้นนี้' : 'ยกเลิกการบันทึกแทนลูกค้า') + '">ยกเลิก</button>' : '';
+    var dn = (tk.skip ? '<span class="chip lock" title="' + esc('ข้าม: ' + tk.skip.why + (tk.skip.note ? ' · ' + tk.skip.note : '')) + '">ข้าม ' + dS(tk.d) + '</span>' :
+      '<span class="chip done"' + (tk.out ? ' title="' + esc('ลูกค้าตอบนอกระบบ ทาง' + tk.out.via + (tk.out.note ? ' · ' + tk.out.note : '')) + '"' : '') + '>สำเร็จ' + (tk.out ? ' (นอกระบบ)' : '') + ' ' + dS(tk.d) + '</span>') + un;
     if (!can || lk || (closed(c) && st[0] !== '5.2')) return b + (s === 'done' ? dn : jOn() && !lk && st[8].indexOf('client') >= 0 ? '<button type="button" class="btn ok" disabled title="ตัวอย่างหน้าจอ ลูกค้ากดปุ่มนี้เมื่อพร้อมส่ง">' + ic('check') + 'ส่ง / ยืนยัน</button>' : '');
     if (s === '') return b + '<button type="button" class="btn pri" data-a="st" data-v="doing">' + ic('play') + 'เริ่มทำ</button>';
     if (s === 'doing') return b + '<button type="button" class="btn ok" data-a="st" data-v="done">' + ic('check') + (isClient(S.role) ? 'ส่ง / ยืนยัน' : st[5] ? 'อนุมัติ' : 'ทำเสร็จ') + '</button>';
-    return b + dn + (isClient(S.role) ? '' : '<button type="button" class="btn sm" data-a="st" data-v="">ย้อนสถานะ</button>');
+    return b + dn + (un || isClient(S.role) ? '' : '<button type="button" class="btn sm" data-a="st" data-v="">ย้อนสถานะ</button>');
   }
 
   /* ---------- panels ---------- */
@@ -6801,7 +7012,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
       '<div class="opts" style="margin-top:8px">' + chk(c, p + 'attR', 'แนบรายงาน CFO ฉบับที่ขอทวนสอบ (ต้องแนบ) <span class="req">*</span>', r) + chk(c, p + 'attV', 'แนบ Verification Sheet ของ อบก. หรือแบบเทียบเท่าที่ครบถ้วน', r) + '</div>' +
       '<h5>3.2 เอกสารแสดงขอบเขตและกิจกรรมขององค์กร</h5><div class="opts">' + chk(c, p + 'att.org', 'แผนผังโครงสร้างองค์กร', r) + chk(c, p + 'att.plant', 'แผนผังโรงงาน', r) + chk(c, p + 'att.flow', 'แผนผังกระบวนการผลิต', r) + '</div>' +
       '<h5>3.3 แหล่งปล่อยและการจัดทำบัญชีรายการก๊าซเรือนกระจก</h5><table class="ft"><thead><tr><th>กิจกรรมที่เป็นแหล่งปล่อย</th><th class="c">ระบบบัญชี</th><th class="c">การวัด</th><th class="c">การคำนวณ</th></tr></thead><tbody>' +
-      SRC.map(function (g) { return '<tr><th colspan="4">' + g[0] + '</th></tr>' + g[1].map(function (x) { var q = p + 'src.' + x[0] + '.'; return '<tr><td>' + chk(c, q + 'on', esc(x[1]), r) + '</td><td class="c">' + box(c, q + 'acc', r) + '</td><td class="c">' + box(c, q + 'mea', r) + '</td><td class="c">' + box(c, q + 'cal', r) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table>' +
+      SRC.map(function (g, gi) { return '<tr><th colspan="4">' + g[0] + '</th></tr>' + g[1].map(function (x) { var q = p + 'src.' + x[0] + '.'; return '<tr><td>' + chk(c, q + 'on', esc(x[1]), r) + '</td><td class="c">' + box(c, q + 'acc', r) + '</td><td class="c">' + box(c, q + 'mea', r) + '</td><td class="c">' + box(c, q + 'cal', r) + '</td></tr>'; }).join('') + srcxRows(c, p, gi, r); }).join('') + '</tbody></table>' +
       '<h5>ก๊าซเรือนกระจกที่ครอบคลุมในการทวนสอบ</h5><div class="opts">' + GHG.map(function (x) { return chk(c, p + 'ghg.' + x[0], x[1], r); }).join('') + '</div></div>';
     /* ส่วนที่ 4: 4.1-4.4 in one compact grid, a row per question with its three choices side by side (one column on a phone), as in F-GCC-24-01 */
     h += '<div class="fs"><h4><i>4</i>ข้อมูลสำหรับประเมิน Manday</h4><p class="fine" style="margin:0 0 8px">ใช้ประเมินจำนวนวันทำงานของคณะผู้ทวนสอบ ตอบตามสภาพจริงขององค์กร ข้อ 4.1–4.4 เลือกข้อละ 1 ช่อง</p>' +
@@ -6817,6 +7028,26 @@ html[data-theme=dark] .dc-over>div{background:#122244}
       '<p style="margin:8px 0 0;color:var(--mut);font-size:13px">ลายเซ็นลงบนเอกสารที่ออกเป็น PDF ระบบไม่ฝังลายเซ็นให้</p></div>';
     return h;
   }
+  /* own emission sources: rows the client adds under a scope when an activity is not in the fixed list (the "อื่น ๆ (ถ้ามี)"
+     lines of F-GCC-24), kept in f24.srcx as { g: the scope's place in SRC, n: the activity, on, acc, mea, cal } */
+  function srcxRows(c, p, gi, r) {
+    var xs = (c.f24 || {}).srcx || [], h = '';
+    xs.forEach(function (x, i) {
+      if (!x || +x.g !== gi || (r && !String(x.n || '').trim())) return;
+      var q = p + 'srcx.' + i + '.';
+      h += '<tr class="srcx"><td><div class="srcx-n">' + box(c, q + 'on', r) + '<input type="text" id="' + idOf(q + 'n') + '" data-f="' + q + 'n" value="' + esc(x.n || '') + '" placeholder="ชื่อกิจกรรมที่เป็นแหล่งปล่อย" aria-label="ชื่อกิจกรรมที่เป็นแหล่งปล่อย"' + (r ? ' disabled' : '') + '>' +
+        (r ? '' : '<button type="button" class="link srcx-del" data-a="srcdel" data-v="' + i + '" title="ลบแถวนี้" aria-label="ลบแถวนี้">' + ic('x') + '</button>') + '</div></td><td class="c">' + box(c, q + 'acc', r) + '</td><td class="c">' + box(c, q + 'mea', r) + '</td><td class="c">' + box(c, q + 'cal', r) + '</td></tr>';
+    });
+    if (!r) h += '<tr class="srcx-add"><td colspan="4"><button type="button" class="link" data-a="srcadd" data-v="' + gi + '">' + ic('plus') + (gi < 3 ? 'เพิ่มแหล่งปล่อยใน ' + esc(SRC[gi][0]) : 'เพิ่มแหล่งปล่อยอื่น') + '</button></td></tr>';
+    return h;
+  }
+  function srcAdd(c, g) {
+    if (!(g >= 0 && g < SRC.length)) return;
+    c.f24 = c.f24 || {}; var l = c.f24.srcx = c.f24.srcx || [];
+    l.push({ g:g, n:'', on:true }); save(); render();
+    var el = $(idOf('f24.srcx.' + (l.length - 1) + '.n')); if (el) el.focus();
+  }
+  function srcDel(c, i) { var l = (c.f24 || {}).srcx || []; if (!l[i]) return; l.splice(i, 1); save(); render(); }
   function box(c, path, r) { return '<input type="checkbox" id="' + idOf(path) + '" data-f="' + path + '"' + (fv(c, path) ? ' checked' : '') + (r ? ' disabled' : '') + ' aria-label="เลือก">'; }
   function confirmView(c, st, edit) {
     var what = { '1.7':['หนังสือแจ้งรายชื่อคณะผู้ทวนสอบและกำหนดการ', 0], '2.3':['แผนการทวนสอบ (F-GCC-32)', 12], '4.3':['ร่างถ้อยแถลงการทวนสอบ (F-GCC-39)', 21] }[st[0]] || [st[2], 0];
@@ -6943,7 +7174,8 @@ html[data-theme=dark] .dc-over>div{background:#122244}
       '<div class="pf-o">' + bx(f.attR) + ' แนบรายงาน CFO ฉบับที่ขอทวนสอบ (ต้องแนบ)&nbsp;&nbsp; ' + bx(f.attV) + ' แนบ Verification Sheet ของ อบก. หรือแบบเทียบเท่าที่ครบถ้วน</div>' +
       '<h3>3.2 ขอบเขตและกิจกรรมการดำเนินงานขององค์กร</h3><div class="pf-o">' + bx(at.org) + ' แผนผังโครงสร้างองค์กร (Organization Chart)&nbsp;&nbsp; ' + bx(at.plant) + ' แผนผังโรงงาน (Plant Layout)&nbsp;&nbsp; ' + bx(at.flow) + ' แผนผังกระบวนการผลิต (Process Flowchart)</div>' +
       '<div class="keep"><h3>3.3 แหล่งปล่อยและการจัดทำบัญชีรายการก๊าซเรือนกระจก</h3><table><thead><tr><th>กิจกรรมที่เป็นแหล่งปล่อยก๊าซเรือนกระจก</th><th class="c">ระบบบัญชี</th><th class="c">การวัด</th><th class="c">การคำนวณ</th></tr></thead><tbody>' +
-      SRC.map(function (gr) { return '<tr><th colspan="4">' + gr[0] + '</th></tr>' + gr[1].map(function (x) { var v = src[x[0]] || {}; return '<tr><td>' + bx(v.on) + ' ' + esc(x[1]) + '</td><td class="c">' + bx(v.acc) + '</td><td class="c">' + bx(v.mea) + '</td><td class="c">' + bx(v.cal) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
+      SRC.map(function (gr, gi) { return '<tr><th colspan="4">' + gr[0] + '</th></tr>' + gr[1].map(function (x) { var v = src[x[0]] || {}; return '<tr><td>' + bx(v.on) + ' ' + esc(x[1]) + '</td><td class="c">' + bx(v.acc) + '</td><td class="c">' + bx(v.mea) + '</td><td class="c">' + bx(v.cal) + '</td></tr>'; }).join('') +
+        (f.srcx || []).filter(function (x) { return x && +x.g === gi && String(x.n || '').trim(); }).map(function (x) { return '<tr><td>' + bx(x.on) + ' อื่น ๆ (ถ้ามี) ' + esc(String(x.n).trim()) + '</td><td class="c">' + bx(x.acc) + '</td><td class="c">' + bx(x.mea) + '</td><td class="c">' + bx(x.cal) + '</td></tr>'; }).join(''); }).join('') + '</tbody></table></div>' +
       '<h3>ก๊าซเรือนกระจกที่ครอบคลุมในการทวนสอบ</h3><div class="pf-o">' + GHG.map(function (x) { return bx(g[x[0]]) + ' ' + x[1]; }).join('&nbsp;&nbsp;&nbsp; ') + '</div>' +
       '<div class="keep"><h2><b>4</b> ข้อมูลสำหรับประเมิน Manday</h2>' +
       '<div class="pf-o">ตอบตามสภาพจริงขององค์กร ข้อ 4.1–4.4 เลือกข้อละ 1 ช่อง</div><table class="pf-md"><tbody>' +
@@ -6975,6 +7207,17 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     else if (a === 'case') { S.page = 'case'; S.cid = v; S.sid = t.getAttribute('data-s') || null; S.ctab = 'docs'; S.ptab = 'form'; S.hf = 'all'; S.hq = ''; S.hn = 20; render(); toTop(); }
     else if (a === 'step') { S.sid = v; S.ptab = 'form'; var stp = stepById(v); if (stp) (S.tlo = S.tlo || {})[stp[1]] = true; render(); }
     else if (a === 'tlph') { S.tlo = S.tlo || {}; S.tlo[v] = !S.tlo[v]; render(); }
+    else if (a === 'recout' && c) openRecOut(c, stepById(S.sid));
+    else if (a === 'recoutok' && c) recOutSave(c, stepById(S.sid));
+    else if (a === 'skipst' && c) openSkip(c, stepById(S.sid));
+    else if (a === 'skipok' && c) skipSave(c, stepById(S.sid));
+    else if (a === 'markundo' && c) markUndo(c, stepById(S.sid));
+    else if (a === 'back11' && c) openBack11(c);
+    else if (a === 'back11ok' && c) back11Save(c);
+    else if (a === 'asgre' && c) { S.asgEd = c.id; render(); }
+    else if (a === 'asglv' && c) asgSave(c);
+    else if (a === 'srcadd' && c) srcAdd(c, +v);
+    else if (a === 'srcdel' && c) srcDel(c, +v);
     else if (a === 'tlc' || a === 'tlfp') { S.tlc = a === 'tlc' && v === '1'; if (a === 'tlfp') (S.tlo = S.tlo || {})[v] = true; try { localStorage.setItem('gcc-tlc', S.tlc ? '1' : '0'); } catch (e) { /* this view only */ } render(); }
     else if (a === 'cft') { S.cft = v; render(); }
     else if (a === 'cy') { S.cy = v; render(); }
@@ -7095,6 +7338,7 @@ html[data-theme=dark] .dc-over>div{background:#122244}
   document.addEventListener('change', function (e) {
     var t = e.target;
     if (t.classList.contains('role-pick')) { S.role = t.value; S.page = 'home'; S.cid = null; S.sid = null; S.jr = null; render(); toTop(); return; }
+    if (t.id === 'roFile') { recPick(t.files && t.files[0]); return; }
     if (t.hasAttribute('data-g')) { setv(DB, t.getAttribute('data-g'), t.value); save(); if (t.tagName === 'SELECT' || t.type === 'date') render(); return; }
     if (t.hasAttribute('data-one')) {
       var c1 = curCase(), g1 = t.getAttribute('data-one'); if (!c1) return;
@@ -7108,6 +7352,10 @@ html[data-theme=dark] .dc-over>div{background:#122244}
     else setv(c, path, t.type === 'checkbox' ? t.checked : t.value);
     save(); render();
   });
+  // the evidence of a step recorded for the client: picked or dropped in its window, kept until it is saved
+  document.addEventListener('dragover', function (e) { var z = e.target.closest && e.target.closest('#roDrop'); if (z) { e.preventDefault(); z.classList.add('over'); } });
+  document.addEventListener('dragleave', function (e) { var z = e.target.closest && e.target.closest('#roDrop'); if (z) z.classList.remove('over'); });
+  document.addEventListener('drop', function (e) { var z = e.target.closest && e.target.closest('#roDrop'); if (z) { e.preventDefault(); z.classList.remove('over'); recPick(e.dataTransfer.files[0]); } });
   document.addEventListener('input', function (e) {
     var t = e.target;
     if (t.id === 'dq') { S.dq = t.value; render(); return; }
