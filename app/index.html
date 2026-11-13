@@ -1899,6 +1899,42 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .srcx-add .ic{width:14px;height:14px}
 #roDrop input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
 @media (max-width:700px){.rec-a{width:100%;justify-content:flex-end}.rec-a select{flex:1 1 auto;max-width:none}}
+/* ---------- the case head (13/11/2569, the user's pick "C"): the client home banner's look as a band at the top of
+   the head card: the progress ring, the name, the meta line and the buttons on the blue, the line drawing in the free
+   space between them; the phase bars and tabs stay on white under it (pageCase 44-cases.js, pageClientCase 18-client-view.js) */
+.main:has(.chd) .pg-art{display:none}
+.chd .chead{position:relative;isolation:isolate;overflow:hidden;margin:-1px -1px 0;padding:22px 26px 22px 24px;border-radius:var(--r) var(--r) 0 0;background:var(--hero);color:#fff}
+.chd .chead::before{content:"";position:absolute;top:-200px;right:-140px;z-index:-1;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.1),rgba(255,255,255,0) 68%);pointer-events:none}
+.chd .chead::after{content:"";position:absolute;bottom:-190px;left:-110px;z-index:-1;width:300px;height:300px;border:44px solid rgba(255,255,255,.07);border-radius:50%;pointer-events:none}
+.chd .chead+.stepper{padding-top:16px}
+.chd .chead+div:not(.stepper):not(.tabs){margin-top:14px}
+/* the name block: the ring on the left, then the link, the name and the meta line */
+.chd .chead>div:first-child{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:20px;align-items:center}
+.chd .chead>div:first-child>:first-child{grid-row:1/span 3}
+.chd .chead>div:first-child>:not(:first-child){grid-column:2;justify-self:start;max-width:100%}
+.chd .chead .ring{width:84px;height:84px}
+/* text, chips and buttons in white on the blue */
+.chd .chead h2{color:#fff}
+.chd .chead .meta{color:rgba(255,255,255,.82)}
+.chd .chead .link{color:#BAE6FD}
+.chd .chead .link:hover{color:#fff}
+.chd .chead .chip{background:rgba(255,255,255,.16);color:#fff}
+.chd .chead .chip.doing{background:#E0F2FE;color:#1E3A8A}
+.chd .chead .chip.lock{background:#FDE68A;color:#5C3A00}
+.chd .chead .btn{border-color:rgba(255,255,255,.36);background:rgba(255,255,255,.1);color:#fff;--ac:rgba(255,255,255,.18)}
+.chd .chead .btn:hover{border-color:rgba(255,255,255,.62);background:rgba(255,255,255,.18)}
+.chd .chead .btn.pri{border-color:#fff;background:#fff;color:#1E3A8A;--ac:#CFE6FA}
+.chd .chead .btn.pri:hover{border-color:#E0F2FE;background:#E0F2FE}
+html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-color:rgba(255,255,255,.1);color:#fff}
+.chd .chead :focus-visible{outline-color:#fff}
+/* the line drawing takes only the free space between the name block and the buttons, so it never runs behind text;
+   a long name pushes it smaller, then out (under 150 px); from 981 px the row keeps one line, the name ends in ... */
+.chd .hd-art{position:relative;flex:1 1 0;align-self:stretch;min-width:0;container-type:inline-size}
+.chd .hd-art .art{position:absolute;top:50%;right:6px;z-index:-1;width:min(290px,100%);height:auto;opacity:.24;transform:translateY(-50%);pointer-events:none}
+@container (max-width:150px){.chd .hd-art .art{display:none}}
+@media (min-width:981px){.chd .chead{flex-wrap:nowrap}.chd .chead>div:first-child{flex:0 1 auto}.chd .chead .acts{flex:none}}
+@media (max-width:980px){.chd .hd-art{display:none}}
+@media (max-width:560px){.chd .chead{padding:18px 16px 18px}.chd .chead>div:first-child{column-gap:14px}.chd .chead .ring{width:64px;height:64px}}
 /* ---------- the app page only: sign-in, who is signed in, saving, accounts and invitations ---------- */
 .ap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 16px}
 .ap-card{width:100%;max-width:420px;padding:28px 28px 24px;border-radius:24px;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}
@@ -1924,17 +1960,36 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .ap-out{margin-top:6px}
 .ap-wait{display:flex;align-items:center;justify-content:center;gap:12px;min-height:120px;color:var(--ink-2);font-size:15px}
 .ap-spin{width:22px;height:22px;border:3px solid var(--tint-2);border-top-color:var(--brand);border-radius:50%;animation:pvs .8s linear infinite}
-/* the top bar: whether the last changes are in the database, and the person signed in */
-.ap-sync{display:inline-flex;flex:none;align-items:center;gap:7px;height:32px;padding:0 12px;border:0;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-size:12.5px;white-space:nowrap;cursor:pointer}
-.ap-sync i{width:7px;height:7px;border-radius:50%;background:currentColor}
+/* the top bar (13/11/2569, the user's pick "แบบ 2"): the save state is one of the round icons (.bell): a cloud with a green
+   tick when saved, a pill with words only while saving or when it failed; the person signed in is one chip at the end:
+   initials, name and role, in place of the lone initials circle (52-app.js appSyncBtn, appTopMe; 31-shell.js topbar) */
+.ap-sync .ok{stroke:#16A34A;stroke-width:2.2}
+.ap-sync:not([data-st=ok]){display:inline-flex;gap:7px;width:auto;padding:0 13px 0 11px;border-radius:999px;font-size:12.5px;white-space:nowrap}
+.ap-sync>i{position:static;flex:none;width:8px;height:8px;min-width:0;padding:0;border-radius:50%;background:currentColor;box-shadow:none}
 .ap-sync[data-st=busy]{background:var(--info-bg);color:var(--info)}
-.ap-sync[data-st=busy] i{animation:ap-blink 1s ease-in-out infinite}
+.ap-sync[data-st=busy]>i{animation:ap-blink 1s ease-in-out infinite}
 .ap-sync[data-st=err]{background:var(--bad-bg);color:var(--bad)}
 @keyframes ap-blink{50%{opacity:.25}}
-.tb-me{display:grid;flex:none;max-width:200px;padding:4px 12px;border:1px solid #DCE6F2;border-radius:14px;background:#fff;text-align:left;cursor:pointer}
-.tb-me:hover{border-color:var(--tint-line)}
-.tb-me b{overflow:hidden;color:var(--ink);font-size:13.5px;font-weight:500;line-height:1.35;text-overflow:ellipsis;white-space:nowrap}
+.tb-me{display:flex;flex:none;align-items:center;gap:10px;height:46px;margin-left:6px;padding:0 12px 0 6px;border:1px solid #DCE6F2;border-radius:999px;background:#fff;box-shadow:0 10px 22px -18px rgba(15,30,61,.4);color:var(--ink);text-align:left;cursor:pointer}
+.tb-me:hover{border-color:var(--tint-line);background:var(--tint)}
+.tb-me .av{width:34px;height:34px;border:0;background:var(--brand)!important;color:#fff;font-size:12px;box-shadow:none}
+.tb-nm{display:grid;min-width:0;max-width:170px}
+.tb-me b{overflow:hidden;font-size:13.5px;font-weight:500;line-height:1.3;text-overflow:ellipsis;white-space:nowrap}
 .tb-me small{overflow:hidden;color:var(--mut);font-size:11.5px;line-height:1.3;text-overflow:ellipsis;white-space:nowrap}
+.tb-me>.ic{width:15px;height:15px;color:var(--mut);transform:rotate(90deg)}
+html[data-theme=dark] .tb-me{border-color:#22406F;background:#14284D;color:var(--ink)}
+html[data-theme=dark] .tb-me:hover{background:#1A3060}
+html[data-theme=dark] .tb-me .av{background:#3B82F6!important}
+/* the blue phone bar: the chip in glass, the tick in light green */
+@media (max-width:900px){
+  .ap-sync .ok{stroke:#86EFAC}
+  .ap-sync[data-st=busy],.ap-sync[data-st=err]{background:rgba(255,255,255,.14);color:#fff}
+  .tb-me{height:40px;border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.12);box-shadow:none;color:#fff}
+  .tb-me small,.tb-me>.ic{color:rgba(255,255,255,.75)}
+  .tb-me .av{background:#fff!important;color:#1E40AF}
+  html[data-theme=dark] .tb-me{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff}
+  html[data-theme=dark] .tb-me .av{background:#fff!important}
+}
 .ap-pw{margin:18px 0 0;padding:16px 0 0;border-top:1px solid var(--divider)}
 .ap-pw h4{margin:0;font-size:14px;font-weight:600}
 .ap-pw .btn{justify-self:start}
@@ -1961,8 +2016,8 @@ html[data-theme=dark] .dc-over>div{background:#122244}
 .ap-pend td{background:var(--warn-bg)}
 .ap-link{display:flex;gap:8px;margin:14px 0 0}
 .ap-link input{flex:1;min-width:0;min-height:40px;padding:0 12px;border:1px solid var(--field);border-radius:12px;background:var(--band);color:var(--ink-2);font-size:13px}
-@media (max-width:700px){.ap-card{padding:22px 18px 18px}.ap-sync span{display:none}.ap-sync{padding:0 10px}.tb-me{max-width:120px}.ap-t{min-width:640px}}
-html[data-theme=dark] :is(.ap-f .f input,.tb-me,.ap-t select){background:#14284D;color:var(--ink);border-color:#22406F}
+@media (max-width:700px){.ap-card{padding:22px 18px 18px}.ap-sync span{display:none}.ap-sync:not([data-st=ok]){width:42px;padding:0;justify-content:center}.tb-me .tb-nm,.tb-me>.ic{display:none}.tb-me{gap:0;padding:0 3px}.ap-t{min-width:640px}}
+html[data-theme=dark] :is(.ap-f .f input,.ap-t select){background:#14284D;color:var(--ink);border-color:#22406F}
 html[data-theme=dark] :is(.ap-f .f input[readonly],.ap-link input){background:#0F1E3D}
 html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0 1px #22406F}
 @media (prefers-reduced-motion:reduce){.ap-spin,.ap-sync[data-st=busy] i{animation:none}}
@@ -4087,7 +4142,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var vis = STEPS.filter(function (st) { return clientSees(c, st); });
     if (!S.sid || !vis.some(function (st) { return st[0] === S.sid; })) { var k = cur(c); S.sid = k && clientSees(c, k) ? k[0] : (vis.length ? vis[vis.length - 1][0] : null); }
     if (S.ctab !== 'hist' && !(S.ctab === 'plan' && mpLast(c))) S.ctab = 'docs';
-    var h = '<section class="card"><div class="chead"><div><h2>' + esc(c.name) + '</h2><div class="meta"><span>' + esc(c.job || 'รอเลขที่งาน') + '</span><span class="chip doing">CFO</span></div></div></div>' +
+    var h = '<section class="card chd"><div class="chead"><div>' + ring(pct(c)) + '<h2 title="' + esc(c.name) + '">' + esc(c.name) + '</h2><div class="meta"><span>' + esc(c.job || 'รอเลขที่งาน') + '</span><span class="chip doing">CFO</span></div></div><span class="hd-art" aria-hidden="true">' + art() + '</span></div>' +
       '<div class="tabs" role="tablist">' + [['docs', 'งานของคุณ', 'clip']].concat(mpLast(c) ? [['plan', 'Master Plan', 'cal']] : [], [['hist', 'อีเมลจาก GCC', 'mail']]).map(function (t) { return '<button type="button" role="tab" data-a="ctab" data-v="' + t[0] + '" aria-selected="' + (S.ctab === t[0]) + '">' + ic(t[2]) + '<span>' + t[1] + '</span></button>'; }).join('') + '</div></section>';
     if (S.ctab === 'hist') return h + histView(c);
     if (S.ctab === 'plan') return h + planView(c);
@@ -5152,7 +5207,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       (APP_ON ? appTopUser() : '<label class="tb-role" title="ตัวอย่างเท่านั้น ระบบจริงเข้าด้วยบัญชีของแต่ละคน"><span>บทบาท</span><select id="roleSel" class="role-pick" aria-label="เข้าใช้ในบทบาท">' + roleOptions() + '</select></label>') +
       '<button type="button" class="bell thm" data-a="theme" title="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '" aria-label="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '">' + ic(isDark() ? 'sun' : 'moon') + '</button>' +
       (navs().indexOf('docs') >= 0 ? (function () { var k = dcMineN(), t = k ? 'คำร้องเอกสารที่รอคุณ ' + k + ' รายการ' : 'ไม่มีคำร้องเอกสารที่รอคุณ'; return '<button type="button" class="bell" data-a="dcmine" title="' + t + '" aria-label="' + t + '">' + ic('docs') + (k ? '<i>' + k + '</i>' : '') + '</button>'; })() : '') +
-      (navs().indexOf('cases') >= 0 ? '<button type="button" class="bell" data-a="mails" title="อีเมลที่ระบบส่งใน 7 วัน" aria-label="อีเมลที่ระบบส่งใน 7 วัน">' + ic('mail') + (n ? '<i>' + n + '</i>' : '') + '</button>' : '') + av(rk()) + '</header>';
+      (navs().indexOf('cases') >= 0 ? '<button type="button" class="bell" data-a="mails" title="อีเมลที่ระบบส่งใน 7 วัน" aria-label="อีเมลที่ระบบส่งใน 7 วัน">' + ic('mail') + (n ? '<i>' + n + '</i>' : '') + '</button>' : '') + (APP_ON ? appTopMe() : av(rk())) + '</header>';
   }
   /* line drawings for the home shortcut cards: navy strokes, lavender and indigo fills */
   var HI_ART = (function () {
@@ -6778,9 +6833,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (!isClient(S.role) && !ext()) tabs.push(['file', 'แฟ้มงาน']);
     tabs.push(['hist', isClient(S.role) ? 'อีเมลจาก GCC' : 'อีเมลและประวัติ']);
     if (!tabs.some(function (t) { return t[0] === S.ctab; })) S.ctab = 'docs';
-    var h = '<section class="card"><div class="chead"><div><button type="button" class="link" data-a="nav" data-v="cases">' + esc(navName('cases')) + '</button><h2>' + esc(c.name) + '</h2>' +
+    var h = '<section class="card chd"><div class="chead"><div>' + ring(pct(c)) + '<button type="button" class="link" data-a="nav" data-v="cases">' + esc(navName('cases')) + '</button><h2 title="' + esc(c.name) + '">' + esc(c.name) + '</h2>' +
       '<div class="meta"><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span><span class="chip doing">CFO</span><span class="chip wait">ระดับความเชื่อมั่นแบบจำกัด</span>' + (closed(c) ? '<span class="chip lock">ปิดแฟ้มแล้ว อ่านอย่างเดียว</span>' : '') +
-      (staff ? '<span title="หัวหน้าผู้ทวนสอบ">LV ' + esc(lead(c) || 'ยังไม่มอบหมาย') + '</span><span title="ผู้ทบทวนอิสระ">IR ' + esc(irName(c)) + '</span>' : '') + '</div></div><div class="acts">' + caseActions(c) + '</div></div>' +
+      (staff ? '<span title="หัวหน้าผู้ทวนสอบ">LV ' + esc(lead(c) || 'ยังไม่มอบหมาย') + '</span><span title="ผู้ทบทวนอิสระ">IR ' + esc(irName(c)) + '</span>' : '') + '</div></div><span class="hd-art" aria-hidden="true">' + art() + '</span><div class="acts">' + caseActions(c) + '</div></div>' +
       (sh ? '<div style="padding:0 20px">' + note('share', 'แชร์ให้ ' + esc(role(S.role)[1]) + ' ถึง ' + dL(sh.until) + ' · ' + (sh.scope === 'all' ? 'ทั้งแฟ้ม' : 'เฉพาะรายงานและถ้อยแถลง') + ' · อ่านอย่างเดียว · ทุกการเปิดดูถูกบันทึก', 'warn') + '</div>' : '') +
       stepper(c) + '<div class="tabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-a="ctab" data-v="' + t[0] + '" aria-selected="' + (S.ctab === t[0]) + '">' + ic(TAB_IC[t[0]] || 'docs') + '<span>' + t[1] + '</span></button>'; }).join('') + '</div></section>';
     if (S.ctab === 'plan') h += planView(c);
@@ -8005,14 +8060,22 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
 
   /* ---------- the top bar: who is signed in, and whether the last changes are saved ---------- */
   function apSyncTxt() { return APP.err ? ['err', 'ยังบันทึกไม่ได้', APP.err + ' · กดเพื่อลองใหม่'] : APP.saving || APP.dirty ? ['busy', 'กำลังบันทึก', 'กำลังบันทึกลงฐานข้อมูล'] : ['ok', 'บันทึกแล้ว', 'ข้อมูลล่าสุดอยู่ในฐานข้อมูลแล้ว · กดเพื่อโหลดใหม่']; }
-  function appTopUser() {
+  /* the save state is one of the round icons: a cloud with a green tick when saved; words only while saving or when it failed */
+  function appSyncBtn() {
     var t = apSyncTxt();
-    return '<button type="button" class="ap-sync" data-a="appsync" data-st="' + t[0] + '" title="' + esc(t[2]) + '"><i aria-hidden="true"></i><span>' + t[1] + '</span></button>' +
-      '<button type="button" class="tb-me" data-a="umenu" title="บัญชีของฉัน"><b>' + esc(meName()) + '</b><small>' + esc(roleName(S.role)) + '</small></button>';
+    return '<button type="button" class="bell ap-sync" data-a="appsync" data-st="' + t[0] + '" title="' + esc(t[1] + ' · ' + t[2]) + '" aria-label="' + esc(t[1]) + '">' + (t[0] === 'ok' ?
+      '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18.5h10a4 4 0 0 0 .5-8 5.5 5.5 0 0 0-10.6 1.2A3.4 3.4 0 0 0 7 18.5z"/><path class="ok" d="m9.6 14.4 1.9 1.9 3.6-3.8"/></svg>' :
+      '<i aria-hidden="true"></i><span>' + t[1] + '</span>') + '</button>';
+  }
+  function appTopUser() { return appSyncBtn(); }
+  /* the person signed in: one chip at the end of the top bar (initials, name, role) that opens บัญชีของฉัน */
+  function appTopMe() {
+    return '<button type="button" class="tb-me" data-a="umenu" title="บัญชีของฉัน">' + av(rk(), meName()) + '<span class="tb-nm"><b>' + esc(meName()) + '</b><small>' + esc(roleName(S.role)) + '</small></span>' + ic('chev') + '</button>';
   }
   function apStatus() {
     var b = document.querySelector('.ap-sync'); if (!b) return;
-    var t = apSyncTxt(); b.setAttribute('data-st', t[0]); b.title = t[2]; b.querySelector('span').textContent = t[1];
+    var t = apSyncTxt(); if (b.getAttribute('data-st') === t[0]) { b.title = t[1] + ' · ' + t[2]; return; }
+    var w = document.createElement('div'); w.innerHTML = appSyncBtn(); b.parentNode.replaceChild(w.firstChild, b);
   }
   function appUserMenu() {
     modal('บัญชีของฉัน', 'people', '<div class="fg"><div class="f"><label>ชื่อ</label><div class="tv">' + esc(meName()) + '</div></div><div class="f"><label>อีเมล</label><div class="tv">' + esc(ME.email) + '</div></div>' +
