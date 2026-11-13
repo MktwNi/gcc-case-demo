@@ -1676,14 +1676,17 @@ details.rv>summary small{display:block}
 @media (max-width:760px){.mp-head{flex-wrap:wrap;padding:16px 16px 8px}.mp-head .acts{flex:1 1 100%;flex-wrap:wrap}
   .mp-sub:not(.mp-dr){display:none}.mp-dr{flex-wrap:wrap;height:auto;padding:0 16px 12px;white-space:normal}}
 
-/* ---------- Master Plan PDF: landscape A4 on one page, in the look of the issued GCC forms ---------- */
+/* ---------- Master Plan PDF: landscape A4 on one page, a document for the client (13/11/2569): the company letterhead and
+   no form code; navy column titles and grey label cells as in the GCC forms ---------- */
 .pf.mp{font-size:13pt;line-height:1.15}
-.pf.mp .pf-rib{margin-bottom:6pt}
-.pf.mp .pf-top{align-items:center}
-.pf.mp .pf-top img{width:58pt}
-.pf.mp .pf-t1.s{margin-top:0;font-size:21pt;line-height:1.1}
+.pf.mp,.pf.mp *{-webkit-print-color-adjust:exact;print-color-adjust:exact}   /* the shading is the plan: print it even when the dialog leaves backgrounds off */
+.pf.mp .mp-hd{display:flex;align-items:center;gap:12pt}
+.pf.mp .mp-hd img{flex:none;width:54pt}
+.pf.mp .mp-tt{flex:none;padding-left:12pt;border-left:1.2pt solid #9AA4AE}
+.pf.mp .mp-tt .pf-t1{margin:0;font-size:22pt;line-height:1.1}
 .pf.mp .pf-sub{font-size:12.5pt}
-.pf.mp .pf-co{margin-top:1pt;font-size:10.5pt;line-height:1.2}
+.pf.mp .mp-co{display:flex;flex-direction:column;align-items:flex-end;margin-left:auto;color:#3A4650;font-size:10.5pt;line-height:1.22;text-align:right;white-space:nowrap}
+.pf.mp .mp-co b{color:#1E2A33;font-size:11.5pt}
 .pf.mp .pf-rule{margin:4pt 0 5pt}
 .pf.mp table{margin:0;font-size:12.5pt;table-layout:fixed}
 .pf.mp th,.pf.mp td{padding:0 4pt;vertical-align:middle;line-height:1.12}
@@ -1711,7 +1714,43 @@ details.rv>summary small{display:block}
 .mp-sg b{align-self:stretch;margin:0 -8pt 0;padding:.5pt 8pt;background:#EEF0F2;text-align:center}
 .mp-sg .ln{display:flex;align-self:stretch;gap:4pt;margin-top:12pt}
 .mp-sg .ln::after{content:"";flex:1;margin-bottom:3pt;border-bottom:.8pt dotted #1E2A33}
-.pf.mp .mp-dbox{margin:0 14pt 0 auto;padding:2pt 10pt;border:1.2pt solid #3A4650;color:#1E2A33;font-size:13pt;font-weight:700;white-space:nowrap}
+.pf.mp .mp-dbox{margin:0 0 0 14pt;padding:2pt 10pt;border:1.2pt solid #3A4650;color:#1E2A33;font-size:13pt;font-weight:700;white-space:nowrap}
+
+/* ---------- page Master Plan in the menu: every case on one time line (54-master-plan.js pageMpo). The case column stays put
+   while the time line scrolls inside the card; the page itself never scrolls sideways ---------- */
+.mpo-card{padding:0;overflow:hidden}
+.mpo-w{overflow-x:auto;scrollbar-width:thin}
+.mpo{table-layout:fixed;min-width:calc(560px + var(--mpo-min, 600px))}
+.mpo col.mpo-c1{width:236px}.mpo col.mpo-c2{width:200px}.mpo col.mpo-c3{width:124px}
+.mpo td{height:60px;padding-top:0;padding-bottom:0;overflow:hidden;white-space:nowrap}
+.mpo th.mpo-c,.mpo td.mpo-c{position:sticky;left:0;z-index:2;background:#fff}
+.mpo td.mpo-c .nm b,.mpo td.mpo-c .nm span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mpo td.mpo-c .nm b{color:var(--ink);font-size:14px;font-weight:500;line-height:1.45}
+.mpo td.mpo-c .nm span{color:var(--mut);font-size:12.5px;line-height:1.45}
+.mpo-step{display:block;overflow:hidden;color:var(--ink-2);font-size:13px;text-overflow:ellipsis;white-space:nowrap}
+.mpo-step b{margin-right:6px;color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.mpo-step.fin{color:var(--mut)}
+.mpo th.mpo-tl,.mpo td.mpo-tl{padding:0 14px 0 0}
+.mpo-mh{position:relative;height:48px}
+.mpo-mh span{position:absolute;top:0;bottom:0;display:flex;align-items:center;padding-left:8px;overflow:hidden;border-left:1px solid var(--line);color:var(--mut);font-size:12px;font-weight:500;white-space:nowrap}
+.mpo-lane{position:relative;height:60px}
+.mpo-ml{position:absolute;top:0;bottom:0;width:1px;background:var(--divider)}
+.mpo-seg{position:absolute;top:25px;height:10px;border-radius:999px;background:#C9CFDD;box-shadow:0 0 0 2px #fff}
+.mpo-seg.done{background:var(--brand)}.mpo-seg.doing{background:#7DD3FC}
+.mpo-site{position:absolute;top:24px;width:12px;height:12px;margin-left:-6px;border-radius:2px;background:var(--ink);box-shadow:0 0 0 2px #fff;transform:rotate(45deg)}
+.mpo-now{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--bad)}
+.mpo-lg{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding:14px 24px;border-top:1px solid var(--line);color:var(--ink-2);font-size:13px}
+.mpo-lg>span{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.mpo-sw{display:inline-block;width:22px;height:10px;border-radius:999px;background:#C9CFDD}
+.mpo-sw.done{background:var(--brand)}.mpo-sw.doing{background:#7DD3FC}
+.mpo-site.lg{position:static;width:10px;height:10px;margin:0 2px;box-shadow:none}
+.mpo-nw{display:inline-block;width:2px;height:14px;background:var(--bad)}
+.mpo-lg .mpo-hint{color:var(--mut);white-space:normal}
+html[data-theme=dark] .mpo td.mpo-c{background:#122244}
+html[data-theme=dark] .mpo-seg,html[data-theme=dark] .mpo-site{box-shadow:0 0 0 2px #122244}
+html[data-theme=dark] .mpo-seg:not(.done):not(.doing),html[data-theme=dark] .mpo-sw:not(.done):not(.doing){background:#3A4D72}
+html[data-theme=dark] .mpo-site{background:#E7EEF9}
+@media (max-width:760px){.mpo col.mpo-c1{width:176px}.mpo col.mpo-c2{width:150px}.mpo col.mpo-c3{width:112px}.mpo{min-width:calc(438px + var(--mpo-min, 600px))}.mpo .ct-ava{display:none}.mpo-lg{padding:12px 16px}}
 /* ---------- documents dropped into the document page (src/js/55-doc-upload.js): one drop strip above the type tiles,
    the chosen file as a chip inside the request form ---------- */
 .dc-drop{margin:16px 0 18px}
@@ -1729,6 +1768,60 @@ details.rv>summary small{display:block}
 #duNote[hidden]{display:none}
 /* the register on a phone: the name column kept its 0 px under the fixed columns; the card already scrolls sideways */
 @media (max-width:760px){.dc-t{min-width:860px}}
+/* ---------- the document page, design trial 13/11/2569 (src/js/56-doc-page.js) ---------- */
+.dc-top{align-items:stretch}
+.dc-top .sec-h{align-items:center}
+.dc-top .sec-h h3{margin:0}
+.dks.dk-row{display:flex;gap:10px;margin:0 0 14px;padding:2px 2px 8px;overflow-x:auto;scrollbar-width:thin}
+.dk-row .dk{flex:1 0 148px;flex-direction:row;align-items:center;gap:10px;padding:10px 12px;border-radius:14px}
+.dk-row .dk:hover{transform:none}
+.dk-row .dk-l{flex:none;width:32px;height:32px;border-radius:10px;font-size:15px}
+.dk-row .dk-l .ic{width:18px;height:18px}
+.dk-row .dk-t{flex:1}
+.dk-row .dk-n{flex:none;font-size:17px;font-weight:600}
+.dc-bar .dc-up,.dc-bar>.btn.pri{flex:none;margin:0 0 8px}
+.dc-up{position:relative;overflow:hidden}
+.dc-up input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dc-due{display:inline-block;margin-left:8px;padding:0 7px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:600;line-height:18px;vertical-align:1px}
+.dc-filt{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:8px 14px;border-radius:12px;background:var(--warn-bg);color:var(--warn);font-size:13.5px}
+.dc-filt .ic{width:18px;height:18px}
+.dc-filt .link{margin-left:auto}
+.dc-more .link{font-size:13px}
+.dc-reg tr.dc-grp td{height:auto;padding:12px 16px 6px;border-top:1px solid var(--line);background:var(--band);color:var(--ink-2);font-size:13px;font-weight:500}
+.dc-reg tbody tr.dc-grp:first-child td{border-top:0}
+.dc-reg tr.dc-grp b{display:inline-block;min-width:18px;margin-right:8px;color:var(--brand);font-weight:700}
+.dc-reg tr.dc-grp span{margin-left:10px;color:var(--mut);font-weight:400}
+.dc-reg tr.click{cursor:pointer}
+.dc-reg tr.click:focus-visible td{outline:0;background:var(--tint)}
+.dc-go{color:var(--mut);text-align:right}
+.dc-go .ic{width:16px;height:16px;transform:rotate(180deg)}
+.dc-over{position:fixed;inset:0;z-index:70;display:none;place-items:center;background:rgba(15,30,61,.32)}
+body.dc-drag .dc-over{display:grid}
+.dc-over>div{display:flex;flex-direction:column;align-items:center;gap:6px;padding:30px 44px;border:2px dashed var(--brand);border-radius:22px;background:#fff;color:var(--brand);text-align:center}
+.dc-over .ic{width:34px;height:34px}
+.dc-over b{font-size:18px}
+.dc-over span{color:var(--ink-2);font-size:13px}
+.dd-h{display:flex;align-items:center;gap:12px;margin:0 0 6px}
+.dd-h b{display:block;color:var(--ink);font-size:16px}
+.dd-h span{color:var(--mut);font-size:13px}
+.dd-acts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.dr-back{display:flex;align-items:flex-start;gap:10px;margin:12px 0 4px;padding:10px 14px;border-radius:12px;background:var(--warn-bg);color:var(--warn)}
+.dr-back .ic{flex:none;width:18px;height:18px;margin-top:2px}
+.dr-back b{display:block;font-weight:600}
+.dr-back span{color:var(--ink)}
+.btn.warn{border-color:var(--warn);background:transparent;color:var(--warn)}
+.btn.warn:hover{background:var(--warn-bg)}
+.nav button{position:relative}
+.nav-n{position:absolute;top:8px;right:16px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--bad);color:#fff;font:600 11px/18px var(--font);font-style:normal;text-align:center}
+html[data-theme=dark] .dc-over>div{background:#122244}
+@media (max-width:1180px){.dc-top{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.dc-top{grid-template-columns:1fr}}
+.dc-work li>div{min-width:0}
+.dc-work li>div b,.dc-work li>div span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dr-rail li.back i{border-color:var(--warn);background:var(--warn-bg);box-shadow:none}
+.dr-rail li.back b{color:var(--warn)}
+@media (max-width:900px){.nav-n{position:static;margin-left:6px}}
+@media (max-width:760px){.dk-row .dk{flex:0 0 auto}}
 /* ---------- the app page only: sign-in, who is signed in, saving, accounts and invitations ---------- */
 .ap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 16px}
 .ap-card{width:100%;max-width:420px;padding:28px 28px 24px;border-radius:24px;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}
@@ -3836,6 +3929,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var n = navs0(), x = S.role;
     if ((x === 'admin' || x === 'mgr') && n.indexOf('cases') >= 0) n.splice(n.indexOf('cases') + 1, 0, 'cal');
     if (x === 'admin' || x === 'qmr' || x === 'mgr' || ((x === 'lv' || x === 'ir' || x === 'sales') && cxList().length)) n.splice(n.indexOf('reg') >= 0 ? n.indexOf('reg') + 1 : n.indexOf('cases') >= 0 ? n.indexOf('cases') + 1 : 1, 0, 'ca');
+    if (!isClient(x) && !ext() && n.indexOf('cases') >= 0) n.splice(n.indexOf('cases') + 1, 0, 'mpo');   // Master Plan of every case (54-master-plan.js)
     return n;
   }
   function cxInsert(h, sec) { var i = h.indexOf('<section class="sec grid2">'); return !sec ? h : i >= 0 ? h.slice(0, i) + sec + h.slice(i) : h + sec; }
@@ -4766,9 +4860,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   function navName(k) {
     if (k === 'cases') return isClient(S.role) ? 'เคสของฉัน' : ext() ? 'เคสที่แชร์ให้' : 'เคสลูกค้า';
-    return { home:'หน้าแรก', cal:'ปฏิทินงาน', reg:'ทะเบียน', docs:'เอกสารควบคุม', flow:'ผังกระบวนการ', perm:'สิทธิ์ผู้ใช้', ca:'ร้องเรียน/อุทธรณ์', users:'ผู้ใช้งาน' }[k];
+    return { home:'หน้าแรก', cal:'ปฏิทินงาน', reg:'ทะเบียน', docs:'เอกสารควบคุม', flow:'ผังกระบวนการ', perm:'สิทธิ์ผู้ใช้', ca:'ร้องเรียน/อุทธรณ์', users:'ผู้ใช้งาน', mpo:'Master Plan ทุกเคส' }[k];
   }
-  var NAV_IC = { home:'home', cases:'folder', cal:'cal', reg:'archive', docs:'docs', flow:'flow', perm:'shield', ca:'msg', users:'people' };
+  var NAV_IC = { home:'home', cases:'folder', cal:'cal', reg:'archive', docs:'docs', flow:'flow', perm:'shield', ca:'msg', users:'people', mpo:'chart' };
   function av(k, title) { var r = role(k); return '<span class="av" style="background:' + r[3] + '" title="' + esc(title || r[1]) + '">' + esc(r[2]) + '</span>'; }
 
   /* ---------- actions on a case ---------- */
@@ -4911,7 +5005,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (S.page === 'ca' || S.page === 'carec') return cxTitles();
     var c = S.page === 'case' ? caseById(S.cid) : null;
     if (c) return [c.short, c.job || 'ยังไม่มีเลขที่งาน'];
-    return { home:['สวัสดี ' + byWho(), 'วันนี้ ' + dL(todayIso())], users:['ผู้ใช้งาน', 'บัญชี บทบาท และคำเชิญ'], cases:[navName('cases'), cases().length + ' เคส'], cal:['ปฏิทินการทวนสอบ', 'นัดลงพื้นที่และจัดคิวงานของทุกเคส'], reg:['ทะเบียน', 'สร้างจากข้อมูลเคสให้เอง'], docs:['เอกสารควบคุม', 'ทะเบียนเอกสารออนไลน์ แก้ไข ยกเลิก และประกาศในที่เดียว'],
+    return { home:['สวัสดี ' + byWho(), 'วันนี้ ' + dL(todayIso())], users:['ผู้ใช้งาน', 'บัญชี บทบาท และคำเชิญ'], cases:[navName('cases'), cases().length + ' เคส'], cal:['ปฏิทินการทวนสอบ', 'นัดลงพื้นที่และจัดคิวงานของทุกเคส'], mpo:['Master Plan', 'ภาพรวมแผนงานของทุกเคส'], reg:['ทะเบียน', 'สร้างจากข้อมูลเคสให้เอง'], docs:['เอกสารควบคุม', 'ทะเบียนเอกสารออนไลน์ แก้ไข ยกเลิก และประกาศในที่เดียว'],
       flow:['ผังกระบวนการ', '23 ขั้น · ต้องอนุมัติ 7 ขั้น · ตามเอกสารประกาศใช้ 08/11/2569'], perm:['สิทธิ์ผู้ใช้', 'ใครเห็นอะไร และทำอะไรได้'] }[S.page] || ['', ''];
   }
   function myMails() { var n = 0; cases().forEach(function (c) { c.mail.forEach(function (m) { if (diff(m.at) >= -7) n++; }); }); return n; }
@@ -4931,18 +5025,20 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     ks.forEach(function (k) {
       var gi = NAV_GRP[k] || 0, on = S.page === k || (k === 'cases' && S.page === 'case') || (k === 'ca' && S.page === 'carec');
       if (gi !== g) { h += (g >= 0 ? '</div>' : '') + '<div class="nav-g">' + (titled ? '<div class="nav-gt">' + NAV_GT[gi] + '</div>' : ''); g = gi; }
-      h += '<button type="button" data-a="nav" data-v="' + k + '" title="' + esc(navName(k)) + '" aria-label="' + esc(navName(k)) + '"' + (on ? ' aria-current="page"' : '') + '>' + ic(NAV_IC[k]) + '<span>' + navShort(k) + '</span></button>';
+      var dn = k === 'docs' ? dcMineN() : 0;   // requests waiting for this role
+      h += '<button type="button" data-a="nav" data-v="' + k + '" title="' + esc(navName(k) + (dn ? ' · คำร้องรอคุณ ' + dn : '')) + '" aria-label="' + esc(navName(k) + (dn ? ' · คำร้องรอคุณ ' + dn : '')) + '"' + (on ? ' aria-current="page"' : '') + '>' + ic(NAV_IC[k]) + '<span>' + navShort(k) + '</span>' + (dn ? '<i class="nav-n">' + dn + '</i>' : '') + '</button>';
     });
     return '<aside class="side"><nav class="nav" aria-label="เมนูหลัก">' + h + (g >= 0 ? '</div>' : '') + '</nav><div class="side-art" aria-hidden="true">' + ART_MINI + '</div></aside>';
   }
   /* the rail's short names; the full name is the tooltip and what a screen reader says */
-  function navShort(k) { if (k === 'cases') return isClient(S.role) ? 'เคสของฉัน' : ext() ? 'เคสที่แชร์' : 'เคสลูกค้า'; return { home:'หน้าแรก', cal:'ปฏิทิน', reg:'ทะเบียน', ca:'ร้องเรียน', docs:'เอกสาร', flow:'ผังงาน', perm:'สิทธิ์ผู้ใช้', users:'ผู้ใช้งาน' }[k] || navName(k); }
+  function navShort(k) { if (k === 'cases') return isClient(S.role) ? 'เคสของฉัน' : ext() ? 'เคสที่แชร์' : 'เคสลูกค้า'; return { home:'หน้าแรก', cal:'ปฏิทิน', reg:'ทะเบียน', ca:'ร้องเรียน', docs:'เอกสาร', flow:'ผังงาน', perm:'สิทธิ์ผู้ใช้', users:'ผู้ใช้งาน', mpo:'Master Plan' }[k] || navName(k); }
   function topbar() {
     var n = myMails();
     return '<header class="topbar"><div class="tb-brand"><img src="' + LOGO + '" alt="GCC"><div><b>ระบบงานทวนสอบ</b><small>Global Carbon Corporation</small></div></div>' +
       '<label class="search">' + ic('search') + '<input id="gq" type="search" placeholder="ค้นหาเคส เอกสาร หรือเรื่อง" value="' + esc(S.gq || '') + '" aria-label="ค้นหา"></label><div class="sp"></div>' +
       (APP_ON ? appTopUser() : '<label class="tb-role" title="ตัวอย่างเท่านั้น ระบบจริงเข้าด้วยบัญชีของแต่ละคน"><span>บทบาท</span><select id="roleSel" class="role-pick" aria-label="เข้าใช้ในบทบาท">' + roleOptions() + '</select></label>') +
       '<button type="button" class="bell thm" data-a="theme" title="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '" aria-label="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '">' + ic(isDark() ? 'sun' : 'moon') + '</button>' +
+      (navs().indexOf('docs') >= 0 ? (function () { var k = dcMineN(), t = k ? 'คำร้องเอกสารที่รอคุณ ' + k + ' รายการ' : 'ไม่มีคำร้องเอกสารที่รอคุณ'; return '<button type="button" class="bell" data-a="dcmine" title="' + t + '" aria-label="' + t + '">' + ic('docs') + (k ? '<i>' + k + '</i>' : '') + '</button>'; })() : '') +
       (navs().indexOf('cases') >= 0 ? '<button type="button" class="bell" data-a="mails" title="อีเมลที่ระบบส่งใน 7 วัน" aria-label="อีเมลที่ระบบส่งใน 7 วัน">' + ic('mail') + (n ? '<i>' + n + '</i>' : '') + '</button>' : '') + av(rk()) + '</header>';
   }
   /* line drawings for the home shortcut cards: navy strokes, lavender and indigo fills */
@@ -5346,7 +5442,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   var DOC_FOLDER = { Q:'01 Q คู่มือคุณภาพ', P:'02 P ขั้นตอนการปฏิบัติงาน', R:'03 R หลักเกณฑ์และเงื่อนไข', W:'04 W วิธีการปฏิบัติงาน', F:'05 F แบบฟอร์ม', E:'06 E เอกสารภายนอก' };
   var DAR_FLOW = { Q:['qmr', 'md'], P:['qmr', 'md'], R:['qmr', 'md'], W:['mgr', 'qmr'], F:['mgr', 'qmr'], E:[null, 'qmr'] };
   var DAR_TYPE = { new:'ออกเอกสารใหม่', rev:'แก้ไขเอกสาร', cancel:'ยกเลิกเอกสาร' };
-  var DAR_ST = { dcc:'รอผู้ควบคุมเอกสารออกเลขที่', rv:'รอผู้ตรวจสอบ', ap:'รอผู้อนุมัติ', pub:'อนุมัติแล้ว รอประกาศ', done:'ประกาศแล้ว', no:'ไม่เห็นชอบ' };
+  var DAR_ST = { dcc:'รอผู้ควบคุมเอกสารออกเลขที่', rv:'รอผู้ตรวจสอบ', ap:'รอผู้อนุมัติ', pub:'อนุมัติแล้ว รอประกาศ', done:'ประกาศแล้ว', no:'ไม่เห็นชอบ', fix:'ส่งกลับให้แก้ไข' };
   function catOf(code) { return String(code || '').charAt(0); }
   function catName(k) { for (var i = 0; i < DOC_CAT.length; i++) if (DOC_CAT[i][0] === k) return DOC_CAT[i][1]; return k; }
   function darSeed() {
@@ -5369,11 +5465,14 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function nextCode(cat) {
     var n = 0; DB.docs.forEach(function (d) { if (catOf(d.code) === cat) n = Math.max(n, +d.code.split('-')[2]); });
     DB.dar.forEach(function (r) { if (r.type === 'new' && r.code && catOf(r.code) === cat) n = Math.max(n, +r.code.split('-')[2]); });
-    return cat + '-GCC-' + pad(n + 1);
+    var c = cat + '-GCC-' + pad(n + 1);
+    while (CODE_HOLD.indexOf(c) >= 0) { n++; c = cat + '-GCC-' + pad(n + 1); }
+    return c;
   }
+  var CODE_HOLD = [];   // codes held back from new documents; none since the Master Plan became a client document, not a form (13/11/2569)
   function darWho(r) {
     var f = DAR_FLOW[r.cat] || [null, 'qmr'];
-    return r.st === 'dcc' || r.st === 'pub' ? 'dcc' : r.st === 'rv' ? f[0] : r.st === 'ap' ? f[1] : null;
+    return r.st === 'dcc' || r.st === 'pub' ? 'dcc' : r.st === 'rv' ? f[0] : r.st === 'ap' ? f[1] : r.st === 'fix' ? r.by : null;
   }
   function darMine() { return DB.dar.filter(function (r) { return darWho(r) === S.role; }); }
   function darOpen() { return DB.dar.filter(function (r) { return r.st !== 'done' && r.st !== 'no'; }); }
@@ -5400,62 +5499,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function openAnnAll() { modal('ประกาศเอกสารทั้งหมด', 'docs', annFeed(), '<button type="button" class="btn" data-a="mclose">ปิด</button>'); }
 
   /* the page: category cards, then the three storage areas of P-GCC-11 and the requests as tabs */
-  function pageDocs() {
-    docsInit();
-    var q = (S.dq || '').trim().toLowerCase(), dcc = S.role === 'dcc', area = S.da || 'use', cat = S.dt || 'all', mine = darMine();
-    var inCat = function (code) { return cat === 'all' || catOf(code) === cat; };
-    var hit = function (s) { return !q || s.toLowerCase().indexOf(q) >= 0; };
-    var cur = DB.docs.filter(function (d) { return d.status !== 'cancel' && d.status !== 'draft' && d.status !== 'pend' && inCat(d.code); });
-    var drafts = DB.dar.filter(function (r) { return r.type !== 'cancel' && r.st !== 'done' && r.st !== 'no' && (cat === 'all' || r.cat === cat); })
-      .concat(DB.docs.filter(function (d) { return (d.status === 'draft' || d.status === 'pend') && inCat(d.code); }).map(function (d) { return { doc:d }; }));
-    var gone = [];
-    DB.docs.forEach(function (d) {
-      if (!inCat(d.code)) return;
-      if (d.status === 'cancel') gone.push({ d:d, rev:d.rev, at:d.cdate || '', why:'ยกเลิกการใช้งาน' });
-      (d.hist || []).slice(1).forEach(function (h, i) { gone.push({ d:d, rev:h.rev, at:(d.hist[i] || {}).date || '', why:'ฉบับเดิม ถูกแทนด้วย Rev.' + (d.hist[i] || {}).rev }); });
-    });
-    var reqs = DB.dar.filter(function (r) { return cat === 'all' || r.cat === cat; });
-    var tiles = [['all', 'ทุกประเภท', 'All documents', 'folder']].concat(DOC_CAT).map(function (t) {
-      var n = DB.docs.filter(function (d) { return d.status !== 'cancel' && (t[0] === 'all' || catOf(d.code) === t[0]); }).length;
-      return '<button type="button" class="dk' + (cat === t[0] ? ' on' : '') + '" data-a="dt" data-v="' + t[0] + '" aria-pressed="' + (cat === t[0]) + '"><span class="dk-l">' + (t[0] === 'all' ? ic('folder') : t[0]) + '</span>' +
-        '<span class="dk-t"><b>' + t[1] + '</b><small>' + t[2] + '</small></span><span class="dk-n">' + n + '<small>ฉบับ</small></span></button>';
-    }).join('');
-    var tabs = [['use', 'ฉบับปัจจุบัน', cur.length, 'check'], ['draft', 'ฉบับร่างและรอตรวจสอบ', drafts.length, 'clip'], ['cancel', 'ยกเลิกแล้ว', gone.length, 'archive'], ['dar', 'คำร้องจัดทำ แก้ไข ยกเลิก', darOpen().length, 'msg']];
-    var h = '<section class="grid2 dc-top"><div class="card pad"><div class="sec-h"><h3>ประกาศเอกสาร</h3><div class="sp"></div><button type="button" class="link" data-a="annall">ดูทั้งหมด</button></div>' + annFeed(4) + '</div>' +
-      '<div class="card pad"><div class="sec-h"><h3>งานควบคุมเอกสาร</h3></div>' + dcWork(mine, dcc) + '</div></section>';
-    h += duStrip();
-    h += '<section class="sec"><div class="dks" role="group" aria-label="ประเภทเอกสาร">' + tiles + '</div>';
-    h += '<div class="ct-bar dc-bar"><div class="tabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-a="da" data-v="' + t[0] + '" aria-selected="' + (area === t[0]) + '">' + ic(t[3]) + '<span>' + t[1] + '<span class="n">' + t[2] + '</span></span></button>'; }).join('') + '</div>' +
-      '<div class="sp"></div><label class="fv-q dc-q">' + ic('search') + '<input id="dq" placeholder="ค้นหาชื่อหรือรหัส" value="' + esc(S.dq || '') + '" aria-label="ค้นหาเอกสาร"></label>' +
-      '<button type="button" class="btn pri" data-a="darnew">' + ic('plus') + 'ยื่นคำร้อง</button></div>';
-    if (area === 'use') h += dcTable(cur.filter(function (d) { return hit(d.code + ' ' + d.name); }), dcc);
-    else if (area === 'draft') h += dcDrafts(drafts.filter(function (x) { return hit(x.doc ? x.doc.code + ' ' + x.doc.name : (x.code || '') + ' ' + x.name); }));
-    else if (area === 'cancel') h += dcGone(gone.filter(function (x) { return hit(x.d.code + ' ' + x.d.name); }));
-    else h += darTable(reqs.filter(function (r) { return hit((r.no || '') + ' ' + (r.code || '') + ' ' + r.name); }));
-    return h + '<p class="dc-fine">ทำตาม P-GCC-11: แก้และประกาศได้เฉพาะผู้ควบคุมเอกสาร ผู้ตรวจสอบและผู้อนุมัติเป็นไปตามตารางที่ 1 ภาคผนวก ข · รหัสที่ยกเลิกแล้วไม่นำกลับมาใช้</p></section>';
-  }
-  function dcWork(mine, dcc) {
-    var q = quarter(todayIso()), last = DB.mlc[0], done = last && last.at >= q.from;
-    var h = '<ul class="rows dc-work">' + (mine.length ? mine.slice(0, 4).map(function (r) {
-      return '<li>' + ic('msg') + '<div><b>' + esc(DAR_TYPE[r.type] + ': ' + r.name) + '</b><span>' + esc((r.no ? 'คำร้อง ' + r.no + ' · ' : 'ยังไม่มีเลขที่ · ') + DAR_ST[r.st]) + '</span></div><button type="button" class="btn sm" data-a="daropen" data-v="' + DB.dar.indexOf(r) + '">ดำเนินการ</button></li>';
-    }).join('') : '<li>' + ic('check') + '<div><b>ไม่มีคำร้องที่รอคุณ</b><span>' + darOpen().length + ' คำร้องกำลังดำเนินการในระบบ</span></div><span></span></li>');
-    h += '<li>' + ic('cal') + '<div><b>ตรวจทะเบียนเทียบไฟล์จริง ไตรมาส ' + q.q + '/' + (+q.y + 543) + '</b><span>' + (done ? 'ตรวจแล้ว ' + dL(last.at) + (last.ok ? ' · ตรงกันทั้งหมด' : ' · พบไม่ตรง: ' + esc(last.note)) : 'ยังไม่ตรวจไตรมาสนี้ · ผลส่ง QMR เพื่อทบทวนโดยฝ่ายบริหาร') + '</span></div>' +
-      (dcc ? '<button type="button" class="btn sm" data-a="mlchk">บันทึกผล</button>' : done ? '<span class="chip done">ตรวจแล้ว</span>' : '<span class="chip y">รอตรวจ</span>') + '</li>';
-    h += '<li>' + ic('cloud') + '<div><b>ที่จัดเก็บออนไลน์ 3 พื้นที่</b><span>ฉบับปัจจุบัน · ฉบับร่างและรอตรวจสอบ · ยกเลิกแล้ว (รอลิงก์ OneDrive)</span></div><span class="chip y">รอลิงก์</span></li>';
-    return h + '</ul>';
-  }
+
+
   function dcRow(d, acts) {
     return '<tr><td><div class="ct-co"><span class="dc-c">' + esc(catOf(d.code)) + '</span><div class="nm"><b title="' + esc(d.name) + '">' + esc(d.name) + '</b><span>' + esc(d.code) + '</span></div></div></td>' +
       '<td>Rev.' + esc(d.rev || '00') + '</td><td>' + (d.date ? '<span class="date">' + dL(d.date) + '</span>' : '<span class="ct-none">-</span>') + '</td><td class="dc-acts">' + acts + '</td></tr>';
   }
-  function dcTable(list, dcc) {
-    if (!list.length) return '<div class="card pad empty">ไม่พบเอกสาร</div>';
-    return '<div class="card ct-card"><table class="t ct dc-t"><colgroup><col><col style="width:90px"><col style="width:150px"><col style="width:' + (dcc ? 372 : 300) + 'px"></colgroup><thead><tr><th>เอกสาร</th><th>Rev</th><th>ประกาศใช้</th><th></th></tr></thead><tbody>' +
-      list.map(function (d) {
-        return dcRow(d, (d.cf ? '<button type="button" class="btn sm" data-a="dcopen" data-v="' + d.code + '">' + ic('eye') + 'เปิด</button>' : d.cfWait ? '<span class="chip wait">กำลังทำไฟล์</span>' : '<a class="btn sm" href="' + fileUrl(d.folder, d.file) + '" target="_blank" rel="noopener">' + ic('eye') + 'เปิด</a>') + '<button type="button" class="btn sm" data-a="dhist" data-v="' + d.code + '">' + ic('cal') + 'ประวัติ</button>' +
-          '<button type="button" class="btn sm" data-a="darnew" data-v="' + d.code + '">' + ic('msg') + 'คำร้อง</button>' + (dcc ? '<button type="button" class="link" data-a="dedit" data-v="' + d.code + '">แก้ข้อมูล</button>' : ''));
-      }).join('') + '</tbody></table></div>';
-  }
+
   function dcDrafts(list) {
     if (!list.length) return '<div class="card pad empty">ไม่มีฉบับร่างหรือเอกสารที่รอตรวจสอบ</div>';
     return '<div class="card ct-card"><table class="t ct dc-t"><colgroup><col><col style="width:90px"><col style="width:230px"><col style="width:150px"></colgroup><thead><tr><th>ฉบับร่าง</th><th>Rev</th><th>สถานะ</th><th></th></tr></thead><tbody>' +
@@ -5518,7 +5568,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var r = { no:'', at:todayIso(), type:t, cat:cat, code:d ? d.code : '', name:name, rev:d ? (t === 'rev' ? pad(+d.rev + 1) : d.rev) : '00', by:S.role, st:'dcc',
       detail:$('drDet').value.trim(), reason:$('drWhy').value.trim(), imp:{ ml:$('drMl').checked, tr:$('drTr').checked, rc:$('drRc').checked }, rel:$('drRel').value.trim(), log:[[todayIso(), S.role, 'ยื่นคำร้อง']] };
     if (cat === 'E' && $('drGrp') && $('drGrp').value.trim()) r.grp = $('drGrp').value.trim();
-    var f = t !== 'cancel' ? DU.f : null, fin = function () { DB.dar.unshift(r); DU.f = null; S.da = 'dar'; save(); closeModal(); render(); toast('ยื่นคำร้องแล้ว' + (f ? 'พร้อมไฟล์' : '') + ' รอผู้ควบคุมเอกสารออกเลขที่'); };
+    var f = t !== 'cancel' ? DU.f : null, fin = function () { darMail(r, 'dcc', 'คำร้องใหม่รอออกเลขที่: ' + r.name); DB.dar.unshift(r); DU.f = null; S.da = 'dar'; save(); closeModal(); render(); toast('ยื่นคำร้องแล้ว' + (f ? 'พร้อมไฟล์' : '') + ' รอผู้ควบคุมเอกสารออกเลขที่'); };
     if (!f) { fin(); return; }
     var fid = 'dar-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     attPut(fid, f).then(function () { r.file = { id:fid, name:f.name, size:f.size, type:f.type || '' }; r.log[0][2] = 'ยื่นคำร้องพร้อมไฟล์ ' + f.name; fin(); }).catch(function () { toast('บันทึกไฟล์ในเบราว์เซอร์นี้ไม่ได้'); });
@@ -5529,24 +5579,28 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var r = DB.dar[i]; if (!r) return;
     var f = DAR_FLOW[r.cat] || [null, 'qmr'], who = darWho(r), me = who && who === S.role;
     var steps = [['ยื่นคำร้อง', r.by], ['ออกเลขที่และ Rev', 'dcc']].concat(f[0] ? [['ตรวจสอบ', f[0]]] : []).concat([['อนุมัติ', f[1]], [r.type === 'cancel' ? 'ยกเลิกและแจ้ง' : 'สอบทานและประกาศใช้', 'dcc']]);
-    var at = { dcc:1, rv:2, ap:f[0] ? 3 : 2, pub:steps.length - 1, done:steps.length, no:-1 }[r.st];
-    var rail = '<ol class="dr-rail">' + steps.map(function (s, k) { return '<li class="' + (r.st === 'no' ? (k <= 1 ? 'done' : '') : k < at ? 'done' : k === at ? 'now' : '') + '"><i></i><b>' + s[0] + '</b><span>' + esc(role(s[1])[1]) + '</span></li>'; }).join('') + '</ol>';
+    var at = { dcc:1, rv:2, ap:f[0] ? 3 : 2, pub:steps.length - 1, done:steps.length, no:-1, fix:r.back && r.back.from === 'ap' ? (f[0] ? 3 : 2) : 2 }[r.st];   // sent back: the step that sent it shows the turn back
+    var rail = '<ol class="dr-rail">' + steps.map(function (s, k) { return '<li class="' + (r.st === 'no' ? (k <= 1 ? 'done' : '') : k < at ? 'done' : k === at ? (r.st === 'fix' ? 'back' : 'now') : '') + '"><i></i><b>' + s[0] + '</b><span>' + esc(role(s[1])[1]) + '</span></li>'; }).join('') + '</ol>';
     var kv = function (k, v) { return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; };
-    var body = rail + '<dl class="fv-kv dr-kv">' + kv('เลขที่', esc(r.no || 'รอผู้ควบคุมเอกสารออกเลขที่')) + kv('ประเภท', esc(DAR_TYPE[r.type])) + kv('ชนิดเอกสาร', esc(catName(r.cat))) +
+    var back = r.st === 'fix' && r.back ? '<div class="dr-back">' + ic('alert') + '<div><b>ส่งกลับให้แก้ไข · ' + esc(role(r.back.by)[1]) + ' · ' + dL(r.back.at) + '</b><span>' + esc(r.back.note) + '</span></div></div>' : '';
+    var body = rail + back + '<dl class="fv-kv dr-kv">' + kv('เลขที่', esc(r.no || 'รอผู้ควบคุมเอกสารออกเลขที่')) + kv('ประเภท', esc(DAR_TYPE[r.type])) + kv('ชนิดเอกสาร', esc(catName(r.cat))) +
       kv('เอกสาร', esc((r.code || 'รหัสใหม่') + ' ' + r.name)) + kv('แก้ไขครั้งที่', 'Rev.' + esc(r.rev)) + kv('รายละเอียด', esc(r.detail)) + kv('เหตุผล', esc(r.reason)) +
       kv('ต้องดำเนินการ', esc([r.imp.ml ? 'ปรับทะเบียนแม่บท' : '', r.imp.tr ? 'ฝึกอบรมเพิ่มเติม' : '', r.imp.rc ? 'เรียกคืนฉบับพิมพ์' : ''].filter(Boolean).join(' · '))) + kv('เอกสารที่เกี่ยวข้อง', esc(r.rel)) + kv('หมวด', esc(r.grp || '')) +
       kv('ไฟล์ที่แนบ', r.file ? '<button type="button" class="link" data-a="darfile" data-v="' + i + '">' + esc(r.file.name) + '</button> · ' + esc(attSize(r.file.size)) + (r.cat === 'E' && duPdf(r.file) && r.type !== 'cancel' ? ' · ระบบใส่ปก GCC เมื่อประกาศใช้' : '') : '') +
       kv('ผู้ยื่น', esc(role(r.by)[1] + ' · ' + dL(r.at))) + kv('ผลการพิจารณา', r.ap ? esc((r.ap.ok ? 'เห็นชอบ' : 'ไม่เห็นชอบ') + (r.ap.note ? ' เพราะ ' + r.ap.note : '') + (r.ap.eff ? ' · มีผล ' + dL(r.ap.eff) : '')) : '') + '</dl>' +
+      (r.mail && r.mail.length ? '<h5 class="dr-h">อีเมลแจ้งเตือน</h5><ul class="dr-log dr-mail">' + r.mail.map(function (m) { return '<li><span class="date">' + dS(m.at) + '</span><b>' + esc(role(m.to)[1]) + '</b><span>' + esc(m.subj) + '</span></li>'; }).join('') + '</ul>' : '') +
       '<h5 class="dr-h">บันทึกการดำเนินการ</h5><ul class="dr-log">' + (r.log || []).map(function (l) { return '<li><span class="date">' + dS(l[0]) + '</span><b>' + esc(role(l[1])[1]) + '</b><span>' + esc(l[2]) + '</span></li>'; }).join('') + '</ul>';
     var act = '';
     if (me && r.st === 'dcc') act = '<div class="f w"><label>รหัสและ Rev ที่จะออก</label><div class="tv">' + esc((r.type === 'new' ? nextCode(r.cat) : r.code) + ' · Rev.' + (r.type === 'new' ? '00' : r.rev) + ' · เลขที่ ' + darNext()) + '</div></div>';
-    if (me && r.st === 'rv') act = '<div class="f w"><label for="drNote">ความเห็นผู้ตรวจสอบ</label><textarea id="drNote" rows="2" placeholder="ไม่บังคับ"></textarea></div>';
-    if (me && r.st === 'ap') act = '<div class="fg"><div class="f"><label for="drEff">กำหนดวันที่ประกาศใช้</label><input type="date" id="drEff" value="' + todayIso() + '"></div><div class="f"><label for="drNote">ความเห็น (ต้องใส่เมื่อไม่เห็นชอบ)</label><input id="drNote"></div></div>';
+    if (me && r.st === 'rv') act = '<div class="f w"><label for="drNote">ความเห็นผู้ตรวจสอบ</label><textarea id="drNote" rows="2" placeholder="ต้องใส่เมื่อส่งกลับให้แก้ไข"></textarea></div>';
+    if (me && r.st === 'fix') act = '<div class="f w"><label>ไฟล์ฉบับแก้ไข</label><div id="duBox">' + duBoxHtml() + '</div></div><div class="f w" style="margin-top:10px"><label for="drFix">สิ่งที่แก้ไขตามความเห็น</label><textarea id="drFix" rows="2"></textarea></div>';
+    if (me && r.st === 'ap') act = '<div class="fg"><div class="f"><label for="drEff">กำหนดวันที่ประกาศใช้</label><input type="date" id="drEff" value="' + todayIso() + '"></div><div class="f"><label for="drNote">ความเห็น</label><input id="drNote" placeholder="ต้องใส่เมื่อส่งกลับหรือไม่เห็นชอบ"></div></div>';
     if (me && r.st === 'pub') act = (r.file && r.cat === 'E' && duPdf(r.file) && r.type !== 'cancel' ? '<div class="dr-prev"><button type="button" class="btn" data-a="dcprev" data-v="' + i + '">' + ic('eye') + 'ดูไฟล์ที่จะประกาศ (ปก + ต้นฉบับ)</button></div>' : '') +
       '<label class="opt dr-chk"><input type="checkbox" id="drChk"><span>' + (r.cat === 'E' ? 'สอบทานแล้ว รหัส ชื่อ และวันที่ประกาศใช้บนปกตรงกับทะเบียนเอกสารภายนอก <span class="nw">(F-GCC-49)</span>' : 'สอบทานแล้ว เลข Rev และวันที่ประกาศใช้บนไฟล์ตรงกับทะเบียนแม่บท <span class="nw">(F-GCC-48)</span>') + '</span></label>';
     var btn = !me ? '' : r.st === 'dcc' ? '<button type="button" class="btn pri" data-a="darstep" data-v="' + i + '">รับเรื่อง ออกเลขที่</button>' :
-      r.st === 'rv' ? '<button type="button" class="btn pri" data-a="darstep" data-v="' + i + '">ตรวจสอบแล้ว เสนออนุมัติ</button>' :
-      r.st === 'ap' ? '<button type="button" class="btn" data-a="darno" data-v="' + i + '">ไม่เห็นชอบ</button><button type="button" class="btn ok" data-a="darstep" data-v="' + i + '">เห็นชอบ</button>' :
+      r.st === 'rv' ? '<button type="button" class="btn warn" data-a="darback" data-v="' + i + '">' + ic('back') + 'ส่งกลับให้แก้ไข</button><button type="button" class="btn pri" data-a="darstep" data-v="' + i + '">ตรวจสอบแล้ว เสนออนุมัติ</button>' :
+      r.st === 'ap' ? '<button type="button" class="btn warn" data-a="darback" data-v="' + i + '">' + ic('back') + 'ส่งกลับให้แก้ไข</button><button type="button" class="btn" data-a="darno" data-v="' + i + '">ไม่เห็นชอบ</button><button type="button" class="btn ok" data-a="darstep" data-v="' + i + '">เห็นชอบ</button>' :
+      r.st === 'fix' ? '<button type="button" class="btn pri" data-a="darfix" data-v="' + i + '">ส่งกลับให้ตรวจสอบ</button>' :
       r.st === 'pub' ? '<button type="button" class="btn ok" data-a="darstep" data-v="' + i + '">' + (r.type === 'cancel' ? 'ยกเลิกเอกสารและแจ้งอีเมล' : 'ประกาศใช้และแจ้งอีเมล') + '</button>' : '';
     modal((r.no ? 'คำร้อง ' + r.no + ' · ' : '') + DAR_TYPE[r.type], 'msg', body + (act ? '<div class="dr-act">' + act + '</div>' : '') + (!me && who && r.st !== 'done' && r.st !== 'no' ? note('info', 'ขั้นนี้รอ ' + role(who)[1]) : ''),
       '<button type="button" class="btn" data-a="mclose">ปิด</button>' + btn);
@@ -5558,13 +5612,17 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (r.st === 'dcc') {
       r.no = darNext(); if (r.type === 'new') { r.code = nextCode(r.cat); r.rev = '00'; }
       r.st = f[0] ? 'rv' : 'ap'; r.log.push([t, 'dcc', 'ออกเลขที่ ' + r.no + ' และกำหนด ' + r.code + ' Rev.' + r.rev]); msg = 'ออกเลขที่ ' + r.no + ' แล้ว ส่ง' + role(f[0] || f[1])[1];
+      darMail(r, f[0] || f[1], 'คำร้อง ' + r.no + ' ' + (f[0] ? 'รอตรวจสอบ' : 'รออนุมัติ') + ': ' + r.code + ' ' + r.name);
     } else if (r.st === 'rv') {
       var n1 = ($('drNote') || {}).value || ''; r.rv = { by:S.role, at:t, note:n1 }; r.st = 'ap'; r.log.push([t, S.role, 'ตรวจสอบแล้ว' + (n1 ? ': ' + n1 : '')]); msg = 'ส่ง' + role(f[1])[1] + 'อนุมัติแล้ว';
+      darMail(r, f[1], 'คำร้อง ' + r.no + ' รออนุมัติ: ' + r.code + ' ' + r.name);
     } else if (r.st === 'ap') {
       var n2 = (($('drNote') || {}).value || '').trim(), eff = ($('drEff') || {}).value || t;
       if (!ok && !n2) { toast('ใส่เหตุผลที่ไม่เห็นชอบก่อน'); return; }
       r.ap = { by:S.role, at:t, ok:ok, note:n2, eff:ok ? eff : '' }; r.st = ok ? 'pub' : 'no';
       r.log.push([t, S.role, ok ? 'เห็นชอบ มีผล ' + dL(eff) : 'ไม่เห็นชอบ เพราะ ' + n2]); msg = ok ? 'อนุมัติแล้ว รอผู้ควบคุมเอกสารประกาศ' : 'บันทึกไม่เห็นชอบแล้ว';
+      if (ok) darMail(r, 'dcc', 'คำร้อง ' + r.no + ' อนุมัติแล้ว รอประกาศใช้: ' + r.code + ' ' + r.name);
+      darMail(r, r.by, 'คำร้อง ' + r.no + (ok ? ' อนุมัติแล้ว: ' : ' ไม่เห็นชอบ: ') + r.code + ' ' + r.name);
     } else if (r.st === 'pub') {
       if (!$('drChk') || !$('drChk').checked) { toast('ติ๊กสอบทานเลข Rev และวันที่ก่อน'); return; }
       var eff2 = (r.ap || {}).eff || t, d = docByCode(r.code), kind = r.type;
@@ -5577,6 +5635,34 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       msg = (kind === 'cancel' ? 'ยกเลิก ' : 'ประกาศใช้ ') + d.code + ' แล้ว ฉบับเดิมย้ายไปพื้นที่ยกเลิก';
     }
     save(); closeModal(); render(); toast(msg);
+  }
+  /* an e-mail to whoever acts next; the demo keeps it on the request, the real page also queues it for the sender */
+  function darMail(r, to, subj) { if (!to) return; (r.mail = r.mail || []).unshift({ at:todayIso(), to:to, subj:subj }); if (APP_ON) appDocMail(to, subj); }
+  /* the reviewer or the approver sends a request back to the person who filed it, with what to change (P-GCC-11:
+     the requester revises the document by their comments, then they check it again) */
+  function darBack(i) {
+    var r = DB.dar[i], t = todayIso(), note = (($('drNote') || {}).value || '').trim();
+    if (!r || darWho(r) !== S.role || (r.st !== 'rv' && r.st !== 'ap')) return;
+    if (!note) { toast('ใส่ความเห็นว่าต้องแก้อะไรก่อนส่งกลับ'); return; }
+    r.back = { by:S.role, at:t, note:note, from:r.st }; r.st = 'fix'; r.round = r.round || 1;
+    r.log.push([t, S.role, 'ส่งกลับให้แก้ไข: ' + note]);
+    darMail(r, r.by, 'คำร้อง ' + r.no + ' ส่งกลับให้แก้ไข: ' + r.code + ' ' + r.name);
+    save(); closeModal(); render(); toast('ส่งกลับให้' + role(r.by)[1] + 'แก้ไขแล้ว และแจ้งอีเมล');
+  }
+  /* the requester sends the revised file back: it goes to the reviewer again (or the approver when there is none) */
+  function darFix(i) {
+    var r = DB.dar[i], t = todayIso(), f = DAR_FLOW[r.cat] || [null, 'qmr'], note = (($('drFix') || {}).value || '').trim(), nf = DU.f;
+    if (!r || r.st !== 'fix' || darWho(r) !== S.role) return;
+    if (!note) { toast('ใส่ว่าแก้อะไรไปบ้างก่อนส่ง'); return; }
+    var fin = function () {
+      r.round = (r.round || 1) + 1; r.st = f[0] ? 'rv' : 'ap'; delete r.back; DU.f = null;
+      r.log.push([t, S.role, 'แก้ไขแล้ว ส่งตรวจสอบอีกครั้ง (รอบที่ ' + r.round + '): ' + note + (nf ? ' · ไฟล์ ' + nf.name : '')]);
+      darMail(r, f[0] || f[1], 'คำร้อง ' + r.no + ' แก้ไขแล้ว รอ' + (f[0] ? 'ตรวจสอบ' : 'อนุมัติ') + 'อีกครั้ง: ' + r.code + ' ' + r.name);
+      save(); closeModal(); render(); toast('ส่งฉบับแก้ไขให้' + role(f[0] || f[1])[1] + 'แล้ว');
+    };
+    if (!nf) { fin(); return; }
+    var fid = 'dar-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    attPut(fid, nf).then(function () { if (r.file) (r.files = r.files || []).push(r.file); r.file = { id:fid, name:nf.name, size:nf.size, type:nf.type || '' }; fin(); }).catch(function () { toast('บันทึกไฟล์ในเบราว์เซอร์นี้ไม่ได้'); });
   }
   function docHist(code) {
     var d = docByCode(code); if (!d) return;
@@ -5827,6 +5913,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     prop(to);
   }
   function moAfter() {
+    mpoAfter();   // page Master Plan: today in view (54-master-plan.js)
     // the menu tab
     var nav = document.querySelector('.side .nav'), on = nav && nav.querySelector('button[aria-current=page]');
     if (nav && on && on.offsetWidth > 0 && window.getComputedStyle(nav).flexDirection === 'column') {
@@ -6463,6 +6550,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (S.page === 'carec') return pageCARec();
     if (S.page === 'cases') return pageCases();
     if (S.page === 'cal') return pageCal();
+    if (S.page === 'mpo') return pageMpo();
     if (S.page === 'reg') return pageReg();
     if (S.page === 'docs') return pageDocs();
     if (S.page === 'flow') return pageFlow();
@@ -6884,6 +6972,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     else if (a === 'ptab') { S.ptab = v; render(); }
     else if (a === 'st' && c) setStep(c, stepById(S.sid), v);
     else if (a === 'f77use' && c) f77Use(c);
+    else if (a === 'mpgo') { S.page = 'case'; S.cid = v; S.sid = null; S.ctab = 'plan'; S.mped = false; render(); toTop(); }
     else if (a === 'mped') { S.mped = v === '1'; render(); }
     else if (a === 'mpiss' && c) { mpIssue(c); render(); }
     else if (a === 'mppdf' && c) mpPdf(c, v);
@@ -6946,9 +7035,14 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     else if (a === 'darfile') darFile(+v);
     else if (a === 'dcprev') dcPrev(+v);
     else if (a === 'darsave') darSave();
-    else if (a === 'daropen') darView(+v);
+    else if (a === 'daropen') { DU.f = null; darView(+v); }
     else if (a === 'darstep') darStep(+v, true);
     else if (a === 'darno') darStep(+v, false);
+    else if (a === 'darback') darBack(+v);
+    else if (a === 'darfix') darFix(+v);
+    else if (a === 'dcdoc') dcDoc(v);
+    else if (a === 'dcmine') { S.page = 'docs'; S.da = 'dar'; S.dmine = true; S.cid = null; render(); toTop(); }
+    else if (a === 'dcmineoff') { S.dmine = false; render(); }
     else if (a === 'dhist') docHist(v);
     else if (a === 'annall') openAnnAll();
     else if (a === 'mlchk') mlCheck();
@@ -7485,6 +7579,12 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
 
   /* ---------- e-mail: the page queues it (case_mail), the sender sends it (server/mailer.gs); with a sender set up the
      page asks it to send at once, otherwise it sends on its own timer ---------- */
+  /* a document e-mail (darMail in 35-document-control.js): one row in doc_mail for the role that acts next; the sender
+     sends it to every active account of that role */
+  function appDocMail(to, subj) {
+    SB.from('doc_mail').insert({ at:todayIso(), to_role:to, subj:String(subj || '').slice(0, 300) }).then(sbOk).then(appKick)
+      .catch(function (e) { toast('บันทึกอีเมลแจ้งเตือนไม่ได้: ' + thErr(e)); });
+  }
   function appKick() {
     if (!APP_CFG.mailer || !window.fetch) return;
     clearTimeout(APP.kick); APP.kick = setTimeout(function () { window.fetch(APP_CFG.mailer, { method:'POST', mode:'no-cors', body:'send' }).catch(function () { /* the timer sends it */ }); }, 300);
@@ -8004,9 +8104,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   });
   /* ---------- Master Plan inside the case (approved 10/11/2569; replaces the separate Master_Plan_CFO.html page):
      the dates of the 16 activities are the case's own (acts() in 25-steps.js reads c.mp.d), each issue keeps a copy of
-     its dates and status, and the PDF is a landscape GCC form: logo ribbon, navy column titles, grey label cells,
-     black text and numbers, signatures left blank for the signers ---------- */
-  var MP_CODE = 'F-GCC-78';   // proposed form code: not in the register until it is issued through F-GCC-47
+     its dates and status, and the PDF is a landscape document for the client: company letterhead, navy column titles,
+     grey label cells, black text and numbers, signatures left blank for the signers. It is not a controlled form, so it
+     carries no form code (the user's decision of 13/11/2569) ---------- */
   var MP_PH = [['รับงาน', 1], ['วางแผน', 5], ['ทวนสอบ', 9], ['ออกผล', 13]];   // [phase, its first activity]
   var MP_DOC = ['รับคำขอรับการทวนสอบ และคัดกรองเบื้องต้น', 'จัดทำและส่งใบเสนอราคา', 'รับข้อตกลงที่ลงนามโดยผู้มีอำนาจ', 'ทบทวนความเป็นกลาง แต่งตั้งคณะผู้ทวนสอบ',
     'ส่งรายงาน CFO, V-Sheet (Fr-01 – Fr-05) และหลักฐาน', 'ทบทวนเอกสาร: ขอบเขต ความครบถ้วน EF และการคำนวณ', 'วิเคราะห์ความเสี่ยง สาระสำคัญ และแผนการสุ่ม', 'ส่งแผนการทวนสอบและกำหนดการให้ลูกค้า',
@@ -8116,8 +8216,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     });
     t += '</tbody></table>';
     var sg = function (h, r) { return '<div><b>' + h + '</b><span class="ln">ลงชื่อ</span><span>(.......................................................)</span><span>' + r + '</span><span>วันที่ ......../......../........</span></div>'; };
-    var hd = pfHead({ title:'แผนงานโครงการทวนสอบ', sub:'Project Master Plan &nbsp;·&nbsp; การทวนสอบคาร์บอนฟุตพริ้นท์ขององค์กร (CFO)' });
-    if (!x) hd = hd.replace('<img src=', '<span class="mp-dbox">ฉบับร่าง (Draft)</span><img src=');   // a draft cannot pass for an issued plan
+    /* the company letterhead of a document for the client: logo, title, the company and how to reach it */
+    var hd = '<div class="mp-hd"><img src="' + LOGO + '" alt=""><div class="mp-tt"><div class="pf-t1">แผนงานโครงการทวนสอบ</div>' +
+      '<div class="pf-sub">Project Master Plan &nbsp;·&nbsp; การทวนสอบคาร์บอนฟุตพริ้นท์ขององค์กร (CFO)</div></div>' +
+      (x ? '' : '<span class="mp-dbox">ฉบับร่าง (Draft)</span>') +   // a draft cannot pass for an issued plan
+      '<div class="mp-co"><b>บริษัท โกลบอล คาร์บอน คอร์ปอเรชั่น จำกัด (สำนักงานใหญ่)</b><span>หน่วยทวนสอบก๊าซเรือนกระจก</span>' +
+      '<span>1023 อาคาร ทีพีเอส ชั้น 5 ห้อง 5/4 ถ.พัฒนาการ แขวงสวนหลวง เขตสวนหลวง กรุงเทพฯ 10250</span><span>โทรศัพท์ 0820069977 &nbsp;·&nbsp; www.gcc.co.th</span></div></div>' +
+      '<div class="pf-rule"></div>';
     return hd + info +
       pfBar('กิจกรรมและกำหนดเวลา') + t +
       '<div class="mp-bot"><div class="mp-rm"><b>หมายเหตุ</b><ol><li>กิจกรรมที่ 9 – 16 อาจเลื่อนตามเวลาที่ลูกค้าใช้ตอบและแก้ไขประเด็นที่พบ</li>' +
@@ -8126,11 +8231,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       '<div class="mp-sg">' + sg('จัดทำโดย', 'หัวหน้าผู้ทวนสอบ') + sg('อนุมัติโดย', 'ผู้จัดการฝ่ายทวนสอบ') + sg('รับทราบโดย', 'ผู้แทนลูกค้า') + '</div></div>';
   }
   function mpPdf(c, k) {
-    var d = docByCode(MP_CODE), foot = MP_CODE + '-' + (d ? d.rev : '00') + ' (' + (d && d.date ? dTH(d.date) : 'รอประกาศใช้') + ') หน้าที่ ';
-    var font = 'font:700 10.5pt "TH Sarabun New","Sarabun",sans-serif;color:#1E2A33';
+    /* no form code: the plan's name, the job number and the issue, then the page */
+    var x = +k ? (mpOf(c).iss || [])[k - 1] : null;
+    var foot = ('แผนงานโครงการทวนสอบ' + (c.job ? '  ·  เลขที่งาน ' + c.job : '') + '  ·  ' + (x ? 'ครั้งที่ ' + x.n + ' (' + dTH(x.d) + ')' : 'ฉบับร่าง')).replace(/["\\]/g, '');
+    var font = 'font:400 10.5pt "TH Sarabun New","Sarabun",sans-serif;color:#3A4650';
     $('pageStyle').textContent = '@page{size:A4 landscape;margin:10mm 12mm 13mm 12mm;' +
-      '@bottom-left{content:"จัดทำโดย:  บริษัท โกลบอล คาร์บอน คอร์ปอเรชั่น จำกัด";' + font + '}' +
-      '@bottom-right{content:"' + foot + '" counter(page) "/" counter(pages);' + font + '}}';
+      '@bottom-left{content:"' + foot + '";' + font + '}' +
+      '@bottom-right{content:"หน้า " counter(page) "/" counter(pages);' + font + '}}';
     $('printArea').innerHTML = '<div class="pf mp">' + mpPrint(c, +k || 0) + '</div>';
     logC(c, 'ออก PDF Master Plan ' + (+k ? 'ครั้งที่ ' + k : 'ฉบับร่าง')); save();
     setTimeout(function () { window.print(); }, 200);
@@ -8151,6 +8258,67 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       c.mp.iss.push({ n:2, d:wd(addDays(todayIso(), -17)), who:c.lv, a:snap(c, function (n) { return n < 10 ? 'done' : n === 10 ? 'doing' : ''; }) });
     });
   }
+
+  /* ---------- page Master Plan in the menu (13/11/2569): every case's plan on one time line. One row a case; the bar runs
+     from the plan's first to last date in its four phases (รับงาน วางแผน ทวนสอบ ออกผล), each coloured by its state as in
+     the case's own tab; the dot is the on-site day and the red line today. The tabs and years are those of page เคสลูกค้า,
+     and the search box filters the rows. A row opens that case's Master Plan ---------- */
+  function mpoPhases(c, a) {
+    var prev = '';
+    return MP_PH.map(function (p, i) {
+      var n1 = i + 1 < MP_PH.length ? MP_PH[i + 1][1] - 1 : a.length, s = '', e = '', st = [];
+      for (var n = p[1]; n <= n1; n++) { var x = a[n - 1]; if (!s || x.s < s) s = x.s; if (!e || x.e > e) e = x.e; st.push(mpSt(c, n)); }
+      var from = !prev ? s : addDays(prev, 1), to = e > prev ? e : prev;   // drawn end to end; the title gives the phase's own dates
+      if (from > to) from = to;
+      prev = to;
+      return { name:p[0], s:s, e:e, from:from, to:to, st:st.every(function (v) { return v === 'done'; }) ? 'done' : st.some(Boolean) ? 'doing' : '' };
+    });
+  }
+  function pageMpo() {
+    var every = cases(), years = {};
+    every.forEach(function (c) { var y = caseYear(c); years[y] = (years[y] || 0) + 1; });
+    var ys = Object.keys(years).sort().reverse(), yr = ys.indexOf(S.cy) >= 0 ? S.cy : 'all';
+    var all = yr === 'all' ? every : every.filter(function (c) { return caseYear(c) === yr; }), open = all.filter(function (c) { return !closed(c); }), shut = all.filter(closed), tab = S.cft || 'open';
+    var ysel = ys.length > 1 ? '<div class="subtabs ct-yr" role="tablist" aria-label="ปีของเคส">' + [['all', 'ทุกปี', every.length]].concat(ys.map(function (y) { return [y, 'ปี ' + y, years[y]]; })).map(function (t) {
+      return '<button type="button" role="tab" data-a="cy" data-v="' + t[0] + '" aria-selected="' + (yr === t[0]) + '">' + t[1] + '<span class="n">' + t[2] + '</span></button>';
+    }).join('') + '</div>' : '';
+    var h = '<div class="ct-bar"><div class="tabs" role="tablist">' + [['open', 'กำลังทำ', open.length, 'play'], ['closed', 'ปิดแฟ้มแล้ว', shut.length, 'archive'], ['all', 'ทั้งหมด', all.length, 'docs']].map(function (t) {
+      return '<button type="button" role="tab" data-a="cft" data-v="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + ic(t[3]) + '<span>' + t[1] + '<span class="n">' + t[2] + '</span></span></button>';
+    }).join('') + '</div><div class="sp"></div>' + ysel + '</div>';
+    var list = (tab === 'closed' ? shut : tab === 'all' ? all : open).slice();
+    if (!list.length) return h + '<section class="card pad empty">' + (all.length ? 'ไม่มีเคสในแท็บนี้' : every.length ? 'ไม่มีเคสของปีนี้' : 'ไม่มีเคสที่บทบาทนี้เห็น') + '</section>';
+    var A = {}, lo = todayIso(), hi = todayIso();
+    list.forEach(function (c) { A[c.id] = acts(c); A[c.id].forEach(function (x) { if (x.s < lo) lo = x.s; if (x.e > hi) hi = x.e; }); });
+    list.sort(function (a, b) { var x = A[a.id][0].s, y = A[b.id][0].s; return x < y ? -1 : x > y ? 1 : String(a.short).localeCompare(String(b.short), 'th'); });
+    var months = []; for (var m = lo.slice(0, 7); m <= hi.slice(0, 7); m = addMonths(m, 1)) months.push(m);
+    var start = months[0] + '-01', total = mpDays(start, addMonths(months[months.length - 1], 1) + '-01');
+    var pc = function (d) { return (Math.max(0, Math.min(total, mpDays(start, d))) / total * 100).toFixed(3) + '%'; };
+    var td = todayIso(), now = '<b class="mpo-now" style="left:' + pc(td) + '" aria-hidden="true"></b>';
+    var lines = months.slice(1).map(function (mm) { return '<i class="mpo-ml" style="left:' + pc(mm + '-01') + '"></i>'; }).join('');
+    var head = '<div class="mpo-mh">' + months.map(function (mm) { var w = mpDays(mm + '-01', addMonths(mm, 1) + '-01') / total * 100; return '<span style="left:' + pc(mm + '-01') + ';width:' + w.toFixed(3) + '%">' + TH_M[+mm.slice(5) - 1] + ' ' + mpYY(mm + '-01') + '</span>'; }).join('') + '</div>';
+    var rows = list.map(function (c) {
+      var a = A[c.id], k = cur(c), last = mpLast(c), df = mpDiff(c), vd = visitDate(c), ph = mpoPhases(c, a);
+      var chip = !last ? '<span class="chip wait">ยังไม่ออก</span>' : df && df.length ? '<span class="chip y" title="แก้วันหลังออกครั้งที่ ' + last.n + ' · กิจกรรม ' + mpNums(df) + '">แก้หลังครั้งที่ ' + last.n + '</span>' :
+        '<span class="chip done" title="ออก ' + dL(last.d) + '">ครั้งที่ ' + last.n + '</span>';
+      var bar = ph.map(function (p) { return '<i class="mpo-seg ' + p.st + '" style="left:' + pc(p.from) + ';width:calc(' + pc(addDays(p.to, 1)) + ' - ' + pc(p.from) + ')" title="' + esc(p.name + ' · ' + mpRange(p.s, p.e) + ' · ' + MP_ST[p.st]) + '"></i>'; }).join('');
+      var site = vd ? '<em class="mpo-site" style="left:' + pc(vd) + '" title="' + esc('ลงพื้นที่ ' + dL(vd)) + '"></em>' : '';
+      return '<tr class="click" data-a="mpgo" data-v="' + c.id + '" title="' + esc(c.name + ' · ' + mpRange(a[0].s, ph[3].to)) + '">' +
+        '<td class="mpo-c"><div class="ct-co"><span class="ct-ava" aria-hidden="true">' + esc(ctIni(c)) + '</span><div class="nm"><b>' + esc(c.short || c.name) + '</b><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span></div></div></td>' +
+        '<td>' + (k ? '<span class="mpo-step"><b>' + k[0] + '</b>' + esc(k[2]) + '</span>' : '<span class="mpo-step fin">' + (closed(c) ? 'ปิดแฟ้มแล้ว' : 'ครบทุกขั้น') + '</span>') + '</td>' +
+        '<td>' + chip + '</td><td class="mpo-tl"><div class="mpo-lane">' + lines + bar + site + now + '</div></td></tr>';
+    }).join('');
+    var lg = '<div class="mpo-lg"><span><i class="mpo-sw done"></i>เสร็จแล้ว</span><span><i class="mpo-sw doing"></i>กำลังทำ</span><span><i class="mpo-sw"></i>ตามแผน</span>' +
+      '<span><em class="mpo-site lg"></em>ลงพื้นที่</span><span><b class="mpo-nw"></b>วันนี้</span><span class="mpo-hint">แถบแบ่ง 4 ช่วง: รับงาน วางแผน ทวนสอบ ออกผล · กดแถวเพื่อเปิด Master Plan ของเคส</span></div>';
+    return h + '<section class="card mpo-card"><div class="mpo-w"><table class="t mpo" style="--mpo-min:' + Math.max(480, months.length * 84) + 'px"><colgroup><col class="mpo-c1"><col class="mpo-c2"><col class="mpo-c3"><col></colgroup>' +
+      '<thead><tr><th class="mpo-c">เคส</th><th>ขั้นตอนถัดไป</th><th>Master Plan</th><th class="mpo-tl">' + head + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' + lg + '</section>';
+  }
+  /* after each draw (moAfter): the time line opens with today in view; it scrolls inside its card, never the page */
+  function mpoAfter() {
+    var w = document.querySelector('.main .mpo-w'), n = w && w.querySelector('tbody .mpo-now'), c = w && w.querySelector('tbody td.mpo-c');
+    if (!n || !c) return;
+    var wr = w.getBoundingClientRect(), x = n.getBoundingClientRect().left - wr.left + w.scrollLeft, fix = c.getBoundingClientRect().width;
+    if (x - w.scrollLeft > w.clientWidth - 24) w.scrollLeft = Math.max(0, x - fix - (w.clientWidth - fix) * 0.6);
+  }
   /* ---------- design trial 10/11/2569: documents dropped into the document page. The file goes with the F-GCC-47
      request; the document controller gives the code as before; at publish an external PDF gets the GCC cover (as on
      E-GCC-74) in front of the untouched original pages, and the register opens that controlled copy. Word and Excel
@@ -8165,7 +8333,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   /* what the file name says: an existing code means a new revision of that document; otherwise a PDF from outside is E */
   function duGuess(f) {
     var base = f.name.replace(/\.[^.]+$/, ''), m = base.match(/^([QPRWFE])-GCC-(\d{2})(?:-(\d{2}))?\s*/i), code = m ? m[1].toUpperCase() + '-GCC-' + m[2] : '', d = code ? docByCode(code) : null;
-    var name = base.replace(/^([QPRWFE])-GCC-\d{2}(?:-\d{2})?\s*/i, '').replace(/\s*\((ฉบับร่าง|Draft|Rev\.?\s*\d+)\)\s*/ig, ' ').replace(/[_]+/g, ' ').trim();
+    var name = base.replace(/^([QPRWFE])-GCC-\d{2}(?:-\d{2})?\s*/i, '').replace(/^[A-Z]{1,4}-[A-Z0-9]{1,6}-\d{1,3}(?:[\s_.-]*Rev\.?\s*\d+)?[\s_-]+/, '').replace(/[_\s]+$/, '').replace(/\s*\((ฉบับร่าง|Draft|Rev\.?\s*\d+)\)\s*/ig, ' ').replace(/[_]+/g, ' ').trim();
     return { type:d ? 'rev' : 'new', cat:d ? catOf(d.code) : duPdf(f) ? 'E' : 'F', code:d ? d.code : '', name:d ? d.name : name };
   }
   function duOk(f) {
@@ -8330,6 +8498,111 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     e.preventDefault(); z.classList.remove('over');
     var fl = e.dataTransfer && e.dataTransfer.files; if (!fl || !fl.length) return;
     if (z.getAttribute('data-dudrop') === 'page') duPick(fl); else if (duOk(fl[0])) { DU.f = fl[0]; duSync(); }
+  });
+  /* ---------- design trial 13/11/2569: the document page, calmer. One row of small type tiles; the work waiting for
+     this role next to the latest announcements; "แนบไฟล์" next to ยื่นคำร้อง and a file dropped anywhere on the page;
+     register rows grouped by type that open one document window (file, request, history, edit) instead of four
+     buttons on every row; a count of the requests waiting for this role on the menu and the top bar ---------- */
+  var DK_SHORT = { all:'ทุกประเภท', Q:'คู่มือคุณภาพ', P:'ขั้นตอน', R:'หลักเกณฑ์', W:'วิธีปฏิบัติ', F:'แบบฟอร์ม', E:'ภายนอก' };   // tile names; the full name is the tooltip
+  function dcMineN() { return DB && DB.dar ? darMine().length : 0; }
+  function pageDocs() {
+    docsInit();
+    var q = (S.dq || '').trim().toLowerCase(), dcc = S.role === 'dcc', area = S.da || 'use', cat = S.dt || 'all', mine = darMine();
+    var inCat = function (code) { return cat === 'all' || catOf(code) === cat; };
+    var hit = function (s) { return !q || s.toLowerCase().indexOf(q) >= 0; };
+    var cur = DB.docs.filter(function (d) { return d.status !== 'cancel' && d.status !== 'draft' && d.status !== 'pend' && inCat(d.code); });
+    var drafts = DB.dar.filter(function (r) { return r.type !== 'cancel' && r.st !== 'done' && r.st !== 'no' && (cat === 'all' || r.cat === cat); })
+      .concat(DB.docs.filter(function (d) { return (d.status === 'draft' || d.status === 'pend') && inCat(d.code); }).map(function (d) { return { doc:d }; }));
+    var gone = [];
+    DB.docs.forEach(function (d) {
+      if (!inCat(d.code)) return;
+      if (d.status === 'cancel') gone.push({ d:d, rev:d.rev, at:d.cdate || '', why:'ยกเลิกการใช้งาน' });
+      (d.hist || []).slice(1).forEach(function (h, i) { gone.push({ d:d, rev:h.rev, at:(d.hist[i] || {}).date || '', why:'ฉบับเดิม ถูกแทนด้วย Rev.' + (d.hist[i] || {}).rev }); });
+    });
+    var reqs = DB.dar.filter(function (r) { return cat === 'all' || r.cat === cat; });
+    if (area === 'dar' && S.dmine) reqs = reqs.filter(function (r) { return darWho(r) === S.role; });
+    var tiles = [['all', 'ทุกประเภท', 'All documents', 'folder']].concat(DOC_CAT).map(function (t) {
+      var n = DB.docs.filter(function (d) { return d.status !== 'cancel' && (t[0] === 'all' || catOf(d.code) === t[0]); }).length;
+      return '<button type="button" class="dk' + (cat === t[0] ? ' on' : '') + '" data-a="dt" data-v="' + t[0] + '" aria-pressed="' + (cat === t[0]) + '" title="' + esc(t[1] + ' · ' + t[2]) + '"><span class="dk-l">' + (t[0] === 'all' ? ic('folder') : t[0]) + '</span>' +
+        '<span class="dk-t"><b>' + DK_SHORT[t[0]] + '</b></span><span class="dk-n">' + n + '</span></button>';
+    }).join('');
+    var tabs = [['use', 'ฉบับปัจจุบัน', cur.length, 'check'], ['draft', 'ฉบับร่างและรอตรวจสอบ', drafts.length, 'clip'], ['cancel', 'ยกเลิกแล้ว', gone.length, 'archive'], ['dar', 'คำร้องจัดทำ แก้ไข ยกเลิก', DB.dar.filter(function (r) { return cat === 'all' || r.cat === cat; }).length, 'msg']];
+    var h = '<section class="grid2 dc-top"><div class="card pad"><div class="sec-h"><h3>ประกาศเอกสาร</h3><div class="sp"></div><button type="button" class="link" data-a="annall">ดูทั้งหมด</button></div>' + annFeed(2) + '</div>' +
+      '<div class="card pad"><div class="sec-h"><h3>งานที่รอคุณ</h3>' + (mine.length ? '<span class="dc-due">' + mine.length + '</span>' : '') + '</div>' + dcWork(mine, dcc) + '</div></section>';
+    h += '<section class="sec"><div class="dks dk-row" role="group" aria-label="ประเภทเอกสาร">' + tiles + '</div>';
+    h += '<div class="ct-bar dc-bar"><div class="tabs" role="tablist">' + tabs.map(function (t) {
+        return '<button type="button" role="tab" data-a="da" data-v="' + t[0] + '" aria-selected="' + (area === t[0]) + '">' + ic(t[3]) + '<span>' + t[1] + '<span class="n">' + t[2] + '</span>' + (t[0] === 'dar' && mine.length ? '<span class="dc-due">รอคุณ ' + mine.length + '</span>' : '') + '</span></button>';
+      }).join('') + '</div>' +
+      '<div class="sp"></div><label class="fv-q dc-q">' + ic('search') + '<input id="dq" placeholder="ค้นหาชื่อหรือรหัส" value="' + esc(S.dq || '') + '" aria-label="ค้นหาเอกสาร"></label>' +
+      '<label class="btn dc-up" title="หรือลากไฟล์มาวางที่หน้านี้"><input type="file" id="duIn" accept=".pdf,.doc,.docx,.xls,.xlsx" aria-label="แนบไฟล์เอกสาร">' + ic('upload') + 'แนบไฟล์</label>' +
+      '<button type="button" class="btn pri" data-a="darnew">' + ic('plus') + 'ยื่นคำร้อง</button></div>';
+    if (area === 'use') h += dcTable(cur.filter(function (d) { return hit(d.code + ' ' + d.name); }), dcc);
+    else if (area === 'draft') h += dcDrafts(drafts.filter(function (x) { return hit(x.doc ? x.doc.code + ' ' + x.doc.name : (x.code || '') + ' ' + x.name); }));
+    else if (area === 'cancel') h += dcGone(gone.filter(function (x) { return hit(x.d.code + ' ' + x.d.name); }));
+    else h += (S.dmine ? '<div class="dc-filt">' + ic('alert') + '<span>แสดงเฉพาะคำร้องที่รอคุณ ' + reqs.length + ' รายการ</span><button type="button" class="link" data-a="dcmineoff">แสดงทั้งหมด</button></div>' : '') +
+      darTable(reqs.filter(function (r) { return hit((r.no || '') + ' ' + (r.code || '') + ' ' + r.name); }));
+    return h + '<p class="dc-fine">ทำตาม P-GCC-11: แก้และประกาศได้เฉพาะผู้ควบคุมเอกสาร ผู้ตรวจสอบและผู้อนุมัติเป็นไปตามตารางที่ 1 ภาคผนวก ข · รหัสที่ยกเลิกแล้วไม่นำกลับมาใช้</p></section>' +
+      '<div class="dc-over" aria-hidden="true"><div>' + ic('upload') + '<b>วางไฟล์เพื่อยื่นคำร้อง</b><span>ระบบเปิดคำร้อง F-GCC-47 พร้อมไฟล์ให้ · PDF จากหน่วยงานภายนอกได้ปก GCC เมื่อประกาศใช้</span></div></div>';
+  }
+  function dcWork(mine, dcc) {
+    var q = quarter(todayIso()), last = DB.mlc[0], done = last && last.at >= q.from;
+    var h = '<ul class="rows dc-work">' + (mine.length ? mine.slice(0, 3).map(function (r) {
+      return '<li>' + ic(r.st === 'fix' ? 'alert' : 'msg') + '<div><b title="' + esc(r.name) + '">' + esc(r.name) + '</b><span>' + esc((r.no ? 'คำร้อง ' + r.no : 'ยังไม่มีเลขที่') + ' · ' + DAR_ST[r.st]) + '</span></div>' +
+        '<button type="button" class="btn sm" data-a="daropen" data-v="' + DB.dar.indexOf(r) + '">ดำเนินการ</button></li>';
+    }).join('') + (mine.length > 3 ? '<li class="dc-more"><span></span><div><button type="button" class="link" data-a="dcmine">ดูอีก ' + (mine.length - 3) + ' รายการ</button></div><span></span></li>' : '') :
+      '<li>' + ic('check') + '<div><b>ไม่มีคำร้องที่รอคุณ</b><span>' + darOpen().length + ' คำร้องอยู่ระหว่างดำเนินการ</span></div><span></span></li>');
+    h += '<li>' + ic('cal') + '<div><b>ตรวจทะเบียนเทียบไฟล์จริง ไตรมาส ' + q.q + '/' + (+q.y + 543) + '</b><span>' + (done ? 'ตรวจแล้ว ' + dL(last.at) + (last.ok ? ' · ตรงกันทั้งหมด' : ' · พบไม่ตรง') : 'ยังไม่ตรวจไตรมาสนี้') + '</span></div>' +
+      (dcc ? '<button type="button" class="btn sm" data-a="mlchk">บันทึกผล</button>' : done ? '<span class="chip done">ตรวจแล้ว</span>' : '<span class="chip y">รอตรวจ</span>') + '</li>';
+    return h + '</ul>';
+  }
+  /* the register: grouped by type when every type shows; a row opens its document window */
+  function dcTable(list, dcc) {
+    if (!list.length) return '<div class="card pad empty">ไม่พบเอกสาร</div>';
+    var open = {}; darOpen().forEach(function (r) { if (r.code) open[r.code] = r; });
+    var grp = (S.dt || 'all') === 'all' && !(S.dq || '').trim(), last = '', cnt = {};
+    if (grp) { var ord = DOC_CAT.map(function (x) { return x[0]; }); list = list.slice().sort(function (a, b) { return ord.indexOf(catOf(a.code)) - ord.indexOf(catOf(b.code)) || (a.code < b.code ? -1 : a.code > b.code ? 1 : 0); }); }   // the tiles' order: Q P R W F E
+    list.forEach(function (d) { var c = catOf(d.code); cnt[c] = (cnt[c] || 0) + 1; });
+    return '<div class="card ct-card"><table class="t ct dc-t dc-reg"><colgroup><col><col style="width:84px"><col style="width:140px"><col style="width:190px"><col style="width:36px"></colgroup>' +
+      '<thead><tr><th>เอกสาร</th><th>Rev</th><th>ประกาศใช้</th><th>สถานะ</th><th></th></tr></thead><tbody>' +
+      list.map(function (d) {
+        var c = catOf(d.code), r = open[d.code], g = '';
+        if (grp && c !== last) { last = c; var ct = DOC_CAT.filter(function (x) { return x[0] === c; })[0] || [c, c]; g = '<tr class="dc-grp"><td colspan="5"><b>' + c + '</b>' + esc(ct[1]) + '<span>' + cnt[c] + ' ฉบับ</span></td></tr>'; }
+        var st = r ? '<span class="chip y" title="' + esc('คำร้อง ' + (r.no || 'รอเลขที่') + ' · ' + DAR_ST[r.st]) + '">' + (r.type === 'cancel' ? 'กำลังขอยกเลิก' : 'กำลังแก้ไข') + (r.no ? ' · ' + esc(r.no) : '') + '</span>' :
+          d.cfWait ? '<span class="chip wait">กำลังทำไฟล์</span>' : d.cf ? '<span class="chip done">ไฟล์ในระบบ</span>' : '';
+        return g + '<tr class="click" data-a="dcdoc" data-v="' + esc(d.code) + '" tabindex="0"><td><div class="ct-co"><span class="dc-c">' + esc(c) + '</span><div class="nm"><b title="' + esc(d.name) + '">' + esc(d.name) + '</b><span>' + esc(d.code) + '</span></div></div></td>' +
+          '<td>Rev.' + esc(d.rev || '00') + '</td><td>' + (d.date ? '<span class="date">' + dL(d.date) + '</span>' : '<span class="ct-none">-</span>') + '</td><td>' + st + '</td><td class="dc-go">' + ic('back') + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
+  }
+  /* one document: its file, the request open on it, every revision, and what this role may do */
+  function dcDoc(code) {
+    var d = docByCode(code); if (!d) return;
+    var dcc = S.role === 'dcc', r = darOpen().filter(function (x) { return x.code === d.code; })[0];
+    var kv = function (k, v) { return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; };
+    var file = d.cf ? '<button type="button" class="btn pri" data-a="dcopen" data-v="' + esc(d.code) + '">' + ic('eye') + 'เปิดไฟล์</button>' :
+      '<a class="btn pri" href="' + fileUrl(d.folder, d.file) + '" target="_blank" rel="noopener">' + ic('eye') + 'เปิดไฟล์</a>';
+    var body = '<div class="dd-h"><span class="dc-c">' + esc(catOf(d.code)) + '</span><div><b>' + esc(d.code) + '</b><span>' + esc(catName(catOf(d.code))) + '</span></div></div>' +
+      '<dl class="fv-kv dr-kv">' + kv('ฉบับ', 'Rev.' + esc(d.rev || '00')) + kv('ประกาศใช้', d.date ? dL(d.date) : '-') + kv('หมวด', esc(d.grp || '')) +
+      kv('ไฟล์', esc(d.cf ? d.cf.name + (d.cf.cover ? ' · ปก GCC + ต้นฉบับ ' + d.cf.src + ' หน้า' : '') : (d.file || d.folder || '-'))) +
+      kv('คำร้องที่เปิดอยู่', r ? '<button type="button" class="link" data-a="daropen" data-v="' + DB.dar.indexOf(r) + '">' + esc((r.no || 'รอเลขที่') + ' · ' + DAR_TYPE[r.type] + ' · ' + DAR_ST[r.st]) + '</button>' : '') + '</dl>' +
+      '<div class="dd-acts">' + file + (r ? '' : '<button type="button" class="btn" data-a="darnew" data-v="' + esc(d.code) + '">' + ic('msg') + 'ยื่นคำร้องแก้ไขหรือยกเลิก</button>') + (dcc ? '<button type="button" class="btn" data-a="dedit" data-v="' + esc(d.code) + '">แก้ข้อมูลในทะเบียน</button>' : '') + '</div>' +
+      '<h5 class="dr-h">ประวัติการแก้ไข</h5><ol class="dh">' + (d.hist || []).map(function (x, k) {
+        return '<li class="' + (k === 0 && d.status !== 'cancel' ? 'now' : '') + '"><i></i><div><b>Rev.' + esc(x.rev) + (k === 0 && d.status !== 'cancel' ? ' <span class="chip done">ฉบับปัจจุบัน</span>' : '') + '</b><span>' + (x.date ? 'มีผล ' + dL(x.date) : '-') + (x.no ? ' · คำร้อง ' + esc(x.no) : '') + '</span><p>' + esc(x.txt || '') + '</p></div></li>';
+      }).join('') + '</ol>';
+    modal(d.name, 'docs', body, '<button type="button" class="btn" data-a="mclose">ปิด</button>');
+  }
+  /* a file dragged over the document page: the whole page takes it */
+  var DCDRAG = 0;
+  function dcHasFiles(e) { return !!e.dataTransfer && [].indexOf.call(e.dataTransfer.types || [], 'Files') >= 0; }
+  document.addEventListener('dragenter', function (e) {
+    if (S.page !== 'docs' || !$('modal').hidden || !dcHasFiles(e)) return;
+    DCDRAG++; document.body.classList.add('dc-drag');
+  });
+  document.addEventListener('dragleave', function () { if (DCDRAG && --DCDRAG <= 0) { DCDRAG = 0; document.body.classList.remove('dc-drag'); } });
+  document.addEventListener('dragover', function (e) { if (document.body.classList.contains('dc-drag')) e.preventDefault(); });
+  document.addEventListener('drop', function (e) {
+    if (!document.body.classList.contains('dc-drag')) return;
+    e.preventDefault(); DCDRAG = 0; document.body.classList.remove('dc-drag');
+    var fl = e.dataTransfer && e.dataTransfer.files; if (fl && fl.length) duPick(fl);
   });
   if (APP_ON) appStart(); else render();
 })();
