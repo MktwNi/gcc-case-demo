@@ -5015,6 +5015,9 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
       var s = seeRule(r);
       if (s === 'none') return false;
       if (!APP_ON && r === 'ir' && s === 'team') { var k = cur(c); return !k || idx(k) >= idx(stepById('4.2')); }
+      // on the app page the database gives every case any of the person's roles reads: a role that sees by team keeps only
+      // its own places (appMine in 52-app.js, as case_read_as() in schema.sql)
+      if (APP_ON && s === 'team') return appMine(c, r);
       return true;
     });
   }
@@ -7117,7 +7120,7 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
      team at step 1.6. On the app page the names are the open accounts in the role lv, and naming one gives them the case */
   function lvPool() {
     var n = {};
-    if (APP_ON) USERS.forEach(function (u) { if (u.active && u.role === 'lv' && u.name) n[u.name.trim()] = 1; });
+    if (APP_ON) USERS.forEach(function (u) { if (u.active && (u.role === 'lv' || (u.more_roles || []).indexOf('lv') >= 0) && u.name) n[u.name.trim()] = 1; });
     else DB.cases.forEach(function (x) { if (x.lv) n[x.lv] = 1; (x.team || []).forEach(function (m) { if (m.r === 'หัวหน้าผู้ทวนสอบ' && m.n) n[m.n] = 1; }); });
     return Object.keys(n).sort();
   }
@@ -7648,7 +7651,7 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
     var right = sel === 'cmp' ? '<div class="pr-stack">' + prMatrix() + prOther() + '</div>' : sel === 'client' || sel === 'ext' ? prFixed(sel) : prEditor(sel, permEdit());
     return '<div class="pr-roles">' + prList(sel) + right + '</div>';
   }
-  function prPeople(k) { return APP_ON && typeof USERS !== 'undefined' ? USERS.filter(function (u) { return u.active && u.role === k; }) : null; }
+  function prPeople(k) { return APP_ON && typeof USERS !== 'undefined' ? USERS.filter(function (u) { return u.active && (u.role === k || (u.more_roles || []).indexOf(k) >= 0); }) : null; }
   function prSub(k) { var p = prPeople(k); return p ? p.length + ' คน' : 'บทบาทตัวอย่าง'; }
   function prList(sel) {
     var it = function (k, b, s, cls) {

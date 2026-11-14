@@ -2127,6 +2127,49 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
 /* the e-mail list in the app (14/11/2569): the status chip and the date share the row's last cell, so the date stays
    on the row (.rows li has three columns) */
 .rows .ml-end{display:flex;align-items:center;gap:12px;white-space:nowrap}
+/* several roles per person (14/11/2569, design B): the role box on the people page and its list, the role menu under the
+   name in the top bar, the role ticks of an invitation. Labels stay on one line */
+.ap-tu th:nth-child(1){width:18%}.ap-tu th:nth-child(2){width:21%}.ap-tu th:nth-child(3){width:28%}.ap-tu th:nth-child(4){width:8%}.ap-tu th:nth-child(5){width:9%}
+.ap-rl{display:flex;align-items:center;gap:8px;width:100%;max-width:300px;height:38px;padding:0 10px 0 12px;border:1px solid var(--field);border-radius:10px;background:transparent;color:var(--ink);font:inherit;font-size:13.5px;text-align:left;cursor:pointer}
+.ap-rl>span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-rl:hover{border-color:var(--tint-line);background:var(--tint)}
+.ap-rl[aria-expanded=true]{border-color:var(--brand);box-shadow:0 0 0 3px var(--tint-2)}
+.ap-rl-n{flex:none;padding:1px 8px;border-radius:999px;background:var(--tint-2);color:var(--link);font-size:12px;font-weight:600}
+.ap-rl>.ic{flex:none;width:15px;height:15px;color:var(--mut);transform:rotate(90deg)}
+.rp{position:fixed;z-index:60;width:320px;max-height:calc(100vh - 16px);overflow:auto;padding:8px;border:1px solid var(--line);border-radius:16px;background:#fff;box-shadow:var(--sh-pop)}
+.rp-h{overflow:hidden;padding:6px 8px 8px;color:var(--mut);font-size:12px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.rp-i{display:flex;align-items:center;gap:8px;min-height:38px;padding:2px 6px 2px 8px;border-radius:10px}
+.rp-i.on{background:var(--tint)}
+.rp-i label{display:flex;flex:1;align-items:center;gap:10px;min-width:0;font-size:13.5px;white-space:nowrap;cursor:pointer}
+.rp-i input{flex:none;width:17px;height:17px;margin:0;accent-color:var(--brand)}
+.rp-m{flex:none;padding:2px 9px;border:1px solid var(--field);border-radius:999px;background:transparent;color:var(--mut);font:inherit;font-size:11.5px;white-space:nowrap;cursor:pointer}
+.rp-m.on{border-color:var(--brand);background:var(--brand);color:#fff;cursor:default}
+.rp-s{margin:6px 8px 2px;padding-top:8px;border-top:1px solid var(--line);color:var(--mut);font-size:11.5px;white-space:nowrap}
+.rp-f{display:flex;justify-content:flex-end;gap:8px;margin-top:6px;padding:8px 4px 2px;border-top:1px solid var(--line)}
+.tb-menu{position:fixed;z-index:60;width:290px;padding:8px;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--sh-pop)}
+.tm-h{padding:8px 10px 6px;color:var(--mut);font-size:12px;font-weight:600}
+.tm-i{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 10px;border:0;border-radius:12px;background:none;color:var(--ink);font:inherit;font-size:13.5px;text-align:left;cursor:pointer}
+.tm-i:hover{background:var(--tint)}
+.tm-i .av{width:30px;height:30px;margin:0;border:0;font-size:11px}
+.tm-i>span:not(.av){display:flex;flex:1;flex-direction:column;min-width:0;white-space:nowrap}
+.tm-i b{overflow:hidden;font-weight:500;text-overflow:ellipsis}
+.tm-i small{color:var(--mut);font-size:11.5px}
+.tm-i.on{background:var(--tint-2);color:var(--link)}
+.tm-i.on b{font-weight:600}
+.tm-i>.ic{flex:none;width:18px;height:18px}
+.tm-i.on>.ic{color:var(--brand)}
+.tm-a{min-height:40px;color:var(--ink-2)}
+.tm-a>.ic{color:var(--mut)}
+.tm-sep{height:1px;margin:6px 4px;background:var(--line)}
+.tm-n{padding:2px 10px 8px;color:var(--mut);font-size:11.5px;white-space:nowrap}
+.iv-f{grid-column:1/-1}
+.iv-f>label small{color:var(--mut);font-weight:400}
+.iv-g{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;padding:8px 10px;border:1px solid var(--field);border-radius:12px}
+.iv-g label{display:flex;align-items:center;gap:8px;min-height:32px;font-size:13.5px;white-space:nowrap}
+.iv-g label small{color:var(--mut);font-size:11.5px}
+.iv-g input{flex:none;width:17px;height:17px;margin:0;accent-color:var(--brand)}
+html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
+@media (max-width:620px){.iv-g{grid-template-columns:1fr}}
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -5107,6 +5150,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       var s = seeRule(r);
       if (s === 'none') return false;
       if (!APP_ON && r === 'ir' && s === 'team') { var k = cur(c); return !k || idx(k) >= idx(stepById('4.2')); }
+      // on the app page the database gives every case any of the person's roles reads: a role that sees by team keeps only
+      // its own places (appMine in 52-app.js, as case_read_as() in schema.sql)
+      if (APP_ON && s === 'team') return appMine(c, r);
       return true;
     });
   }
@@ -7209,7 +7255,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
      team at step 1.6. On the app page the names are the open accounts in the role lv, and naming one gives them the case */
   function lvPool() {
     var n = {};
-    if (APP_ON) USERS.forEach(function (u) { if (u.active && u.role === 'lv' && u.name) n[u.name.trim()] = 1; });
+    if (APP_ON) USERS.forEach(function (u) { if (u.active && (u.role === 'lv' || (u.more_roles || []).indexOf('lv') >= 0) && u.name) n[u.name.trim()] = 1; });
     else DB.cases.forEach(function (x) { if (x.lv) n[x.lv] = 1; (x.team || []).forEach(function (m) { if (m.r === 'หัวหน้าผู้ทวนสอบ' && m.n) n[m.n] = 1; }); });
     return Object.keys(n).sort();
   }
@@ -7720,6 +7766,27 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
 
   function appSync0() { return { parts:{}, steps:{}, files:{}, mailN:{}, logN:{}, reg:{}, ca:{}, fcase:{} }; }
   function roleName(k) { return k === 'pending' ? 'รอกำหนดบทบาท' : k === 'client' ? 'ลูกค้า' : role(k)[1]; }
+  // every role of an account or an invitation: the main one, then the others in the usual order (more_roles, 14/11/2569)
+  function rolesOf(u) { return u ? [u.role].concat((u.more_roles || []).filter(function (k) { return k !== u.role; }).sort(function (a, b) { return ROLE_ORDER.indexOf(a) - ROLE_ORDER.indexOf(b); })) : []; }
+  function myRoles() { return rolesOf(ME); }
+  function roleLine(u) { var l = rolesOf(u); return roleName(l[0]) + (l.length > 1 ? ' +' + (l.length - 1) : ''); }
+  // the signed-in person's own row as just loaded: roles and rights an admin changed meanwhile take effect; a role taken
+  // away moves the pages to the main role
+  function apMeSync() {
+    var mine = ME && USERS.filter(function (u) { return u.id === ME.id; })[0]; if (!mine) return;
+    ME.role = mine.role; ME.more_roles = mine.more_roles || []; ME.is_admin = mine.is_admin; ME.active = mine.active;
+    if (myRoles().indexOf(S.role) < 0 && STAFF_ROLES.indexOf(ME.role) >= 0) { S.role = ME.role; apRoleKeep(S.role); S.page = 'home'; S.cid = null; S.sid = null; }
+  }
+  // the cases a role that sees by team works on, as case_read_as() in schema.sql: the IR role through its IR place from
+  // step 4.2 and never on a case whose team it is on; any other role through a team place
+  function appMine(c, r) {
+    var me = ME && ME.id, has = function (k) { return MEMBERS.some(function (m) { return m.case_id === c.id && m.user_id === me && m.kind === k; }); };
+    if (r !== 'ir') return has('team');
+    var k = cur(c); return has('ir') && !has('team') && (c.closed || !k || idx(k) >= idx(stepById('4.2')));
+  }
+  // the role this browser last worked in, while the account still holds it; otherwise the main role
+  function apRoleMem() { var k = ''; try { k = localStorage.getItem('gcc-role-' + ME.id) || ''; } catch (e) { /* none kept */ } return myRoles().indexOf(k) >= 0 ? k : ME.role; }
+  function apRoleKeep(k) { try { localStorage.setItem('gcc-role-' + ME.id, k); } catch (e) { /* this tab only */ } }
   // the right to manage accounts, roles and invitations, kept apart from the work role (profiles.is_admin)
   function apAdm() { return !!(ME && ME.is_admin && ME.active !== false); }
   function val(id) { var e = $(id); return e ? String(e.value || '').trim() : ''; }
@@ -7735,7 +7802,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (/Password should be|weak.?password|at least \d+ char/i.test(m)) return 'รหัสผ่านสั้นหรือเดาง่ายเกินไป';
     if (/rate limit|too many|over_email_send/i.test(m)) return 'ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่';
     if (/Failed to fetch|NetworkError|network|Load failed/i.test(m)) return 'เชื่อมต่อระบบไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่';
-    if (/PGRST202|Could not find the function/i.test(m)) return 'ฐานข้อมูลยังไม่ได้อัปเดต ให้ผู้ดูแลระบบรัน schema.sql ล่าสุด';
+    if (/PGRST202|Could not find the function|42703|column .* does not exist/i.test(m)) return 'ฐานข้อมูลยังไม่ได้อัปเดต ให้ผู้ดูแลระบบรัน schema.sql ล่าสุด';
     if (rulesErr(m)) return 'บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้';
     return m || 'เกิดข้อผิดพลาด';
   }
@@ -7779,13 +7846,13 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var want = APP.name; APP.name = '';   // the name typed at sign-up belongs to this sign-in only
     APP.view = 'loading'; APP.busy = false; render();
     var acc = APP.code ? rpc('accept_invite', { c:APP.code }).then(function () { APP.code = ''; ssSet(''); }, function (e) { APP.code = ''; ssSet(''); APP.msg = thErr(e); }) : Promise.resolve();
-    return acc.then(function () { return SB.from('profiles').select('id,email,name,role,active,is_admin').eq('id', u.id).maybeSingle(); }).then(function (r) {
-      sbOk(r); ME = r.data || { id:u.id, email:u.email || '', name:'', role:'pending', active:true, is_admin:false };
+    return acc.then(function () { return SB.from('profiles').select('id,email,name,role,more_roles,active,is_admin').eq('id', u.id).maybeSingle(); }).then(function (r) {
+      sbOk(r); ME = r.data || { id:u.id, email:u.email || '', name:'', role:'pending', more_roles:[], active:true, is_admin:false };
       if (want && want !== ME.name && String(ME.email).toLowerCase() === String(u.email || '').toLowerCase()) return SB.from('profiles').update({ name:want }).eq('id', ME.id).then(function () { ME.name = want; });
     }).then(function () {
       if (!ME.active) { APP.view = 'off'; render(); return; }
       if (ME.role === 'pending') { APP.view = 'pending'; render(); return; }
-      S.role = ME.role; S.page = 'home'; S.cid = null; S.sid = null; S.caid = null;
+      S.role = apRoleMem(); S.page = 'home'; S.cid = null; S.sid = null; S.caid = null;
       return appLoad().then(function () {
         APP.ready = true; var m0 = APP.msg; APP.msg = ''; APP.ok = ''; render(); toTop();
         if (m0) toast(m0);
@@ -7869,7 +7936,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     else if (v === 'setup') h = '<h1>ตั้งค่าครั้งแรก</h1><p class="ap-sub">สร้างบัญชีผู้ดูแลระบบคนแรก คนต่อไปเชิญจากเมนูผู้ใช้งาน</p>' + msg +
       apForm('setup', apFld('apName', 'ชื่อ-นามสกุล', 'text', 'name', APP.nm) + apFld('apEmail', 'อีเมล', 'email', 'username', APP.email) + apFld('apPw', 'รหัสผ่าน (อย่างน้อย 8 ตัว)', 'password', 'new-password') + pw2, 'สร้างบัญชีผู้ดูแลระบบ') +
       '<div class="ap-links">' + apLink('signin', 'มีบัญชีแล้ว เข้าสู่ระบบ') + '</div>';
-    else if (v === 'invite' && i) h = '<h1>ตั้งรหัสผ่านเพื่อเข้าระบบ</h1><p class="ap-sub">คำเชิญ' + (i.role === 'client' ? 'ลูกค้า' : 'ในบทบาท ' + esc(roleName(i.role))) + (i.case ? ' · ' + esc(i.case) : '') + '</p>' + msg +
+    else if (v === 'invite' && i) h = '<h1>ตั้งรหัสผ่านเพื่อเข้าระบบ</h1><p class="ap-sub">คำเชิญ' + (i.role === 'client' ? 'ลูกค้า' : 'ในบทบาท ' + esc(rolesOf(i).map(roleName).join(' · '))) + (i.case ? ' · ' + esc(i.case) : '') + '</p>' + msg +
       apForm('invite', apFld('apEmail', 'อีเมล', 'email', 'username', i.email, true) + apFld('apName', 'ชื่อ-นามสกุล', 'text', 'name', APP.nm || i.name) + apFld('apPw', 'รหัสผ่าน (อย่างน้อย 8 ตัว)', 'password', 'new-password') + pw2, 'ตั้งรหัสผ่านและเข้าระบบ') +
       '<div class="ap-links">' + apLink('signin', 'มีบัญชีอีเมลนี้แล้ว เข้าสู่ระบบ') + '</div>';
     else if (v === 'forgot') h = '<h1>ลืมรหัสผ่าน</h1><p class="ap-sub">ใส่อีเมลที่ใช้เข้าระบบ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้</p>' + msg +
@@ -7919,7 +7986,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function appLoad() {
     var cl = isClient(S.role), xt = S.role === 'tisi' || S.role === 'tgo', staff = !cl && !xt;
     return Promise.all([
-      appAll('profiles', 'id,email,name,role,active,is_admin,created_at', 'created_at'),
+      appAll('profiles', 'id,email,name,role,more_roles,active,is_admin,created_at', 'created_at'),
       appAll('cases', 'id,name,stage,closed,created_at', 'created_at'),
       appAll('case_parts', 'case_id,part,data,version', 'case_id'),
       appAll('case_steps', 'case_id,sid,s,d', 'case_id'),
@@ -7964,7 +8031,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var mk = {}; (r[11] || []).forEach(function (m) { if (m && m.x) mk[m.case_id + '|' + m.sid] = m.x; });
     r[3].forEach(function (s) { var x = mk[s.case_id + '|' + s.sid]; if (x) s.x = x; });
     var parts = by(r[2]), steps = by(r[3]), files = by(r[4]), mail = by(r[5]), log = by(r[6]);
-    USERS = r[0]; MEMBERS = r[8];
+    USERS = r[0]; MEMBERS = r[8]; apMeSync();
     r[7].forEach(function (x) { db[x.key] = x.data; sy.reg[x.key] = { v:x.version, j:JSON.stringify(x.data) }; });
     /* a register saved before a revision was issued shows the issued revision; recorded as unchanged, so loading alone writes nothing */
     if (Array.isArray(db.docs)) { docsFollow(db.docs); if (sy.reg.docs) sy.reg.docs.j = JSON.stringify(db.docs); }
@@ -8227,7 +8294,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   function appTopUser() { return appSyncBtn(); }
   /* the person signed in: one chip at the end of the top bar (initials, name, role) that opens บัญชีของฉัน */
   function appTopMe() {
-    return '<button type="button" class="tb-me" data-a="umenu" title="บัญชีของฉัน">' + av(rk(), meName()) + '<span class="tb-nm"><b>' + esc(meName()) + '</b><small>' + esc(roleName(S.role)) + '</small></span>' + ic('chev') + '</button>';
+    return '<button type="button" class="tb-me" data-a="umenu" title="บัญชีของฉัน"' + (myRoles().length > 1 ? ' aria-haspopup="menu"' : '') + '>' + av(rk(), meName()) + '<span class="tb-nm"><b>' + esc(meName()) + '</b><small>' + esc(roleName(S.role)) + '</small></span>' + ic('chev') + '</button>';
   }
   function apStatus() {
     var b = document.querySelector('.ap-sync'); if (!b) return;
@@ -8236,7 +8303,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   }
   function appUserMenu() {
     modal('บัญชีของฉัน', 'people', '<div class="fg"><div class="f"><label>ชื่อ</label><div class="tv">' + esc(meName()) + '</div></div><div class="f"><label>อีเมล</label><div class="tv">' + esc(ME.email) + '</div></div>' +
-      '<div class="f"><label>บทบาท</label><div class="tv">' + esc(roleName(S.role)) + '</div></div></div>' +
+      '<div class="f"><label>บทบาท</label><div class="tv">' + esc(myRoles().map(function (k, i) { return roleName(k) + (i === 0 && myRoles().length > 1 ? ' (หลัก)' : ''); }).join(' · ')) + '</div></div></div>' +
       '<form class="ap-f ap-pw" data-apf="pw" novalidate><h4>เปลี่ยนรหัสผ่าน</h4><div class="fg">' + apFld('apPw', 'รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)', 'password', 'new-password') + apFld('apPw2', 'ยืนยันรหัสผ่าน', 'password', 'new-password') + '</div>' +
       '<button type="submit" class="btn">' + ic('key') + 'บันทึกรหัสผ่านใหม่</button></form>',
       '<button type="button" class="btn" data-a="mclose">ปิด</button><button type="button" class="btn pri" data-a="signout">' + ic('out') + 'ออกจากระบบ</button>');
@@ -8245,7 +8312,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   /* ---------- people: accounts, roles and invitations (admin and manager) ---------- */
   function appInvites() {
     APP.invBusy = true;
-    return SB.from('invites').select('code,email,name,role,case_id,created_at,expires_at,used_at').order('created_at', { ascending:false }).then(function (r) {
+    return SB.from('invites').select('code,email,name,role,more_roles,case_id,created_at,expires_at,used_at').order('created_at', { ascending:false }).then(function (r) {
       sbOk(r); INVITES = r.data || []; APP.invBusy = false; if (S.page === 'users') render();
     }).catch(function (e) { APP.invBusy = false; INVITES = []; toast(thErr(e)); });
   }
@@ -8253,18 +8320,12 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (!INVITES && !APP.invBusy) appInvites();
     var adm = apAdm(), ord = function (u) { return ROLE_ORDER.indexOf(u.role); };
     var list = USERS.slice().sort(function (a, b) { return (a.role === 'pending' ? -1 : 0) - (b.role === 'pending' ? -1 : 0) || ord(a) - ord(b) || String(a.name).localeCompare(String(b.name), 'th'); });
-    // an admin keeps a staff role; anyone else may also be set back to pending, and a client stays a client
-    var opts = function (u) {
-      var ks = u.is_admin ? STAFF_ROLES.slice() : ROLE_ORDER.filter(function (k) { return k !== 'client' || u.role === 'client'; });
-      if (ks.indexOf(u.role) < 0) ks.unshift(u.role);
-      return ks.map(function (k) { return '<option value="' + k + '"' + (k === u.role ? ' selected' : '') + '>' + esc(roleName(k)) + '</option>'; }).join('');
-    };
     var edBtn = function (a, v, what) { return '<button type="button" class="btn sm ap-ed" data-a="' + a + '" data-v="' + esc(v) + '" title="' + esc(what) + '" aria-label="' + esc(what) + '">' + ic('edit') + '</button>'; };
     var rows = list.map(function (u) {
       var me = ME && u.id === ME.id, nm = u.name || u.email, staff = STAFF_ROLES.indexOf(u.role) >= 0;
       return '<tr' + (u.role === 'pending' ? ' class="ap-pend"' : '') + '><td><b class="ap-nm" title="' + esc(u.name || '') + '">' + esc(u.name || '-') + '</b>' + (me ? '<span class="chip wait">คุณ</span>' : '') + '</td>' +
         '<td class="ap-em" title="' + esc(u.email) + '">' + esc(u.email) + '</td>' +
-        '<td>' + (adm ? '<select class="ap-role" data-uid="' + esc(u.id) + '" aria-label="บทบาทของ ' + esc(nm) + '">' + opts(u) + '</select>' : esc(roleName(u.role))) + '</td>' +
+        '<td>' + (adm ? apRoleBox(u, nm) : '<span title="' + esc(rolesOf(u).map(roleName).join(' · ')) + '">' + esc(roleLine(u)) + '</span>') + '</td>' +
         '<td class="ap-ad">' + (adm && staff && u.active ? '<input type="checkbox" class="ap-adm" data-uid="' + esc(u.id) + '"' + (u.is_admin ? ' checked' : '') + ' title="ผู้ดูแลระบบ: จัดการบัญชี บทบาท และคำเชิญ" aria-label="ผู้ดูแลระบบ: ' + esc(nm) + '">' : u.is_admin ? '<span class="chip doing">ผู้ดูแล</span>' : '') + '</td>' +
         '<td>' + (u.active ? '<span class="chip done">ใช้งาน</span>' : '<span class="chip lock">ปิดบัญชี</span>') + '</td>' +
         '<td class="ap-act">' + (adm ? (me ? '' : '<button type="button" class="btn sm" data-a="uact" data-v="' + esc(u.id) + '">' + (u.active ? 'ปิดบัญชี' : 'เปิดบัญชี') + '</button>') + edBtn('uedit', u.id, 'แก้ชื่อหรืออีเมลของ ' + nm) : '') + '</td></tr>';
@@ -8272,7 +8333,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var open = (INVITES || []).filter(function (x) { return !x.used_at; }), now = new Date().toISOString();
     var inv = open.map(function (x) {
       var cs = x.case_id ? caseById(x.case_id) : null, old = x.expires_at < now;
-      return '<tr><td class="ap-em" title="' + esc(x.email) + '">' + esc(x.email) + '</td><td>' + esc(roleName(x.role)) + (cs ? '<span class="ct-sub">' + esc(cs.short || cs.name) + '</span>' : '') + '</td>' +
+      return '<tr><td class="ap-em" title="' + esc(x.email) + '">' + esc(x.email) + '</td><td title="' + esc(rolesOf(x).map(roleName).join(' · ')) + '">' + esc(roleLine(x)) + (cs ? '<span class="ct-sub">' + esc(cs.short || cs.name) + '</span>' : '') + '</td>' +
         '<td>' + (old ? '<span class="chip late">หมดอายุ</span>' : dS(x.expires_at.slice(0, 10))) + '</td><td class="ap-act">' +
         (old ? '' : '<button type="button" class="btn sm" data-a="invcopy" data-v="' + x.code + '">' + ic('share') + 'คัดลอกลิงก์</button><a class="btn sm" href="' + esc(inviteMail(x.email, x.name, x.code, cs ? cs.name : '')) + '">' + ic('mail') + 'อีเมล</a>' +
           (x.role === 'client' ? '<span class="ap-ed ap-ph" aria-hidden="true"></span>' : edBtn('invedit', x.code, 'แก้คำเชิญของ ' + x.email))) +
@@ -8287,23 +8348,23 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       '<div class="sec">' + note('info', 'ผู้ดูแลระบบจัดการบัญชี บทบาท และคำเชิญได้ ส่วนงานในเคสเป็นไปตามบทบาท · ลูกค้าได้คำเชิญตอนเปิดเคส · หัวหน้าผู้ทวนสอบเห็นเฉพาะเคสที่มีชื่อในทีม (ขั้น 1.6) · ผู้ทบทวนอิสระเห็นเคสที่มีชื่อตั้งแต่ขั้น 4.2') + '</div>';
   }
   function appInviteForm() {
-    var adm = apAdm(), ks = ROLE_ORDER.filter(function (k) { return k !== 'client' && k !== 'pending' && (adm || k !== 'admin'); });
     modal('เชิญผู้ใช้', 'people', '<div class="fg">' + apFld('uiName', 'ชื่อ-นามสกุล', 'text', 'off') + apFld('uiMail', 'อีเมล', 'email', 'off') +
-      '<div class="f"><label for="uiRole">บทบาท</label><select id="uiRole">' + ks.map(function (k) { return '<option value="' + k + '"' + (k === 'lv' ? ' selected' : '') + '>' + esc(roleName(k)) + '</option>'; }).join('') + '</select></div></div>' +
+      apInvRoles('ui', 'lv', []) + '</div>' +
       '<div style="margin-top:12px">' + note('info', 'ระบบสร้างลิงก์ให้ ส่งลิงก์นั้นทางอีเมลของคุณ ผู้รับเปิดลิงก์แล้วตั้งรหัสผ่านเอง ลิงก์ใช้ได้ 14 วันและใช้ได้ครั้งเดียว') + '</div>',
       '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn pri" data-a="uinvsave">' + ic('plus') + 'สร้างคำเชิญ</button>');
   }
   function appInviteShow(x, cs) {
     var link = inviteLink(x.code);
-    modal('ส่งคำเชิญ', 'mail', '<p>คำเชิญสำหรับ <b>' + esc(x.email) + '</b> · ' + esc(roleName(x.role)) + (cs ? ' · ' + esc(cs.name) : '') + '</p>' +
+    modal('ส่งคำเชิญ', 'mail', '<p>คำเชิญสำหรับ <b>' + esc(x.email) + '</b> · ' + esc(rolesOf(x).map(roleName).join(' · ')) + (cs ? ' · ' + esc(cs.name) : '') + '</p>' +
       '<div class="ap-link"><input id="apLink" readonly value="' + esc(link) + '" aria-label="ลิงก์คำเชิญ"><button type="button" class="btn" data-a="invcopy" data-v="' + x.code + '">' + ic('share') + 'คัดลอกลิงก์</button></div>' +
       '<div style="margin-top:12px">' + note('info', 'ระบบยังไม่ส่งอีเมลเอง: กด "เปิดอีเมล" หรือคัดลอกลิงก์ไปส่งจากอีเมลของคุณ') + '</div>',
       '<button type="button" class="btn" data-a="mclose">ปิด</button><a class="btn pri" href="' + esc(inviteMail(x.email, x.name, x.code, cs ? cs.name : '')) + '">' + ic('mail') + 'เปิดอีเมล</a>');
   }
   function appInviteSave() {
-    var nm = val('uiName'), em = val('uiMail'), rl = val('uiRole');
+    var nm = val('uiName'), em = val('uiMail'), rr = apInvRead('ui');
     if (!nm || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { toast('ใส่ชื่อและอีเมลให้ถูกต้อง'); return; }
-    SB.from('invites').insert({ email:em, name:nm, role:rl }).select('code,email,name,role,case_id,created_at,expires_at,used_at').single().then(function (r) {
+    if (!rr.role) { toast('เลือกบทบาทอย่างน้อยหนึ่งบทบาท'); return; }
+    SB.from('invites').insert({ email:em, name:nm, role:rr.role, more_roles:rr.more }).select('code,email,name,role,more_roles,case_id,created_at,expires_at,used_at').single().then(function (r) {
       sbOk(r); INVITES = [r.data].concat(INVITES || []); render(); appInviteShow(r.data, null);
     }).catch(function (e) { toast(thErr(e)); });
   }
@@ -8312,18 +8373,6 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(ok, function () { appCopyOld(link); ok(); }); else { appCopyOld(link); ok(); }
   }
   function appCopyOld(t) { var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select(); try { document.execCommand('copy'); } catch (e) { /* shown in the box */ } document.body.removeChild(i); }
-  // an admin may change their own work role too: the menus and what the database gives follow the new role at once
-  function appSetRole(uid, rl) {
-    var me = ME && uid === ME.id;
-    if (me && !window.confirm('เปลี่ยนบทบาทของคุณเป็น ' + roleName(rl) + '? เมนูและสิทธิ์ในเคสจะเปลี่ยนตามบทบาทใหม่ ส่วนสิทธิ์ผู้ดูแลระบบยังอยู่')) { render(); return; }
-    SB.from('profiles').update({ role:rl }).eq('id', uid).select('id,role').then(function (r) {
-      sbOk(r); var u = USERS.filter(function (x) { return x.id === uid; })[0]; if (u && r.data && r.data[0]) u.role = r.data[0].role;
-      var done = !!u && u.role === rl;
-      if (!me || !done) { render(); toast(done ? 'เปลี่ยนบทบาทเป็น ' + roleName(rl) + ' แล้ว' : 'เปลี่ยนบทบาทไม่ได้'); return; }
-      ME.role = rl; S.role = rl;
-      return (APP.saving || APP.dirty ? Promise.resolve() : appLoad()).then(function () { render(); toast('บทบาทของคุณเป็น ' + roleName(rl) + ' แล้ว'); });
-    }).catch(function (e) { toast(thErr(e)); render(); });
-  }
   function userById(uid) { return USERS.filter(function (x) { return x.id === uid; })[0]; }
   function appSetAdmin(uid, on) {
     var u = userById(uid); if (!u) return;
@@ -8362,16 +8411,16 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   // a staff invitation not used yet: new name, e-mail or role, same link (a client's invitation follows its case contact)
   function appInvEdit(code) {
     var x = (INVITES || []).filter(function (i) { return i.code === code; })[0]; if (!x || x.role === 'client') return;
-    var adm = apAdm(), ks = ROLE_ORDER.filter(function (k) { return k !== 'client' && k !== 'pending' && (adm || k !== 'admin' || x.role === 'admin'); });
     modal('แก้คำเชิญ', 'mail', '<div class="fg">' + apFld('ieName', 'ชื่อ-นามสกุล', 'text', 'off', x.name) + apFld('ieMail', 'อีเมล', 'email', 'off', x.email) +
-      '<div class="f"><label for="ieRole">บทบาท</label><select id="ieRole">' + ks.map(function (k) { return '<option value="' + k + '"' + (k === x.role ? ' selected' : '') + '>' + esc(roleName(k)) + '</option>'; }).join('') + '</select></div></div>' +
+      apInvRoles('ie', x.role, x.more_roles || []) + '</div>' +
       '<div style="margin-top:12px">' + note('info', 'ลิงก์เดิมยังใช้ได้ ผู้รับต้องสมัครด้วยอีเมลในคำเชิญ') + '</div>',
       '<button type="button" class="btn" data-a="mclose">ยกเลิก</button><button type="button" class="btn pri" data-a="iesave" data-v="' + esc(code) + '">' + ic('check') + 'บันทึก</button>');
   }
   function appInvEditSave(code) {
-    var nm = val('ieName'), em = val('ieMail').toLowerCase(), rl = val('ieRole');
+    var nm = val('ieName'), em = val('ieMail').toLowerCase(), rr = apInvRead('ie');
     if (!nm || !apMailOk(em)) { toast('ใส่ชื่อและอีเมลให้ถูกต้อง'); return; }
-    SB.from('invites').update({ name:nm, email:em, role:rl }).eq('code', code).select('code,email,name,role,case_id,created_at,expires_at,used_at').then(function (r) {
+    if (!rr.role) { toast('เลือกบทบาทอย่างน้อยหนึ่งบทบาท'); return; }
+    SB.from('invites').update({ name:nm, email:em, role:rr.role, more_roles:rr.more }).eq('code', code).select('code,email,name,role,more_roles,case_id,created_at,expires_at,used_at').then(function (r) {
       sbOk(r); if (!r.data || !r.data[0]) throw new Error('คำเชิญนี้แก้ไม่ได้แล้ว อาจถูกใช้หรือลบไปแล้ว');
       INVITES = (INVITES || []).map(function (i) { return i.code === code ? r.data[0] : i; });
       closeModal(); render(); toast('แก้คำเชิญแล้ว ลิงก์เดิมยังใช้ได้');
@@ -8401,7 +8450,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       c = appShell(id); c.name = nm; c.short = sh; c.start = st; c.contact = { name:cn, mail:cm }; c.f24 = { org:nm, cName:cn, cMail:cm };
       c.track['0.1'] = { s:'doing', d:'' }; logC(c, 'เปิดเคส');
       DB.cases.push(c); SYNC.parts[id] = {}; SYNC.steps[id] = {}; SYNC.files[id] = {}; SYNC.mailN[id] = 0; SYNC.logN[id] = 0;
-      return SB.from('invites').insert({ email:cm, name:cn, role:'client', case_id:id }).select('code,email,name,role,case_id,created_at,expires_at,used_at').single();
+      return SB.from('invites').insert({ email:cm, name:cn, role:'client', case_id:id }).select('code,email,name,role,more_roles,case_id,created_at,expires_at,used_at').single();
     }).then(function (r) {
       sbOk(r); c.inv = r.data.code; if (INVITES) INVITES.unshift(r.data);
       save(); closeModal(); S.page = 'case'; S.cid = id; S.sid = '0.1'; S.ctab = 'docs'; S.ptab = 'form'; render(); toTop(); openInvite(c);
@@ -8428,17 +8477,183 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     if (!APP.ready) return;
     var dl = $('apStaff');
     if (!dl) { dl = document.createElement('datalist'); dl.id = 'apStaff'; document.body.appendChild(dl); }
-    var names = USERS.filter(function (u) { return u.active && u.name && ['lv', 'ir', 'mgr', 'admin'].indexOf(u.role) >= 0; }).map(function (u) { return u.name; });
+    var names = USERS.filter(function (u) { return u.active && u.name && rolesOf(u).some(function (k) { return ['lv', 'ir', 'mgr', 'admin'].indexOf(k) >= 0; }); }).map(function (u) { return u.name; });
     if (dl.getAttribute('data-n') !== names.join('|')) { dl.innerHTML = names.map(function (n) { return '<option value="' + esc(n) + '">'; }).join(''); dl.setAttribute('data-n', names.join('|')); }
     [].forEach.call(document.querySelectorAll('.main input[data-f^="team."][data-f$=".n"]'), function (i) { i.setAttribute('list', 'apStaff'); });
+    if ($('tbMenu')) apMenuPlace();
+    if (RP) { if (document.querySelector('.ap-rl[data-v="' + RP.uid + '"]')) apRolePlace(); else apRoleClose(); }
     if ((S.role === 'tisi' || S.role === 'tgo') && S.page === 'case' && S.cid && APP.ext !== S.cid) { APP.ext = S.cid; rpc('ext_open', { cid:S.cid }).catch(function () { APP.ext = ''; }); }
   }
+
+  /* ---------- several roles per person (14/11/2569, design B): the name in the top bar lists the person's roles to work
+     in; on the people page one box per account opens a list to tick the roles and pick the main one (the one the page
+     opens in); an invitation carries them too. The database lets a person do what any one of their roles may do; the
+     pages work from the one picked (S.role), so picking another loads the data again ---------- */
+  function apMenuClose() { var m = $('tbMenu'); if (m) m.parentNode.removeChild(m); }
+  function apMenuPlace() {
+    var m = $('tbMenu'), b = document.querySelector('.tb-me'); if (!m) return; if (!b) { apMenuClose(); return; }
+    var r = b.getBoundingClientRect(); m.style.top = Math.round(r.bottom + 8) + 'px'; m.style.right = Math.max(8, Math.round(window.innerWidth - r.right)) + 'px';
+  }
+  function appMeMenu() {
+    var rs = myRoles();
+    if (rs.length < 2 || !document.querySelector('.tb-me')) { appUserMenu(); return; }
+    if ($('tbMenu')) { apMenuClose(); return; }
+    var m = document.createElement('div');
+    m.id = 'tbMenu'; m.className = 'tb-menu'; m.setAttribute('role', 'menu'); m.setAttribute('aria-label', 'บัญชีของฉัน');
+    m.innerHTML = '<div class="tm-h">ทำงานในบทบาท</div>' + rs.map(function (k, i) {
+        var on = k === S.role;
+        return '<button type="button" class="tm-i' + (on ? ' on' : '') + '" role="menuitemradio" aria-checked="' + on + '" data-a="urole" data-v="' + k + '">' + av(k) +
+          '<span><b>' + esc(roleName(k)) + '</b><small>' + (i ? 'บทบาทเสริม' : 'บทบาทหลัก') + (function (n) { return n ? ' · งานรอ ' + n : ''; })(apRoleWait(k)) + '</small></span>' + (on ? ic('check') : '') + '</button>';
+      }).join('') + '<div class="tm-n">เมนูและงานที่รอแสดงตามบทบาทที่เลือก</div><div class="tm-sep"></div>' +
+      '<button type="button" class="tm-i tm-a" role="menuitem" data-a="umine">' + ic('people') + '<span>บัญชีของฉัน</span></button>' +
+      '<button type="button" class="tm-i tm-a" role="menuitem" data-a="signout">' + ic('out') + '<span>ออกจากระบบ</span></button>';
+    document.body.appendChild(m); apMenuPlace();
+    var f = m.querySelector('.tm-i.on') || m.querySelector('.tm-i'); if (f) f.focus();
+  }
+  // what waits for a role, counted as the inbox counts it for the role in use (57-inbox.js ibxItems reads S.role only)
+  function apRoleWait(k) {
+    if (typeof ibxItems !== 'function') return 0;
+    var r0 = S.role; S.role = k;
+    try { return ibxItems().length; } catch (e) { return 0; } finally { S.role = r0; }
+  }
+  // work in another of one's roles; the browser keeps it for the next sign-in
+  function appUseRole(k) {
+    apMenuClose();
+    if (k === S.role || myRoles().indexOf(k) < 0) return;
+    if (APP.saving || APP.dirty) { toast('รอบันทึกให้เสร็จก่อน แล้วค่อยสลับบทบาท'); return; }
+    S.role = k; apRoleKeep(k); S.page = 'home'; S.cid = null; S.sid = null; S.caid = null; render(); toTop();
+    return appLoad().then(function () { render(); toast('ทำงานในบทบาท ' + roleName(k)); }).catch(function (e) { toast(thErr(e)); render(); });
+  }
+  // the people page: the main role and how many more; it opens the list below (RP: the list being edited)
+  var RP = null;
+  function apRoleBox(u, nm) {
+    var l = rolesOf(u);
+    return '<button type="button" class="ap-rl" data-a="urbox" data-v="' + esc(u.id) + '" aria-haspopup="dialog" aria-expanded="' + !!(RP && RP.uid === u.id) + '" aria-label="บทบาทของ ' + esc(nm) + '" title="' + esc(l.map(roleName).join(' · ')) + '">' +
+      '<span>' + esc(roleName(l[0])) + '</span>' + (l.length > 1 ? '<span class="ap-rl-n">+' + (l.length - 1) + '</span>' : '') + ic('chev') + '</button>';
+  }
+  function apRoleOpen(uid) {
+    var u = userById(uid); if (!u || !apAdm()) return;
+    apRoleClose(); apMenuClose();
+    RP = { uid:uid, main:u.role, more:(u.more_roles || []).filter(function (k) { return k !== u.role; }) };
+    var p = document.createElement('div'); p.id = 'rolePop'; p.className = 'rp'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'บทบาทของ ' + (u.name || u.email));
+    document.body.appendChild(p); apRoleDraw();
+    var b = document.querySelector('.ap-rl[data-v="' + uid + '"]'); if (b) b.setAttribute('aria-expanded', 'true');
+    var f = p.querySelector('input:checked') || p.querySelector('input'); if (f) f.focus();
+  }
+  function apRoleClose() {
+    var u = RP && RP.uid; RP = null; var p = $('rolePop'); if (p) p.parentNode.removeChild(p);
+    var b = u && document.querySelector('.ap-rl[data-v="' + u + '"]'); if (b) b.setAttribute('aria-expanded', 'false');
+  }
+  // below the box, or above it when there is no room below
+  function apRolePlace() {
+    var p = $('rolePop'), b = RP && document.querySelector('.ap-rl[data-v="' + RP.uid + '"]'); if (!p || !b) return;
+    var r = b.getBoundingClientRect(), h = p.offsetHeight, w = p.offsetWidth, top = r.bottom + 6;
+    if (top + h > window.innerHeight - 8 && r.top - h - 6 >= 8) top = r.top - h - 6;
+    top = Math.min(top, window.innerHeight - h - 8);
+    p.style.top = Math.round(Math.max(8, top)) + 'px'; p.style.left = Math.round(Math.max(8, Math.min(r.left, window.innerWidth - w - 8))) + 'px';
+  }
+  // GCC staff roles to tick, one of them the main; or one role that stands alone (สมอ., อบก., a client, waiting). An admin
+  // keeps a staff role, a client stays a client
+  function apRoleDraw() {
+    var p = $('rolePop'), u = RP && userById(RP.uid); if (!p || !u) return;
+    var picked = STAFF_ROLES.indexOf(RP.main) >= 0 ? [RP.main].concat(RP.more) : [];
+    var solo = u.is_admin ? [] : ['tisi', 'tgo'].concat(u.role === 'client' ? ['client'] : [], ['pending']);
+    var h = '<div class="rp-h">บทบาทของ ' + esc(u.name || u.email) + '</div>' + STAFF_ROLES.map(function (k) {
+      var on = picked.indexOf(k) >= 0, main = on && k === RP.main;
+      return '<div class="rp-i' + (on ? ' on' : '') + '"><label><input type="checkbox" class="rp-k" value="' + k + '"' + (on ? ' checked' : '') + '><span>' + esc(roleName(k)) + '</span></label>' +
+        (on ? '<button type="button" class="rp-m' + (main ? ' on' : '') + '" data-a="urmain" data-v="' + k + '" aria-pressed="' + main + '" title="บทบาทที่เปิดมาตอนเข้าระบบ">' + (main ? 'หลัก' : 'ตั้งเป็นหลัก') + '</button>' : '') + '</div>';
+    }).join('');
+    if (solo.length) h += '<div class="rp-s">หรือบทบาทเดียว</div>' + solo.map(function (k) {
+      var on = RP.main === k;
+      return '<div class="rp-i' + (on ? ' on' : '') + '"><label><input type="radio" name="rpOne" class="rp-one" value="' + k + '"' + (on ? ' checked' : '') + '><span>' + esc(roleName(k)) + '</span></label></div>';
+    }).join('');
+    else h += '<div class="rp-s">ผู้ดูแลระบบมีบทบาทพนักงาน GCC เสมอ</div>';
+    h += '<div class="rp-f"><button type="button" class="btn sm" data-a="urcancel">ยกเลิก</button><button type="button" class="btn sm pri" data-a="ursave"' + (RP.main ? '' : ' disabled') + '>' + ic('check') + 'บันทึก</button></div>';
+    p.innerHTML = h; apRolePlace();
+  }
+  function apRoleTick(k, on) {
+    if (!RP) return;
+    var picked = (STAFF_ROLES.indexOf(RP.main) >= 0 ? [RP.main].concat(RP.more) : []).filter(function (x) { return x !== k; });
+    if (on) picked.push(k);
+    picked.sort(function (a, b) { return STAFF_ROLES.indexOf(a) - STAFF_ROLES.indexOf(b); });
+    var main = picked.indexOf(RP.main) >= 0 ? RP.main : picked[0] || '';
+    RP.main = main; RP.more = picked.filter(function (x) { return x !== main; }); apRoleDraw();
+    var i = document.querySelector('#rolePop .rp-k[value="' + k + '"]'); if (i) i.focus();
+  }
+  function apRoleOne(k) { if (!RP) return; RP.main = k; RP.more = []; apRoleDraw(); var i = document.querySelector('#rolePop .rp-one[value="' + k + '"]'); if (i) i.focus(); }
+  function apRoleMain(k) {
+    if (!RP || k === RP.main) return;
+    var all = [RP.main].concat(RP.more); if (all.indexOf(k) < 0) return;
+    RP.main = k; RP.more = all.filter(function (x) { return x !== k; }); apRoleDraw();
+    var m = document.querySelector('#rolePop .rp-m.on'); if (m) m.focus();
+  }
+  // the account changes at once; if it is one's own and the role worked in is gone, the page moves to the main role
+  function apRoleSave() {
+    if (!RP || !RP.main) return;
+    var x = { uid:RP.uid, main:RP.main, more:RP.more.slice() }, u = userById(x.uid); if (!u) return;
+    var me = ME && u.id === ME.id;
+    if (me && [x.main].concat(x.more).indexOf(S.role) < 0 && !window.confirm('บทบาทที่คุณทำงานอยู่ (' + roleName(S.role) + ') จะไม่มีแล้ว หน้าจะเปลี่ยนไปที่ ' + roleName(x.main) + ' บันทึกเลยไหม')) return;
+    SB.from('profiles').update({ role:x.main, more_roles:x.more }).eq('id', x.uid).select('id,role,more_roles').then(function (r) {
+      sbOk(r); var d = r.data && r.data[0]; if (!d) throw new Error('บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้');
+      var same = d.role === x.main && (d.more_roles || []).slice().sort().join() === x.more.slice().sort().join();
+      u.role = d.role; u.more_roles = d.more_roles || []; apRoleClose();
+      var back = function () { var b = document.querySelector('.ap-rl[data-v="' + x.uid + '"]'); if (b) b.focus(); };
+      if (!same) { render(); back(); toast('เปลี่ยนบทบาทไม่ได้'); return; }
+      if (!me) { render(); back(); toast('บันทึกบทบาทของ ' + (u.name || u.email) + ' แล้ว'); return; }
+      ME.role = u.role; ME.more_roles = u.more_roles;
+      if (myRoles().indexOf(S.role) >= 0) { render(); back(); toast('บันทึกบทบาทของคุณแล้ว'); return; }
+      S.role = ME.role; apRoleKeep(S.role);
+      return (APP.saving || APP.dirty ? Promise.resolve() : appLoad()).then(function () { render(); toast('บทบาทของคุณเป็น ' + roleName(S.role) + ' แล้ว'); });
+    }).catch(function (e) { toast(thErr(e)); render(); });
+  }
+  // an invitation: GCC staff roles to tick (the main role picked below), or สมอ./อบก. alone; only an admin gives the admin office
+  function apInvRoles(px, main, more) {
+    var adm = apAdm(), picked = STAFF_ROLES.indexOf(main) >= 0 ? [main].concat(more || []) : [];
+    var ks = STAFF_ROLES.filter(function (k) { return adm || k !== 'admin' || picked.indexOf('admin') >= 0; });
+    return '<div class="f iv-f"><label>บทบาท <small>ติ๊กได้หลายบทบาท</small></label><div class="iv-g">' + ks.map(function (k) {
+        return '<label><input type="checkbox" class="iv-k" data-px="' + px + '" value="' + k + '"' + (picked.indexOf(k) >= 0 ? ' checked' : '') + '>' + esc(roleName(k)) + '</label>';
+      }).join('') + ['tisi', 'tgo'].map(function (k) {
+        return '<label><input type="checkbox" class="iv-k iv-one" data-px="' + px + '" value="' + k + '"' + (main === k ? ' checked' : '') + '>' + esc(roleName(k)) + '<small>บทบาทเดียว</small></label>';
+      }).join('') + '</div></div>' +
+      '<div class="f"><label for="' + px + 'Main">บทบาทหลัก (ใช้ตอนเข้าระบบ)</label><select id="' + px + 'Main">' + apInvMain(picked.length ? picked : [main], main) + '</select></div>';
+  }
+  function apInvMain(l, main) { return l.filter(Boolean).map(function (k) { return '<option value="' + k + '"' + (k === main ? ' selected' : '') + '>' + esc(roleName(k)) + '</option>'; }).join(''); }
+  // ticking a role that stands alone clears the others, and the other way round; the main-role list follows the ticks
+  function apInvTick(t) {
+    var px = t.getAttribute('data-px'), all = [].slice.call(document.querySelectorAll('.iv-k[data-px="' + px + '"]'));
+    if (t.checked) all.forEach(function (x) { if (x !== t && (x.classList.contains('iv-one') || t.classList.contains('iv-one'))) x.checked = false; });
+    var l = all.filter(function (x) { return x.checked; }).map(function (x) { return x.value; }), s = $(px + 'Main'), cur = s ? s.value : '';
+    if (s) s.innerHTML = apInvMain(l, l.indexOf(cur) >= 0 ? cur : l[0]);
+  }
+  function apInvRead(px) {
+    var l = [].slice.call(document.querySelectorAll('.iv-k[data-px="' + px + '"]')).filter(function (x) { return x.checked; }).map(function (x) { return x.value; });
+    var main = val(px + 'Main'); if (l.indexOf(main) < 0) main = l[0] || '';
+    return { role:main, more:l.filter(function (k) { return k !== main && STAFF_ROLES.indexOf(k) >= 0; }) };
+  }
+  document.addEventListener('mousedown', function (e) {
+    var t = e.target; if (!APP_ON || !t.closest) return;
+    if ($('tbMenu') && !t.closest('#tbMenu') && !t.closest('.tb-me')) apMenuClose();
+    if (RP && !t.closest('#rolePop') && !t.closest('.ap-rl')) apRoleClose();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!APP_ON || e.key !== 'Escape') return;
+    if ($('tbMenu')) { apMenuClose(); var b = document.querySelector('.tb-me'); if (b) b.focus(); }
+    if (RP) { var u = RP.uid; apRoleClose(); var x = document.querySelector('.ap-rl[data-v="' + u + '"]'); if (x) x.focus(); }
+  });
+  document.addEventListener('scroll', function () { if (RP) apRolePlace(); if ($('tbMenu')) apMenuPlace(); }, true);
+  window.addEventListener('resize', function () { if (RP) apRolePlace(); if ($('tbMenu')) apMenuPlace(); });
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-a]'); if (!t || !APP_ON) return;
     var a = t.getAttribute('data-a'), v = t.getAttribute('data-v');
-    if (a === 'signout') apSignOut();
-    else if (a === 'umenu') appUserMenu();
+    if (a === 'signout') { apMenuClose(); apSignOut(); }
+    else if (a === 'umenu') appMeMenu();
+    else if (a === 'urole') appUseRole(v);
+    else if (a === 'umine') { apMenuClose(); appUserMenu(); }
+    else if (a === 'urbox') { if (RP && RP.uid === v) apRoleClose(); else apRoleOpen(v); }
+    else if (a === 'urmain') apRoleMain(v);
+    else if (a === 'ursave') apRoleSave();
+    else if (a === 'urcancel') apRoleClose();
     else if (a === 'appsync') { if (APP.err) { APP.err = ''; appFlush(); } else appRefresh('โหลดข้อมูลล่าสุดแล้ว'); }
     else if (a === 'uinvite') appInviteForm();
     else if (a === 'uinvsave') appInviteSave();
@@ -8453,7 +8668,9 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
   });
   document.addEventListener('change', function (e) {
     var t = e.target; if (!APP_ON || !t.classList) return;
-    if (t.classList.contains('ap-role')) appSetRole(t.getAttribute('data-uid'), t.value);
+    if (t.classList.contains('rp-k')) apRoleTick(t.value, t.checked);
+    else if (t.classList.contains('rp-one')) apRoleOne(t.value);
+    else if (t.classList.contains('iv-k')) apInvTick(t);
     else if (t.classList.contains('ap-adm')) appSetAdmin(t.getAttribute('data-uid'), t.checked);
   });
   window.addEventListener('beforeunload', function (e) { if (APP_ON && APP.ready && (APP.dirty || APP.saving)) { e.preventDefault(); e.returnValue = ''; } });
@@ -8502,7 +8719,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     var right = sel === 'cmp' ? '<div class="pr-stack">' + prMatrix() + prOther() + '</div>' : sel === 'client' || sel === 'ext' ? prFixed(sel) : prEditor(sel, permEdit());
     return '<div class="pr-roles">' + prList(sel) + right + '</div>';
   }
-  function prPeople(k) { return APP_ON && typeof USERS !== 'undefined' ? USERS.filter(function (u) { return u.active && u.role === k; }) : null; }
+  function prPeople(k) { return APP_ON && typeof USERS !== 'undefined' ? USERS.filter(function (u) { return u.active && (u.role === k || (u.more_roles || []).indexOf(k) >= 0); }) : null; }
   function prSub(k) { var p = prPeople(k); return p ? p.length + ' คน' : 'บทบาทตัวอย่าง'; }
   function prList(sel) {
     var it = function (k, b, s, cls) {
