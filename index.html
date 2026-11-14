@@ -5141,7 +5141,7 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     list.forEach(function (c) { c.mail.forEach(function (m) { all.push({ c:c, m:m }); }); });
     all.sort(function (a, b) { return a.m.at < b.m.at ? 1 : -1; });
     if (!all.length) return '<div class="empty">ยังไม่มีอีเมล</div>';
-    return '<ul class="rows">' + all.slice(0, n).map(function (x) { return '<li>' + ic('mail') + '<div><b>' + esc(x.m.subj) + '</b><span>' + esc(x.c.short) + ' · ถึง ' + esc(x.m.to) + '</span></div>' + (APP_ON ? mailSt(x.m) : '') + '<span class="date">' + dS(x.m.at) + '</span></li>'; }).join('') + '</ul>';
+    return '<ul class="rows">' + all.slice(0, n).map(function (x) { return '<li>' + ic('mail') + '<div><b>' + esc(x.m.subj) + '</b><span>' + esc(x.c.short) + ' · ถึง ' + esc(x.m.to) + '</span></div>' + (APP_ON ? '<span class="ml-end">' + mailSt(x.m) + '<span class="date">' + dS(x.m.at) + '</span></span>' : '<span class="date">' + dS(x.m.at) + '</span>') + '</li>'; }).join('') + '</ul>';
   }
   function ring(p) {
     var C = 2 * Math.PI * 40, o = C * (1 - p / 100);
@@ -7353,7 +7353,7 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
       '<button type="button" class="btn" data-a="asclient">' + ic('eye') + 'ดูในมุมลูกค้า</button><button type="button" class="btn pri" data-a="sendinvite">' + ic('mail') + 'ส่งอีเมลเชิญ</button>');
   }
   function openMails() {
-    modal('อีเมลที่ระบบส่ง', 'mail', mailList(cases(), 30) + '<div style="margin-top:12px">' + note('info', 'ระบบจริงส่งอีเมลเมื่อถึงขั้นที่ลูกค้าต้องทำ และเมื่อมีไฟล์ให้ดาวน์โหลด') + '</div>', '');
+    modal('อีเมลที่ระบบส่ง', 'mail', mailList(cases(), 30) + (APP_ON ? '' : '<div style="margin-top:12px">' + note('info', 'ระบบจริงส่งอีเมลเมื่อถึงขั้นที่ลูกค้าต้องทำ และเมื่อมีไฟล์ให้ดาวน์โหลด') + '</div>'), '');
   }
   function editDoc(code) {
     var d = docByCode(code);

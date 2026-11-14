@@ -2112,6 +2112,9 @@ html[data-theme=dark] :is(.ap-f .f input,.ap-t select){background:#14284D;color:
 html[data-theme=dark] :is(.ap-f .f input[readonly],.ap-link input){background:#0F1E3D}
 html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0 1px #22406F}
 @media (prefers-reduced-motion:reduce){.ap-spin,.ap-sync[data-st=busy] i{animation:none}}
+/* the e-mail list in the app (14/11/2569): the status chip and the date share the row's last cell, so the date stays
+   on the row (.rows li has three columns) */
+.rows .ml-end{display:flex;align-items:center;gap:12px;white-space:nowrap}
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -5230,7 +5233,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
     list.forEach(function (c) { c.mail.forEach(function (m) { all.push({ c:c, m:m }); }); });
     all.sort(function (a, b) { return a.m.at < b.m.at ? 1 : -1; });
     if (!all.length) return '<div class="empty">ยังไม่มีอีเมล</div>';
-    return '<ul class="rows">' + all.slice(0, n).map(function (x) { return '<li>' + ic('mail') + '<div><b>' + esc(x.m.subj) + '</b><span>' + esc(x.c.short) + ' · ถึง ' + esc(x.m.to) + '</span></div>' + (APP_ON ? mailSt(x.m) : '') + '<span class="date">' + dS(x.m.at) + '</span></li>'; }).join('') + '</ul>';
+    return '<ul class="rows">' + all.slice(0, n).map(function (x) { return '<li>' + ic('mail') + '<div><b>' + esc(x.m.subj) + '</b><span>' + esc(x.c.short) + ' · ถึง ' + esc(x.m.to) + '</span></div>' + (APP_ON ? '<span class="ml-end">' + mailSt(x.m) + '<span class="date">' + dS(x.m.at) + '</span></span>' : '<span class="date">' + dS(x.m.at) + '</span>') + '</li>'; }).join('') + '</ul>';
   }
   function ring(p) {
     var C = 2 * Math.PI * 40, o = C * (1 - p / 100);
@@ -7442,7 +7445,7 @@ html[data-theme=dark] .ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0
       '<button type="button" class="btn" data-a="asclient">' + ic('eye') + 'ดูในมุมลูกค้า</button><button type="button" class="btn pri" data-a="sendinvite">' + ic('mail') + 'ส่งอีเมลเชิญ</button>');
   }
   function openMails() {
-    modal('อีเมลที่ระบบส่ง', 'mail', mailList(cases(), 30) + '<div style="margin-top:12px">' + note('info', 'ระบบจริงส่งอีเมลเมื่อถึงขั้นที่ลูกค้าต้องทำ และเมื่อมีไฟล์ให้ดาวน์โหลด') + '</div>', '');
+    modal('อีเมลที่ระบบส่ง', 'mail', mailList(cases(), 30) + (APP_ON ? '' : '<div style="margin-top:12px">' + note('info', 'ระบบจริงส่งอีเมลเมื่อถึงขั้นที่ลูกค้าต้องทำ และเมื่อมีไฟล์ให้ดาวน์โหลด') + '</div>'), '');
   }
   function editDoc(code) {
     var d = docByCode(code);
