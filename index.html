@@ -2025,6 +2025,18 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
 @media (min-width:981px){.chd .chead{flex-wrap:nowrap}.chd .chead>div:first-child{flex:0 1 auto}.chd .chead .acts{flex:none}}
 @media (max-width:980px){.chd .hd-art{display:none}}
 @media (max-width:560px){.chd .chead{padding:18px 16px 18px}.chd .chead>div:first-child{column-gap:14px}.chd .chead .ring{width:64px;height:64px}}
+/* ---------- the inbox in the top bar (14/11/2569, src/js/57-inbox.js): what waits for this role, by kind; a row opens its work ---------- */
+.ibx-g+.ibx-g{margin-top:16px}
+.ibx-g h4{display:flex;align-items:center;gap:8px;margin:0 0 4px;color:var(--mut);font-size:12.5px;font-weight:600}
+.ibx-g h4 span{min-width:22px;padding:1px 7px;border-radius:999px;background:var(--tint-2);color:var(--link);font-size:11.5px;text-align:center}
+.rows.ibx li{display:block;padding:0}
+.ibx-o{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:calc(100% + 20px);margin:0 -10px;padding:10px;border:0;border-radius:12px;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;transition:background-color .12s}
+.ibx-o:hover{background:var(--tint)}
+.ibx-o b,.ibx-o div span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ibx-o .chip{white-space:nowrap}
+.ibx-d{color:var(--mut);font-size:12.5px;white-space:nowrap}
+.ibx-b{max-height:calc(100vh - 230px);margin:0 -10px;padding:0 10px;overflow:auto}
+html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -5203,13 +5215,11 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
   /* the rail's short names; the full name is the tooltip and what a screen reader says */
   function navShort(k) { if (k === 'cases') return isClient(S.role) ? 'เคสของฉัน' : ext() ? 'เคสที่แชร์' : 'เคสลูกค้า'; return { home:'หน้าแรก', cal:'ปฏิทิน', reg:'ทะเบียน', ca:'ร้องเรียน', docs:'เอกสาร', flow:'ผังงาน', perm:'สิทธิ์ผู้ใช้', users:'ผู้ใช้งาน', mpo:'Master Plan' }[k] || navName(k); }
   function topbar() {
-    var n = myMails();
     return '<header class="topbar"><div class="tb-brand"><img src="' + LOGO + '" alt="GCC"><div><b>ระบบงานทวนสอบ</b><small>Global Carbon Corporation</small></div></div>' +
       '<label class="search">' + ic('search') + '<input id="gq" type="search" placeholder="ค้นหาเคส เอกสาร หรือเรื่อง" value="' + esc(S.gq || '') + '" aria-label="ค้นหา"></label><div class="sp"></div>' +
       (APP_ON ? appTopUser() : '<label class="tb-role" title="ตัวอย่างเท่านั้น ระบบจริงเข้าด้วยบัญชีของแต่ละคน"><span>บทบาท</span><select id="roleSel" class="role-pick" aria-label="เข้าใช้ในบทบาท">' + roleOptions() + '</select></label>') +
       '<button type="button" class="bell thm" data-a="theme" title="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '" aria-label="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '">' + ic(isDark() ? 'sun' : 'moon') + '</button>' +
-      (navs().indexOf('docs') >= 0 ? (function () { var k = dcMineN(), t = k ? 'คำร้องเอกสารที่รอคุณ ' + k + ' รายการ' : 'ไม่มีคำร้องเอกสารที่รอคุณ'; return '<button type="button" class="bell" data-a="dcmine" title="' + t + '" aria-label="' + t + '">' + ic('docs') + (k ? '<i>' + k + '</i>' : '') + '</button>'; })() : '') +
-      (navs().indexOf('cases') >= 0 ? '<button type="button" class="bell" data-a="mails" title="อีเมลที่ระบบส่งใน 7 วัน" aria-label="อีเมลที่ระบบส่งใน 7 วัน">' + ic('mail') + (n ? '<i>' + n + '</i>' : '') + '</button>' : '') + (APP_ON ? appTopMe() : av(rk())) + '</header>';
+      inboxBtn() + (APP_ON ? appTopMe() : av(rk())) + '</header>';
   }
   /* line drawings for the home shortcut cards: navy strokes, lavender and indigo fills */
   var HI_ART = (function () {
@@ -5232,9 +5242,8 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
   /* the home page opens with a large hello and three shortcut cards (a client keeps the plain head: its banner names the company) */
   function heroHome() {
     var r = S.role, list = cases(), ks = navs(), cards = [];
-    var mine = list.filter(function (c) { var k = cur(c); return k && (r === 'admin' || r === 'mgr' || canAct(c, k)); });
-    var late = list.filter(function (c) { var k = cur(c); return k && diff(due(c, k)) < 0; }).length;
-    if (ks.indexOf('cases') >= 0) cards.push(['cases', 'clip', ext() ? 'เคสที่แชร์ให้' : 'งานที่รอคุณ', ext() ? list.length + ' เคส · อ่านอย่างเดียว' : mine.length + ' งาน · เลยกำหนด ' + late + ' เคส']);
+    var ib = ext() ? [] : ibxItems();   // the same work as the inbox in the top bar, and the card opens it
+    if (ks.indexOf('cases') >= 0) cards.push(ext() ? ['cases', 'clip', 'เคสที่แชร์ให้', list.length + ' เคส · อ่านอย่างเดียว'] : ['inbox', 'clip', 'งานที่รอคุณ', ib.length + ' งาน · เลยกำหนด ' + ibxLate(ib) + ' งาน']);
     if (ks.indexOf('cal') >= 0) cards.push(['cal', 'archive', 'ปฏิทินงาน', list.filter(function (c) { var v = visitDate(c); return v && diff(v) >= 0 && diff(v) <= 30; }).length + ' นัดลงพื้นที่ใน 30 วัน']);
     if (ks.indexOf('flow') >= 0) cards.push(['flow', 'flow', 'ผังกระบวนการ', STEPS.length + ' ขั้น · ต้องอนุมัติ ' + STEPS.filter(function (st) { return st[5]; }).length + ' ขั้น']);
     if (ks.indexOf('docs') >= 0) cards.push(['docs', 'docs', 'เอกสารควบคุม', DB.docs.length + ' ฉบับที่ประกาศใช้']);
@@ -5242,7 +5251,7 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     if (ks.indexOf('ca') >= 0) cards.push(['ca', 'msg', 'ร้องเรียนและอุทธรณ์', cxList().length + ' เรื่องในระบบ']);
     return '<section class="hi"><div class="hi-t"><h1><span>สวัสดี ' + esc(byWho()) + '</span><span>วันนี้มีงานอะไรบ้าง?</span></h1>' +
       '<p>รวมงาน เอกสาร และกำหนดส่งของทุกเคสไว้ในที่เดียว</p><span class="hi-d">' + ic('cal') + 'ข้อมูล ณ ' + dL(todayIso()) + '</span></div>' +
-      '<div class="hi-cards">' + cards.slice(0, 3).map(function (x) { return '<button type="button" class="hi-c" data-a="nav" data-v="' + x[0] + '">' + HI_ART[x[1]] + '<b>' + x[2] + '</b><span>' + esc(x[3]) + '</span></button>'; }).join('') + '</div></section>';
+      '<div class="hi-cards">' + cards.slice(0, 3).map(function (x) { return '<button type="button" class="hi-c" ' + (x[0] === 'inbox' ? 'data-a="inbox"' : 'data-a="nav" data-v="' + x[0] + '"') + '>' + HI_ART[x[1]] + '<b>' + x[2] + '</b><span>' + esc(x[3]) + '</span></button>'; }).join('') + '</div></section>';
   }
   function pageHead() {
     if (S.page === 'home' && !isClient(S.role)) return heroHome();
@@ -5303,9 +5312,9 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
   }
   function kStats(xs) { var o = { soon:0, maxLate:0 }; xs.forEach(function (x) { var d = diff(due(x.c, x.k)); if (d >= 0 && d <= 7) o.soon++; if (-d > o.maxLate) o.maxLate = -d; }); return o; }
   function staffKpis(r, list, mine, late, issued) {
-    var adm = r === 'admin' || r === 'mgr', all = list.map(function (c) { return { c:c, k:cur(c) }; }).filter(function (x) { return x.k; }), xa = kStats(all), xm = kStats(adm ? all : mine);
+    var adm = r === 'admin' || r === 'mgr', ib = adm ? [] : ibxItems(), all = list.map(function (c) { return { c:c, k:cur(c) }; }).filter(function (x) { return x.k; }), xa = kStats(all), xm = kStats(adm ? all : mine);
     return kpi('เคสทั้งหมด', list.length, 'folder', '', 'เคส', 'ปิดแฟ้มแล้ว <b>' + list.filter(closed).length + '</b>') +
-      kpi(adm ? 'เคสที่กำลังทำ' : 'งานที่รอคุณ', adm ? list.length - issued : mine.length, 'clip', 'go', adm ? 'เคส' : 'งาน', 'ถึงกำหนดใน 7 วัน <b>' + xm.soon + '</b>') +
+      kpi(adm ? 'เคสที่กำลังทำ' : 'งานที่รอคุณ', adm ? list.length - issued : ib.length, 'clip', 'go', adm ? 'เคส' : 'งาน', 'ถึงกำหนดใน 7 วัน <b>' + (adm ? xm.soon : ibxSoon(ib)) + '</b>') +
       kpi('เลยกำหนด', late, 'alert', 'late', 'เคส', late ? '<span class="bad">นานสุด ' + xa.maxLate + ' วัน</span>' : 'ไม่มีเคสเลยกำหนด') +
       kpi('ออกถ้อยแถลงแล้ว', issued, 'award', 'ok', 'ฉบับ', list.length ? '<b class="ok">' + Math.round(issued / list.length * 100) + '%</b> ของเคสทั้งหมด' : 'ยังไม่มีเคส');
   }
@@ -8450,6 +8459,64 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
     if (!document.body.classList.contains('dc-drag')) return;
     e.preventDefault(); DCDRAG = 0; document.body.classList.remove('dc-drag');
     var fl = e.dataTransfer && e.dataTransfer.files; if (fl && fl.length) duPick(fl);
+  });
+  /* ---------- the inbox in the top bar (14/11/2569): everything that waits for this role in one place, the approvals and
+     steps in the cases, document requests, complaints and appeals; a client sees its own tasks. The number on the
+     envelope is how many (the home page's "งานที่รอคุณ" card and count show the same); a click lists them by kind, the
+     nearest due first, and each row opens its work. The e-mails the system sent stay one click away at the foot ---------- */
+  var IBX_G = [['gate', 'รออนุมัติ'], ['case', 'งานในเคส'], ['doc', 'คำร้องเอกสาร'], ['cx', 'ร้องเรียนและอุทธรณ์']];
+  // a document request has no id: its number, date, kind, code, name and requester name it, so a row still opens its own
+  // request after the list behind an open inbox has changed (a new request goes to the front)
+  function ibxKey(r) { return [r.no, r.at, r.type, r.code, r.name, r.by].join('|'); }
+  function ibxItems() {
+    var out = [], cl = isClient(S.role), nv = navs();
+    cases().forEach(function (c) {
+      var st = cur(c); if (!st) return;
+      // a client's turn is what its home page shows (clientSees and clientPart), staff act by the step's roles (canAct)
+      if (cl ? jOn() || !clientSees(c, st) || clientPart(c, st) !== 'todo' : !canAct(c, st)) return;
+      var gate = !!st[5] && !cl && GATE_BY[st[5]] === rk();   // an approval only for the one who approves this gate
+      out.push({ g:gate ? 'gate' : 'case', ic:gate ? 'check' : 'clip', t:cl ? (CLIENT_TASK[st[0]] || st[2]) : (gate ? 'อนุมัติ ' : 'ขั้น ') + st[0] + ' ' + st[2],
+        s:c.name + (c.job ? ' · ' + c.job : ''), du:due(c, st), a:'case', v:c.id, sid:st[0] });
+    });
+    if (nv.indexOf('docs') >= 0) darMine().forEach(function (r) {
+      out.push({ g:'doc', ic:r.st === 'fix' ? 'alert' : 'msg', t:r.name, s:(r.no ? 'คำร้อง ' + r.no : 'ยังไม่มีเลขที่') + ' · ' + DAR_ST[r.st], du:'', a:'ibxdar', v:ibxKey(r) });
+    });
+    if (nv.indexOf('ca') >= 0) cxTodo().forEach(function (r) {
+      var k = cxCur(r); out.push({ g:'cx', ic:'alert', t:cxNo(r) + ' ' + (r.subj || ''), s:CX_ST[k][0], du:cxDue(r, k), a:'cxopen', v:r.id });
+    });
+    return out;
+  }
+  function ibxLate(it) { return it.filter(function (x) { return x.du && diff(x.du) < 0; }).length; }
+  function ibxSoon(it) { return it.filter(function (x) { var d = x.du ? diff(x.du) : -1; return d >= 0 && d <= 7; }).length; }
+  function ibxDue(du) {
+    if (!du) return '';
+    var d = diff(du);
+    return d < 0 ? '<span class="chip late">เลย ' + (-d) + ' วัน</span>' : d === 0 ? '<span class="chip y">วันนี้</span>' : d <= 7 ? '<span class="chip y">อีก ' + d + ' วัน</span>' : '<span class="ibx-d">' + dS(du) + '</span>';
+  }
+  function inboxBtn() {
+    var k = ibxItems().length, t = k ? 'งานที่รอคุณ ' + k + ' รายการ' : 'ไม่มีงานที่รอคุณ';
+    return '<button type="button" class="bell" data-a="inbox" title="' + t + '" aria-label="' + t + '">' + ic('mail') + (k ? '<i>' + k + '</i>' : '') + '</button>';
+  }
+  function openInbox() {
+    var it = ibxItems(), cl = isClient(S.role);
+    var body = it.length ? IBX_G.map(function (g) {
+      var l = it.filter(function (x) { return x.g === g[0]; }); if (!l.length) return '';
+      l.sort(function (a, b) { return (a.du || '9') < (b.du || '9') ? -1 : 1; });
+      return '<div class="ibx-g"><h4>' + (g[0] === 'case' && cl ? 'สิ่งที่ต้องทำ' : g[1]) + '<span>' + l.length + '</span></h4><ul class="rows ibx">' + l.map(function (x) {
+        return '<li><button type="button" class="ibx-o" data-a="' + x.a + '" data-v="' + esc(String(x.v)) + '"' + (x.sid ? ' data-s="' + x.sid + '"' : '') + '>' + ic(x.ic) +
+          '<div><b title="' + esc(x.t) + '">' + esc(x.t) + '</b><span title="' + esc(x.s) + '">' + esc(x.s) + '</span></div>' + ibxDue(x.du) + '</button></li>';
+      }).join('') + '</ul></div>';
+    }).join('') : '<div class="empty">ไม่มีงานที่รอคุณ</div>';
+    var mails = !cl && navs().indexOf('cases') >= 0 ? '<button type="button" class="btn" data-a="mails">' + ic('mail') + 'อีเมลที่ระบบส่ง</button>' : '';
+    // the list scrolls inside the window, so the buttons at its foot stay in view
+    modal('งานที่รอคุณ', 'clip', '<div class="ibx-b">' + body + '</div>', mails + '<button type="button" class="btn pri" data-a="mclose">ปิด</button>');
+    var f = document.querySelector('#modal .ibx-o') || document.querySelector('#modal [data-a=mclose]'); if (f) f.focus();   // keyboard users land in the list
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-a=inbox],[data-a=ibxdar]'); if (!t) return;
+    if (t.getAttribute('data-a') === 'inbox') { openInbox(); return; }
+    var k = t.getAttribute('data-v'), r = DB.dar.filter(function (x) { return ibxKey(x) === k; })[0];
+    if (r) { DU.f = null; darView(DB.dar.indexOf(r)); } else { closeModal(); toast('คำร้องนี้เปลี่ยนไปแล้ว เปิดกล่องงานอีกครั้ง'); }
   });
   if (APP_ON) appStart(); else render();
 })();
