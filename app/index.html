@@ -2038,6 +2038,39 @@ html[data-theme=dark] .chd .chead .btn:not(.pri):not(.ok):not(.dark){background-
 .ibx-d{color:var(--mut);font-size:12.5px;white-space:nowrap}
 .ibx-b{max-height:calc(100vh - 230px);margin:0 -10px;padding:0 10px;overflow:auto}
 html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
+/* ---------- signatures on approve and confirm (14/11/2569, src/js/58-sign.js); a signature keeps its white paper in dark
+   mode, like the document previews ---------- */
+.sgn-pv{display:grid;place-items:center;min-height:120px;margin:0 0 14px;padding:10px;border:1px dashed var(--field);border-radius:14px;background:#fff}
+.sgn-img{display:block;max-width:280px;max-height:100px}
+.sgn-none{color:#5F6D85;font-size:13px;white-space:nowrap}
+.sgn-acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 14px}
+.sgn-acts label{position:relative;cursor:pointer}
+.sgn-acts input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
+.sgn-acts label:focus-within{outline:2px solid var(--link);outline-offset:2px}
+.sgn-pad{margin:0 0 14px}
+.sgn-pad canvas{display:block;width:100%;height:auto;aspect-ratio:560/180;border:1px solid var(--field);border-radius:12px;background:#fff;touch-action:none;cursor:crosshair}
+.sgn-pact{display:flex;align-items:center;gap:8px;margin-top:8px}
+.sgn-pact span{flex:1;min-width:0;color:var(--mut);font-size:12.5px}
+.sgn-pact .btn{white-space:nowrap}
+.sgn-q{margin:0 0 12px}
+.sgn-sheet{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px;margin:0 0 14px;padding:16px 18px;border:1px solid #E3EBF5;border-radius:14px;background:#fff;color:#0F1E3D}
+.sgn-line{display:grid;place-items:end center;min-width:220px;min-height:96px;padding-bottom:4px;border-bottom:1px dotted #5F6D85}
+.sgn-who{display:flex;flex-direction:column;gap:2px;font-size:13px}
+.sgn-who span{color:#5F6D85}
+.sgn-who .sgn-chg{align-self:flex-start;margin-top:4px;padding:0;color:#1E3A8A;font-size:12.5px;white-space:nowrap}
+.sgn-box{display:flex;align-items:center;gap:14px;margin:0 0 14px;padding:10px 14px;border:1px solid var(--tint-line);border-radius:12px;background:var(--tint)}
+/* the picture keeps one size, so a picture that arrives a moment later (the app fetches it) moves nothing */
+.sgn-box img,.sgn-box .sgn-ph{display:block;flex:none;box-sizing:border-box;width:150px;height:44px;padding:2px 8px;border-radius:8px;background:#fff;object-fit:contain}
+.sgn-box .btn{flex:none;white-space:nowrap}
+.sgn-t{display:flex;flex:1;flex-direction:column;min-width:0}
+.sgn-t b,.sgn-t span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sgn-t span{color:var(--ink-2);font-size:12.5px}
+.sgn-acc{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:4px 0 16px}
+.sgn-acc h4{flex-basis:100%;margin:0}
+.sgn-acc .sgn-pv{min-width:200px;min-height:72px;margin:0;padding:6px 12px}
+.sgn-acc .sgn-img{max-height:60px}
+.topbar>.tb-sgn{padding:0;font-family:inherit;line-height:1;cursor:pointer}
+@media (max-width:560px){.sgn-box{flex-wrap:wrap}.sgn-line{min-width:0;width:100%}}
 /* ---------- the app page only: sign-in, who is signed in, saving, accounts and invitations ---------- */
 .ap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:32px 16px}
 .ap-card{width:100%;max-width:420px;padding:28px 28px 24px;border-radius:24px;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}
@@ -4282,7 +4315,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     var sk = !!(c.track[st[0]] || {}).skip, meta = p === 'done' ? (sk ? 'GCC ปิดขั้นนี้แล้ว ' : st[0] === '4.4' ? 'ได้รับแล้ว ' : 'ส่งแล้ว ') + dL((c.track[st[0]] || {}).d) : p === 'sent' ? 'ส่งแล้ว ' + dL(flSentAt(c, st[0])) + ' · รอ GCC ตรวจ' : p === 'wait' ? 'GCC กำลังดำเนินการ' : 'กำหนด ' + dL(due(c, st));
     var form = CLIENT_ALSO[st[0]] || sk ? '' : formView(c, st, can && !lk && s !== 'done'), fl = flBox(c, st), out = outBox(c, st), att = attBox(c, st);
     return '<section class="card panel"><div class="ph"><div><h3>' + esc(CLIENT_TASK[st[0]] || st[2]) + '</h3><div class="meta">' + meta + '</div></div>' +
-      '<div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div><div class="pb">' + (st[0] === '1.1' && s !== 'done' ? backNote(c, 1) : '') + (st[0] === '3.4' ? form + fl + out : fl + att + out + form) + '</div></section>';
+      '<div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div><div class="pb">' + (s === 'done' ? sgnBox(c, st) : '') + (st[0] === '1.1' && s !== 'done' ? backNote(c, 1) : '') + (st[0] === '3.4' ? form + fl + out : fl + att + out + form) + '</div></section>';
   }
   function pageClientCase() {
     var c = caseById(S.cid || myCase(S.role));
@@ -4324,6 +4357,18 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   /* TPL and TPLB are written by build_tpl.py from 05 F แบบฟอร์ม; FILL holds what goes where in each form */
   var W_NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', W14_NS = 'http://schemas.microsoft.com/office/word/2010/wordml',
     XML_NS = 'http://www.w3.org/XML/1998/namespace', S_NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main', FILL = {};
+  // text for Word and Excel XML: characters XML does not allow (controls, lone surrogates, U+FFFE, U+FFFF) are dropped,
+  // and a vertical tab (Word's line break pasted in) becomes a line break
+  function xmlSafe(v) {
+    var s = String(v == null ? '' : v).replace(/\u000b/g, '\n'), o = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s.charCodeAt(i);
+      if (c >= 0xD800 && c <= 0xDBFF) { var d = s.charCodeAt(i + 1); if (d >= 0xDC00 && d <= 0xDFFF) { o += s.charAt(i) + s.charAt(i + 1); i++; } continue; }
+      if ((c >= 0xDC00 && c <= 0xDFFF) || (c < 0x20 && c !== 9 && c !== 10 && c !== 13) || c === 0xFFFE || c === 0xFFFF) continue;
+      o += s.charAt(i);
+    }
+    return o;
+  }
   function b64u8(b) { var s = atob(b), u = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; }
   function inflateRaw(u8) { return new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer().then(function (b) { return new Uint8Array(b); }); }
   var CRC_T = null;
@@ -4363,7 +4408,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     }
     function run(text, rPr) {
       var r = mk('r'); if (rPr) r.appendChild(rPr.cloneNode(true));
-      String(text).split('\n').forEach(function (line, i) { if (i) r.appendChild(mk('br')); var t = mk('t'); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); t.textContent = line; r.appendChild(t); });
+      xmlSafe(text).split('\n').forEach(function (line, i) { if (i) r.appendChild(mk('br')); var t = mk('t'); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); t.textContent = line; r.appendChild(t); });
       return r;
     }
     function setText(target, val, o) {
@@ -4398,7 +4443,34 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
       var ts = all(kids(s, 'sdtContent')[0], 't'); if (ts[0]) ts[0].textContent = String.fromCharCode(parseInt(code, 16));
     }
     var X = {
-      doc:doc, body:body, kids:kids, all:all, text:txt, norm:norm, setText:setText, nextCell:nextCell, findCell:findCell,
+      doc:doc, body:body, kids:kids, all:all, text:txt, norm:norm, setText:setText, nextCell:nextCell, findCell:findCell, pics:[],
+      /* a signed step's signature (sgnOf): into a table cell, on its own line under a label already there, or in place of the
+         k-th dotted leader of a paragraph */
+      sig:function (target, g, k, maxCm) {
+        if (!target || !g) return false;
+        var run = sigPic(doc, X.pics, g, maxCm); if (!run) return false;
+        if (target.localName === 'tc') {
+          var ps = kids(target, 'p'), p = ps[ps.length - 1]; if (!p) return false;
+          if (txt(p)) { var np = mk('p'), pp = kids(p, 'pPr')[0]; if (pp) np.appendChild(pp.cloneNode(true)); target.appendChild(np); p = np; }
+          p.appendChild(run); return true;
+        }
+        var n = 0, ts = all(target, 't');
+        for (var i = 0; i < ts.length; i++) {
+          var t = ts[i], s0 = t.textContent, re = /[.…]{3,}|_{3,}/g, m;
+          while ((m = re.exec(s0))) if (n++ === (k || 0)) {
+            var r = t.parentNode, rPr = kids(r, 'rPr')[0], r2 = mk('r'), t2 = mk('t');
+            if (rPr) r2.appendChild(rPr.cloneNode(true));
+            t2.setAttributeNS(XML_NS, 'xml:space', 'preserve'); t2.textContent = s0.slice(m.index + m[0].length); r2.appendChild(t2);
+            while (t.nextSibling) r2.appendChild(t.nextSibling);
+            t.textContent = s0.slice(0, m.index); t.setAttributeNS(XML_NS, 'xml:space', 'preserve');
+            r.parentNode.insertBefore(r2, r.nextSibling); r.parentNode.insertBefore(run, r2);
+            return true;
+          }
+        }
+        X.pics.pop(); return false;
+      },
+      /* the first paragraph with the words, or starting with them (^) */
+      para:function (key) { var st = key.charAt(0) === '^', K = st ? key.slice(1) : key; return all(body, 'p').filter(function (q) { var x = txt(q); return st ? x.replace(/^\s+/, '').indexOf(K) === 0 : x.indexOf(K) >= 0; })[0] || null; },
       tables:function () { return kids(body, 'tbl'); },
       rows:function (tbl) { return kids(tbl, 'tr'); },
       cellsOf:function (tr) { return kids(tr, 'tc'); },
@@ -4421,7 +4493,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
         var ps = all(body, 'p'), n = 0, st = key.charAt(0) === '^', K = st ? key.slice(1) : key;
         for (var i = 0; i < ps.length; i++) if ((st ? txt(ps[i]).replace(/^\s+/, '').indexOf(K) === 0 : txt(ps[i]).indexOf(K) >= 0) && ++n === (nth || 1)) {
           var k = 0;
-          all(ps[i], 't').forEach(function (t) { t.textContent = t.textContent.replace(/[.…]{3,}|_{3,}/g, function (m) { var v = vals[k++]; return v == null || v === '' ? m : ' ' + v + ' '; }); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); });
+          all(ps[i], 't').forEach(function (t) { t.textContent = t.textContent.replace(/[.…]{3,}|_{3,}/g, function (m) { var v = vals[k++]; return v == null || v === '' ? m : ' ' + xmlSafe(v) + ' '; }); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); });
           return true;
         }
         return false;
@@ -4445,9 +4517,9 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
           for (var j = 0; j < rs.length; j++) {
             var tt = all(rs[j], 't')[0];
             if (!tt) continue;
-            if (seen && /[.…]{3,}/.test(tt.textContent)) { tt.textContent = tt.textContent.replace(/[.…]{3,}/, val == null || val === '' ? '$&' : ' ' + val + ' '); tt.setAttributeNS(XML_NS, 'xml:space', 'preserve'); return true; }
+            if (seen && /[.…]{3,}/.test(tt.textContent)) { tt.textContent = tt.textContent.replace(/[.…]{3,}/, val == null || val === '' ? '$&' : ' ' + xmlSafe(val) + ' '); tt.setAttributeNS(XML_NS, 'xml:space', 'preserve'); return true; }
             acc += tt.textContent;
-            if (!seen && norm(acc).indexOf(L) >= 0 && ++n === (nth || 1)) { seen = true; if (/[.…]{3,}/.test(tt.textContent.split(label).slice(1).join(label))) { tt.textContent = tt.textContent.replace(new RegExp('(' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*)[.…]{3,}'), '$1' + (val || '$&')); return true; } }
+            if (!seen && norm(acc).indexOf(L) >= 0 && ++n === (nth || 1)) { seen = true; if (/[.…]{3,}/.test(tt.textContent.split(label).slice(1).join(label))) { tt.textContent = tt.textContent.replace(new RegExp('(' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*)[.…]{3,}'), '$1' + (xmlSafe(val) || '$&')); return true; } }
           }
           if (seen) return false;
         }
@@ -4472,6 +4544,40 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     return X;
   }
 
+  /* ---------- signatures (14/11/2569, 58-sign.js): a signed step's signature as a picture in its form's signature block.
+     X.sig() makes the picture run (about 1 cm high, never wider than the block); xport then adds the picture files, their
+     links and the PNG type to the Word package (sigPack) ---------- */
+  function sgnOf(c, sid) { var t = c && c.track && c.track[sid], g = t && t.s === 'done' && t.sig, u = sgnImg(g); return /^data:image\/png;base64,/.test(u) ? { img:u, name:g.name, role:g.role, at:g.at } : null; }
+  var SIG_NS = { wp:'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing', a:'http://schemas.openxmlformats.org/drawingml/2006/main',
+    pic:'http://schemas.openxmlformats.org/drawingml/2006/picture', r:'http://schemas.openxmlformats.org/officeDocument/2006/relationships' };
+  function sigPic(doc, pics, g, maxCm) {
+    var u; try { u = b64u8(g.img.slice(g.img.indexOf(',') + 1)); } catch (e) { return null; }   // a picture that cannot be read is left out, the form still comes
+    if (u.length < 24 || u[1] !== 0x50 || u[2] !== 0x4E || u[3] !== 0x47) return null;
+    var pw = (u[16] << 24 | u[17] << 16 | u[18] << 8 | u[19]) >>> 0, ph = (u[20] << 24 | u[21] << 16 | u[22] << 8 | u[23]) >>> 0;
+    if (!pw || !ph) return null;
+    var n = pics.length + 1, rid = 'rIdGccSig' + n, id = 7000 + n, cy = 360000, cx = Math.round(cy * pw / ph), mx = Math.round((maxCm || 3.4) * 360000);
+    if (cx > mx) { cy = Math.max(1, Math.round(cy * mx / cx)); cx = mx; }
+    pics.push({ rid:rid, name:'word/media/gcc-sig-' + n + '.png', data:u });
+    var xml = '<w:r xmlns:w="' + W_NS + '" xmlns:wp="' + SIG_NS.wp + '" xmlns:a="' + SIG_NS.a + '" xmlns:pic="' + SIG_NS.pic + '" xmlns:r="' + SIG_NS.r + '"><w:drawing>' +
+      '<wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="' + cx + '" cy="' + cy + '"/><wp:effectExtent l="0" t="0" r="0" b="0"/><wp:docPr id="' + id + '" name="ลายเซ็น ' + n + '"/>' +
+      '<wp:cNvGraphicFramePr><a:graphicFrameLocks noChangeAspect="1"/></wp:cNvGraphicFramePr><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic>' +
+      '<pic:nvPicPr><pic:cNvPr id="' + id + '" name="gcc-sig-' + n + '.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="' + rid + '"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill>' +
+      '<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + cx + '" cy="' + cy + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r>';
+    return doc.importNode(new DOMParser().parseFromString(xml, 'application/xml').documentElement, true);
+  }
+  function sigPack(ents, pics) {
+    var get = function (nm) { return ents.filter(function (e) { return e.name === nm; })[0]; }, rel = get('word/_rels/document.xml.rels'), ct = get('[Content_Types].xml');
+    if (!rel || !ct) return Promise.reject(new Error('แม่แบบไม่มีส่วนที่ใส่รูปลายเซ็นได้'));
+    var raw = function (en) { return en.method === 8 ? inflateRaw(en.data) : Promise.resolve(en.data); };
+    var put = function (en, x) { var u = new TextEncoder().encode(x); en.method = 0; en.data = u; en.usize = u.length; en.crc = crc32(u); };
+    return Promise.all([raw(rel), raw(ct)]).then(function (x) {
+      var dec = new TextDecoder(), rs = dec.decode(x[0]), cs = dec.decode(x[1]);
+      put(rel, rs.replace('</Relationships>', pics.map(function (q) { return '<Relationship Id="' + q.rid + '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="' + q.name.slice(5) + '"/>'; }).join('') + '</Relationships>'));
+      if (!/<Default Extension="png"/i.test(cs)) put(ct, cs.replace(/(<Types\b[^>]*>)/, '$1<Default Extension="png" ContentType="image/png"/>'));
+      pics.forEach(function (q) { ents.push({ name:q.name, method:0, crc:crc32(q.data), usize:q.data.length, data:q.data }); });
+    });
+  }
+
   /* ---------- Excel helpers: inline strings in the sheet, keeping each cell's style ---------- */
   function XLS(doc) {
     var sd = doc.getElementsByTagNameNS(S_NS, 'sheetData')[0];
@@ -4491,7 +4597,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
       if (!c) { c = doc.createElementNS(S_NS, 'c'); c.setAttribute('r', ref); var nx = null; Array.prototype.forEach.call(r.getElementsByTagNameNS(S_NS, 'c'), function (x) { if (!nx && colN(x.getAttribute('r')) > colN(ref)) nx = x; }); r.insertBefore(c, nx); }
       while (c.firstChild) c.removeChild(c.firstChild);
       if (val == null || val === '') { c.removeAttribute('t'); return; }
-      c.setAttribute('t', 'inlineStr'); var is = doc.createElementNS(S_NS, 'is'), t = doc.createElementNS(S_NS, 't'); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); t.textContent = String(val); is.appendChild(t); c.appendChild(is);
+      c.setAttribute('t', 'inlineStr'); var is = doc.createElementNS(S_NS, 'is'), t = doc.createElementNS(S_NS, 't'); t.setAttributeNS(XML_NS, 'xml:space', 'preserve'); t.textContent = xmlSafe(val); is.appendChild(t); c.appendChild(is);
     }
     return { doc:doc, set:set, rows:function (start, cols, data, like) { data.forEach(function (vals, i) { vals.forEach(function (v, j) { set(cols[j] + (start + i), v, like || start); }); }); } };
   }
@@ -4503,15 +4609,16 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     if (!T || !F) { toast('ยังไม่มีแม่แบบ ' + code + ' ในระบบ'); return; }
     if (typeof DecompressionStream === 'undefined') { toast('เบราว์เซอร์นี้ส่งออกไฟล์ไม่ได้ ลองใช้ Chrome, Edge หรือ Safari รุ่นใหม่'); return; }
     var parts = F.parts || [T.t === 'xlsx' ? 'xl/worksheets/sheet1.xml' : 'word/document.xml'];
-    var ents = T.e.map(function (x) { return { name:x[0], method:x[1], crc:x[2], usize:x[3], data:b64u8(x[4].charAt(0) === '#' ? TPLB[x[4].slice(1)] : x[4]) }; });
-    Promise.all(ents.filter(function (en) { return parts.indexOf(en.name) >= 0; }).map(function (en) {
+    var ents = T.e.map(function (x) { return { name:x[0], method:x[1], crc:x[2], usize:x[3], data:b64u8(x[4].charAt(0) === '#' ? TPLB[x[4].slice(1)] : x[4]) }; }), pics = [];
+    sgnReady(c).then(function () { return Promise.all(ents.filter(function (en) { return parts.indexOf(en.name) >= 0; }).map(function (en) {
       return (en.method === 8 ? inflateRaw(en.data) : Promise.resolve(en.data)).then(function (raw) {
-        var doc = new DOMParser().parseFromString(new TextDecoder().decode(raw), 'application/xml');
-        F.fill(T.t === 'xlsx' ? XLS(doc) : DX(doc), c, en.name);
+        var doc = new DOMParser().parseFromString(new TextDecoder().decode(raw), 'application/xml'), X = T.t === 'xlsx' ? XLS(doc) : DX(doc);
+        F.fill(X, c, en.name);
+        if (X.pics && X.pics.length && en.name === 'word/document.xml') pics = pics.concat(X.pics);
         var u = new TextEncoder().encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\r\n' + new XMLSerializer().serializeToString(doc).replace(/^<\?xml[^>]*\?>\s*/, ''));
         en.method = 0; en.data = u; en.usize = u.length; en.crc = crc32(u);
       });
-    })).then(function () {
+    })); }).then(function () { return pics.length ? sigPack(ents, pics) : null; }).then(function () {
       var blob = zipBuild(ents), a = document.createElement('a'), nm = xportName(code, c);
       if (window.__xportHook) { window.__xportHook(nm, blob); }
       else docPreview(nm, blob);
@@ -4634,6 +4741,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     if (tDec >= 0) { X.boxIn(X.rows(T[tDec])[0], 0, ok); X.boxIn(X.rows(T[tDec])[0], 1, no); }
     X.at(tDec, 1, 4, stOf(c, '1.3') === 'done' ? dTH(c.track['1.3'].d) : '', o);
     X.at(tDec, 2, 1, stOf(c, '1.6') === 'done' ? c.team.filter(function (m) { return m.n; }).map(function (m) { return m.n + ' (' + m.r + ')'; }).join(', ') : '', o);
+    X.sig(X.cell(tDec, 1, 1), sgnOf(c, '1.3'));   // ลงนามผู้อนุมัติรับคำขอ: the manager who approved 1.3 (the date beside it is 1.3's)
   } };
 
   /* ---------- F-GCC-26 ข้อตกลงการทวนสอบ ---------- */
@@ -4650,6 +4758,8 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     X.dotsIn('กรอบระยะเวลาการดำเนินงานจำนวน', [md ? String(md) : '', g.qno]);
     X.dotsIn('ตกลงจ่ายค่าจ้าง', price ? [fmt(price, 2), bahtText(price).replace(/บาทถ้วน$/, '').replace(/บาท$/, '')] : []);
     X.at(5, 2, 1, f.signName, o);
+    // หน่วยทวนสอบ (VB): sales, who approved 1.4, with the name and the date it signed; the client's side stays its signed scan
+    var g14 = sgnOf(c, '1.4'); if (g14 && X.sig(X.cell(5, 1, 5), g14)) { X.at(5, 2, 5, String(g14.name || '').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, ''), o); X.at(5, 3, 5, dTH(String(g14.at).slice(0, 10)), o); }
   } };
   /* ---------- F-GCC-32 แผนการทวนสอบ (Rev.01) ---------- */
   FILL['F-GCC-32'] = { fill:function (X, c) {
@@ -4668,6 +4778,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     AGENDA_T.forEach(function (t, i) { X.at(12, i + 1, 2, (f.ag || {})[i], o); });
     X.dotsIn('ผู้แทนลูกค้ารับทราบแผน', [f.ackN, f.ackP]);
     if (t23.s === 'done') { var d = t23.d; X.dotsIn('^ลงชื่อ', ['', d.slice(8, 10), d.slice(5, 7), String(+d.slice(0, 4) + 543)]); }
+    X.sig(X.para('^ลงชื่อ'), sgnOf(c, '2.3'), 0);   // ผู้แทนลูกค้ารับทราบแผน: the client's signature when it confirmed the plan in the system (2.3)
   } };
 
   /* ---------- F-GCC-36 รายการข้อแก้ไขและข้อชี้แจงเพิ่มเติม: one finding block per finding ---------- */
@@ -4743,7 +4854,10 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     [f.re1, f.re2].forEach(function (v, i) { var tr = X.rows(T[10])[i]; X.boxIn(tr, 0, v === 'เพียงพอ'); X.boxIn(tr, 1, v === 'ไม่เพียงพอ'); });
     F41_SUM.forEach(function (x, i) { X.boxIn(X.rows(T[12])[i], 0, (f.sum || {})[i]); });
     F41_OP.forEach(function (op, i) { var tr = X.rows(T[13])[i]; if (tr) X.boxIn(tr, 0, f.op === op[0]); if (f.op === op[0] && f.opWhy && op[2]) X.dotsIn(op[1].slice(0, 12), [f.opWhy]); });
-    X.at(14, 1, 1, f.date ? dTH(f.date) : '', o);
+    // ลงชื่อผู้ทบทวนอิสระ (IR): the IR who approved 4.2; with no review date of its own the date is the day it signed
+    var g42 = sgnOf(c, '4.2');
+    X.at(14, 1, 1, f.date ? dTH(f.date) : g42 ? dTH(String(g42.at).slice(0, 10)) : '', o);
+    X.sig(X.cell(14, 0, 1), g42);
   } };
   /* ---------- F-GCC-15 แบบบันทึกการบรรยายสรุป: one copy per person briefed ---------- */
   FILL['F-GCC-15'] = { fill:function (X, c) {
@@ -4829,6 +4943,9 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     X.dotsIn('คะแนนความเสี่ยงจากสรุป', [rk.ir, rk.cr, rk.adr]);
     if (t23.s === 'done') X.dotsIn('วันที่ยืนยัน', dd(t23.d));
     [0, 1].forEach(function (i) { X.boxIn(X.cell(15, 0, 0), i, (f.out || {})[i]); });
+    // the lead verifier who approved Gate Review (2.4): the plan's ผู้จัดทำแผน / หัวหน้าคณะผู้ทวนสอบ line with its date, and ลงนาม/Signature(s)
+    var g24 = sgnOf(c, '2.4');
+    if (g24) { if (X.sig(X.para('^ผู้จัดทำแผน'), g24, 0)) X.dotsIn('^ผู้จัดทำแผน', dd(String(g24.at).slice(0, 10))); X.sig(X.cell(15, 0, 2), g24); }
   } };
 
   /* ---------- payments (F-GCC-26 ข้อ 4: งวด 1 40%, งวด 2 60%) ---------- */
@@ -5118,7 +5235,10 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   function docs0() { return DOCS0.map(function (d) { var x = { code:d[0], rev:d[1], name:d[2], folder:d[3], file:d[4], date:d[6] || (d[0].charAt(0) === 'E' ? '' : '2026-11-08'), status:d[5] || 'use' }; if (d[5] === 'cancel') x.cdate = '2026-11-08'; return x; }); }
   function ann0() { return [{ id:'a0', date:'2026-11-08', code:'Q P R W F', text:'ประกาศใช้เอกสารระบบคุณภาพชุดรหัสใหม่ทั้งชุด' }]; }
   function load() { if (APP_ON) return appEmptyDb(); try { var d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d && d.v === 8 && Array.isArray(d.cases) && Array.isArray(d.ca)) return d; } catch (e) { /* start from the sample */ } return seed(); }
-  function save() { if (APP_ON) { appSave(); return; } try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { /* kept in memory */ } }
+  // the browser refused to keep the data (storage full): said once, after the action's own message (which would hide it),
+  // and the page goes on in memory
+  var SAVE_FULL = false;
+  function save() { if (APP_ON) { appSave(); return; } try { localStorage.setItem(KEY, JSON.stringify(DB)); SAVE_FULL = false; } catch (e) { if (!SAVE_FULL) { SAVE_FULL = true; setTimeout(function () { toast('เก็บข้อมูลในเบราว์เซอร์นี้ไม่ได้ (พื้นที่เต็ม) สิ่งที่ทำต่อจากนี้จะหายเมื่อโหลดหน้าใหม่'); }, 0); } } }
   var DB = load();
   if (!APP_ON && !DB.cases.some(function (x) { return x.id === 'c6'; })) { DB.cases.push(journeyCase()); save(); }
   /* 08/11/2569 revision (F-GCC-47): F-GCC-37 folded into F-GCC-36-01; a browser that kept the older register follows, unless that entry was changed there */
@@ -5232,32 +5352,41 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     }
     return '';
   }
-  function setStep(c, st, to) {
-    var i = idx(st), s = stOf(c, st[0]), lock = lockOf(c, i);
-    if (!canAct(c, st)) { toast('บทบาทนี้ไม่ได้รับสิทธิ์ทำขั้นนี้'); return; }
-    if (lock && !s) { toast('เริ่มได้เมื่อขั้น ' + lock[0] + ' อนุมัติแล้ว'); return; }
-    if (to === 'done') {
-      if (st[5]) {
-        var open = STEPS.slice(0, i).filter(function (x) { return stOf(c, x[0]) !== 'done'; }).map(function (x) { return x[0]; });
-        if (open.length) { toast('อนุมัติไม่ได้ ขั้นก่อนหน้ายังไม่เสร็จ: ' + open.join(', ')); return; }
-        if (GATE_BY[st[5]] !== rk()) { toast('ขั้นนี้ต้องให้ ' + role(GATE_BY[st[5]])[1] + ' เป็นผู้อนุมัติ'); return; }
-        var why = gateBlock(c, st[5]); if (why) { toast(why); return; }
+  // opt.dry: only the checks, nothing changes, and the reason the step cannot be done comes back ('' when it can).
+  // opt.signed: signed in the system (58-sign.js); for 2.3 and 4.3 that is the written confirmation P-GCC-08 asks for.
+  // opt.applied: the server has made the change already (step_sign), so the page follows it without checking again
+  function setStep(c, st, to, opt) {
+    opt = opt || {};
+    var i = idx(st), s = stOf(c, st[0]), lock = lockOf(c, i), no = function (m) { if (!opt.dry) toast(m); return m; };
+    if (!opt.applied) {
+      if (!canAct(c, st)) return no('บทบาทนี้ไม่ได้รับสิทธิ์ทำขั้นนี้');
+      if (lock && !s) return no('เริ่มได้เมื่อขั้น ' + lock[0] + ' อนุมัติแล้ว');
+      if (to === 'done') {
+        if (st[5]) {
+          var open = STEPS.slice(0, i).filter(function (x) { return stOf(c, x[0]) !== 'done'; }).map(function (x) { return x[0]; });
+          if (open.length) return no('อนุมัติไม่ได้ ขั้นก่อนหน้ายังไม่เสร็จ: ' + open.join(', '));
+          if (GATE_BY[st[5]] !== rk()) return no('ขั้นนี้ต้องให้ ' + role(GATE_BY[st[5]])[1] + ' เป็นผู้อนุมัติ');
+          var why = gateBlock(c, st[5]); if (why) return no(why);
+        }
+        if (st[0] === '1.1') { var m = f24Missing(c); if (m.length) return no('ยังขาด ' + m.length + ' หัวข้อบังคับ: ' + m.slice(0, 3).join(', ') + (m.length > 3 ? ' …' : '')); }
+        if (st[0] === '5.1') { var op = STEPS.slice(0, i).filter(function (x) { return stOf(c, x[0]) !== 'done'; }).map(function (x) { return x[0]; }); if (op.length) return no('ยังปิดแฟ้มไม่ได้ ขั้นที่ยังไม่เสร็จ: ' + op.join(', ')); if (!c.f51.ok) return no('ยังไม่ได้ติ๊กว่าตรวจแฟ้มงานครบแล้ว'); }
+        if (st[0] === '5.2') { var rr = f42Result(c); if (!rr || rr.n < F42_ITEMS) return no('ยังตอบส่วนที่ 1 ไม่ครบ ' + F42_ITEMS + ' ข้อ'); var ff = c.f24 || {}; if (!opt.dry) { if (!c.f42.date) c.f42.date = todayIso(); if (!c.f42.n) c.f42.n = ff.cName || ''; if (!c.f42.p) c.f42.p = ff.cPos || ''; if (!c.f42.mail) c.f42.mail = ff.cMail || ''; if (!c.f42.tel) c.f42.tel = ff.cTel || ''; } }
+        if (st[0] === '1.2') { if (!c.code) return no('ยังไม่ได้ใส่รหัสลูกค้า'); if (f28Match(c).some(function (x) { return x.active; })) return no('ผู้ขอรับบริการอยู่ในตาราง F-GCC-28 ยังรับงานไม่ได้'); if (!c.f25.asked) return no('ยังไม่ได้สอบถามฝ่ายงานที่ปรึกษา'); }
+        if (st[0] === '1.5') { var jb = c.job || suggestJob(c); if (!jb) return no('ยังไม่มีรหัสลูกค้าสำหรับออกเลขที่งาน'); if (!opt.dry) c.job = jb; }
+        if (st[0] === '2.3' && !c.f32.ackN && !ofs(c, '2.3')) return no('ยังไม่มีชื่อผู้แทนลูกค้าที่รับทราบแผน');
+        if (st[0] === '3.2' && !ofs(c, '3.2')) { var ob = onsiteBlock(c); if (ob) return no('ยังปิดงานหน้างานไม่ได้: ' + ob); }
+        if (st[0] === '3.4' && !ofs(c, '3.4')) { var nr = cars(c).filter(function (f) { return !f.reply; }).map(function (f) { return f.id; }); if (nr.length) return no('ยังไม่ได้ตอบ ' + nr.join(', ')); }
+        if (st[0] === '4.4') { if (!(c.iss.client && c.iss.tgo)) return no('ติ๊กว่าส่งลูกค้าและ อบก. แล้วก่อน'); if (!opt.dry && !c.iss.date) c.iss.date = todayIso(); }
+        var fb = flBlock(c, st); if (fb) return no(fb);
+        if (SIGNED[st[0]] && !(opt.signed && !SIGNED[st[0]][2]) && !attList(c, st[0]).length) return no('แนบ' + SIGNED[st[0]][1] + 'ก่อนปิดขั้นนี้');
       }
-      if (st[0] === '1.1') { var m = f24Missing(c); if (m.length) { toast('ยังขาด ' + m.length + ' หัวข้อบังคับ: ' + m.slice(0, 3).join(', ') + (m.length > 3 ? ' …' : '')); return; } }
-      if (st[0] === '5.1') { var op = STEPS.slice(0, i).filter(function (x) { return stOf(c, x[0]) !== 'done'; }).map(function (x) { return x[0]; }); if (op.length) { toast('ยังปิดแฟ้มไม่ได้ ขั้นที่ยังไม่เสร็จ: ' + op.join(', ')); return; } if (!c.f51.ok) { toast('ยังไม่ได้ติ๊กว่าตรวจแฟ้มงานครบแล้ว'); return; } }
-      if (st[0] === '5.2') { var rr = f42Result(c); if (!rr || rr.n < F42_ITEMS) { toast('ยังตอบส่วนที่ 1 ไม่ครบ ' + F42_ITEMS + ' ข้อ'); return; } var ff = c.f24 || {}; if (!c.f42.date) c.f42.date = todayIso(); if (!c.f42.n) c.f42.n = ff.cName || ''; if (!c.f42.p) c.f42.p = ff.cPos || ''; if (!c.f42.mail) c.f42.mail = ff.cMail || ''; if (!c.f42.tel) c.f42.tel = ff.cTel || ''; }
-      if (st[0] === '1.2') { if (!c.code) { toast('ยังไม่ได้ใส่รหัสลูกค้า'); return; } if (f28Match(c).some(function (x) { return x.active; })) { toast('ผู้ขอรับบริการอยู่ในตาราง F-GCC-28 ยังรับงานไม่ได้'); return; } if (!c.f25.asked) { toast('ยังไม่ได้สอบถามฝ่ายงานที่ปรึกษา'); return; } }
-      if (st[0] === '1.5') { if (!c.job) c.job = suggestJob(c); if (!c.job) { toast('ยังไม่มีรหัสลูกค้าสำหรับออกเลขที่งาน'); return; } }
-      if (st[0] === '2.3' && !c.f32.ackN && !ofs(c, '2.3')) { toast('ยังไม่มีชื่อผู้แทนลูกค้าที่รับทราบแผน'); return; }
-      if (st[0] === '3.2' && !ofs(c, '3.2')) { var ob = onsiteBlock(c); if (ob) { toast('ยังปิดงานหน้างานไม่ได้: ' + ob); return; } }
-      if (st[0] === '3.4' && !ofs(c, '3.4')) { var nr = cars(c).filter(function (f) { return !f.reply; }).map(function (f) { return f.id; }); if (nr.length) { toast('ยังไม่ได้ตอบ ' + nr.join(', ')); return; } }
-      if (st[0] === '4.4') { if (!(c.iss.client && c.iss.tgo)) { toast('ติ๊กว่าส่งลูกค้าและ อบก. แล้วก่อน'); return; } if (!c.iss.date) c.iss.date = todayIso(); }
-      var fb = flBlock(c, st); if (fb) { toast(fb); return; }
-      if (SIGNED[st[0]] && !attList(c, st[0]).length) { toast('แนบ' + SIGNED[st[0]][1] + 'ก่อนปิดขั้นนี้'); return; }
+      if (!to && (st[5] || (c.track[st[0]] || {}).sig) && s === 'done' && STEPS.slice(i + 1).some(function (x) { return stOf(c, x[0]); })) return no(st[5] ? 'ย้อนการอนุมัตินี้ไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว' : 'ย้อนขั้นที่ลงนามแล้วไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว');
     }
-    if (!to && st[5] && s === 'done' && STEPS.slice(i + 1).some(function (x) { return stOf(c, x[0]); })) { toast('ย้อนการอนุมัตินี้ไม่ได้ เพราะขั้นต่อไปเริ่มแล้ว'); return; }
+    if (opt.dry) return '';
     var bk = (c.track['1.1'] || {}).back; if (to === 'done' && st[0] === '1.1' && bk) logC(c, 'ส่งคำขอที่แก้ไขแล้ว ตามที่ GCC ส่งกลับเมื่อ ' + dL(bk.at));
     if (to) c.track[st[0]] = { s:to, d:to === 'done' ? todayIso() : '' }; else delete c.track[st[0]];
+    // a signed step: its signature, and the server's date in the app, go with it in the one save below
+    if (to === 'done' && opt.sig) { c.track[st[0]].sig = opt.sig; if (opt.d) c.track[st[0]].d = opt.d; }
     logC(c, (to === 'done' ? 'ทำเสร็จ ' : to === 'doing' ? 'เริ่มทำ ' : 'ย้อนสถานะ ') + st[0] + ' ' + st[2]);
     var msg = to === 'done' ? 'บันทึกแล้ว: ' + st[0] + ' เสร็จ' : 'บันทึกแล้ว';
     if (to === 'done') {
@@ -5267,6 +5396,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
       for (var k = i + 1; k < STEPS.length; k++) if (seeStep(c, STEPS[k])) { S.sid = STEPS[k][0]; break; }
     }
     save(); render(); toast(msg);
+    return '';
   }
 
   /* ---------- small builders ---------- */
@@ -5357,7 +5487,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
       '<label class="search">' + ic('search') + '<input id="gq" type="search" placeholder="ค้นหาเคส เอกสาร หรือเรื่อง" value="' + esc(S.gq || '') + '" aria-label="ค้นหา"></label><div class="sp"></div>' +
       (APP_ON ? appTopUser() : '<label class="tb-role" title="ตัวอย่างเท่านั้น ระบบจริงเข้าด้วยบัญชีของแต่ละคน"><span>บทบาท</span><select id="roleSel" class="role-pick" aria-label="เข้าใช้ในบทบาท">' + roleOptions() + '</select></label>') +
       '<button type="button" class="bell thm" data-a="theme" title="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '" aria-label="' + (isDark() ? 'เปลี่ยนเป็นโหมดสว่าง' : 'เปลี่ยนเป็นโหมดมืด') + '">' + ic(isDark() ? 'sun' : 'moon') + '</button>' +
-      inboxBtn() + (APP_ON ? appTopMe() : av(rk())) + '</header>';
+      inboxBtn() + (APP_ON ? appTopMe() : sgnAv()) + '</header>';
   }
   /* line drawings for the home shortcut cards: navy strokes, lavender and indigo fills */
   var HI_ART = (function () {
@@ -6341,9 +6471,12 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   function attSize(n) { return n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
   function attBox(c, st) {
     var sg = SIGNED[st[0]]; if (!sg) return '';
+    // a confirmation signed in the system (58-sign.js) needs no file: its signature box stands for it
+    var sgd = (c.track[st[0]] || {}).sig;   // the demo keeps the picture (img), the app its fingerprint (h)
+    if (!sg[2] && stOf(c, st[0]) === 'done' && sgd && (sgd.img || sgd.h) && !attList(c, st[0]).length) return '';
     var l = attList(c, st[0]), cl = isClient(S.role), staff = !cl && !ext(), fin = stOf(c, st[0]) === 'done' && l.some(function (a) { return a.ok; });
     var rec = stOf(c, st[0]) === 'done' && !!(c.track[st[0]] || {}).out, canAdd = (staff || (cl && !rec)) && !closed(c) && !fin;
-    var steps = '<ol class="at-how"><li><b>1</b>' + (cl ? 'ดาวน์โหลดแบบฟอร์ม' : 'ส่งแบบฟอร์มให้ลูกค้า') + (typeof TPL !== 'undefined' && TPL[sg[0]] && FILL[sg[0]] ? ' ' + expBtn(sg[0], c.id, 'sm') : '') + '</li><li><b>2</b>' + (sg[2] ? (cl ? 'พิมพ์ ลงนาม และประทับตราบริษัท' : 'ลูกค้าพิมพ์ ลงนาม และประทับตรา') : (cl ? 'ตอบรับทางอีเมล หรือพิมพ์และลงชื่อ' : 'ลูกค้าตอบรับทางอีเมล หรือลงชื่อ')) + '</li><li><b>3</b>' + (cl ? (sg[2] ? 'สแกนแล้วแนบไฟล์กลับที่นี่' : 'แนบอีเมลหรือไฟล์ที่ลงชื่อกลับที่นี่') : 'แนบไฟล์ที่ได้รับกลับ แล้วตรวจรับ') + '</li></ol>';
+    var steps = '<ol class="at-how"><li><b>1</b>' + (cl ? 'ดาวน์โหลดแบบฟอร์ม' : 'ส่งแบบฟอร์มให้ลูกค้า') + (typeof TPL !== 'undefined' && TPL[sg[0]] && FILL[sg[0]] ? ' ' + expBtn(sg[0], c.id, 'sm') : '') + '</li><li><b>2</b>' + (sg[2] ? (cl ? 'พิมพ์ ลงนาม และประทับตราบริษัท' : 'ลูกค้าพิมพ์ ลงนาม และประทับตรา') : (cl ? 'กด "ส่ง / ยืนยัน" แล้วลงนามในระบบ' : 'ลูกค้าลงนามยืนยันในระบบ')) + '</li><li><b>3</b>' + (sg[2] ? (cl ? 'สแกนแล้วแนบไฟล์กลับที่นี่' : 'แนบไฟล์ที่ได้รับกลับ แล้วตรวจรับ') : cl ? 'หรือแนบอีเมลหรือไฟล์ที่ลงชื่อกลับที่นี่' : 'หรือแนบอีเมลหรือไฟล์ที่ลงชื่อที่ได้รับ แล้วตรวจรับ') + '</li></ol>';
     var files = l.length ? '<ul class="at-l">' + l.map(function (a, i) {
       return '<li><span class="at-ic">' + ic(/pdf/i.test(a.type) ? 'docs' : 'eye') + '</span><div class="nm"><b title="' + esc(a.name) + '">' + esc(a.name) + '</b><span>' + esc(attSize(a.size) + ' · แนบโดย ' + a.by + ' · ' + dL(a.at)) + '</span></div>' +
         (a.ok ? '<span class="chip done">ตรวจรับแล้ว</span>' : '<span class="chip y">รอตรวจรับ</span>') +
@@ -6351,8 +6484,8 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
         (staff && !a.ok ? '<button type="button" class="btn sm ok" data-a="attok" data-v="' + st[0] + ':' + i + '">' + ic('check') + 'ตรวจรับ</button>' : '') +
         (!a.ok && (staff || a.who === S.role) ? '<button type="button" class="link at-x" data-a="attrm" data-v="' + st[0] + ':' + i + '" aria-label="ลบ ' + esc(a.name) + '">' + ic('x') + '</button>' : '') + '</li>';
     }).join('') + '</ul>' : '';
-    return '<section class="at"><div class="at-h"><span class="at-hi">' + ic('award') + '</span><div><b>' + esc(sg[1]) + '</b><small>' + (rec && !l.length ? 'ลูกค้าตอบนอกระบบ GCC บันทึกจากหลักฐานแล้ว' : sg[2] ? 'เอกสารนี้ต้องลงนามและประทับตรา แล้วแนบกลับก่อนปิดขั้น' : 'ยืนยันเป็นลายลักษณ์อักษร ไม่ต้องประทับตรา แนบก่อนปิดขั้น') + '</small></div>' +
-      (l.length ? '<span class="chip ' + (l.some(function (a) { return a.ok; }) ? 'done">ตรวจรับแล้ว' : 'y">แนบแล้ว รอตรวจรับ') + '</span>' : rec ? '<span class="chip done">บันทึกแทนลูกค้าแล้ว</span>' : '<span class="chip late">ยังไม่แนบ</span>') + '</div>' + steps + files +
+    return '<section class="at"><div class="at-h"><span class="at-hi">' + ic('award') + '</span><div><b>' + esc(sg[1]) + '</b><small>' + (rec && !l.length ? 'ลูกค้าตอบนอกระบบ GCC บันทึกจากหลักฐานแล้ว' : sg[2] ? 'เอกสารนี้ต้องลงนามและประทับตรา แล้วแนบกลับก่อนปิดขั้น' : 'ยืนยันเป็นลายลักษณ์อักษร ไม่ต้องประทับตรา ลงนามในระบบหรือแนบไฟล์ก็ได้') + '</small></div>' +
+      (l.length ? '<span class="chip ' + (l.some(function (a) { return a.ok; }) ? 'done">ตรวจรับแล้ว' : 'y">แนบแล้ว รอตรวจรับ') + '</span>' : rec ? '<span class="chip done">บันทึกแทนลูกค้าแล้ว</span>' : sg[2] ? '<span class="chip late">ยังไม่แนบ</span>' : '') + '</div>' + steps + files +
       (canAdd ? (jOn() ? '<label class="at-drop off" title="ตัวอย่างหน้าจอ แนบไฟล์ไม่ได้ขณะดูย้อนหลัง"><input type="file" disabled>' : '<label class="at-drop" data-drop="' + st[0] + '"><input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple data-att="' + st[0] + '">') + ic('upload') + '<span><b>ลากไฟล์มาวาง หรือกดเพื่อเลือกไฟล์</b><small>' + (sg[2] ? 'PDF, JPG หรือ PNG' : 'อีเมลให้บันทึกเป็น PDF') + ' ไม่เกิน 20 MB ต่อไฟล์</small></span></label>' : '') + '</section>';
   }
   function attAdd(sid, files) {
@@ -7127,7 +7260,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   function stepExtra(c, st, s, lk) {
     var h = st[0] === '1.3' ? asgBox(c) : '';
     if (st[0] === '1.1' && s !== 'done') h += backNote(c);
-    return h + (s === 'done' ? markInfo(c, st) : recBox(c, st, s, lk) + back11Box(c, st, s));
+    return h + (s === 'done' ? sgnBox(c, st) + markInfo(c, st) : recBox(c, st, s, lk) + back11Box(c, st, s));
   }
   function recBox(c, st, s, lk) {
     if (s === 'done' || lk || isClient(S.role) || ext() || jOn() || (closed(c) && st[0] !== '5.2')) return '';
@@ -7802,7 +7935,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     if (/Password should be|weak.?password|at least \d+ char/i.test(m)) return 'รหัสผ่านสั้นหรือเดาง่ายเกินไป';
     if (/rate limit|too many|over_email_send/i.test(m)) return 'ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่';
     if (/Failed to fetch|NetworkError|network|Load failed/i.test(m)) return 'เชื่อมต่อระบบไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่';
-    if (/PGRST202|Could not find the function|42703|column .* does not exist/i.test(m)) return 'ฐานข้อมูลยังไม่ได้อัปเดต ให้ผู้ดูแลระบบรัน schema.sql ล่าสุด';
+    if (/PGRST202|PGRST205|Could not find the (function|table)|42703|42P01|column .* does not exist|relation .* does not exist/i.test(m)) return 'ฐานข้อมูลยังไม่ได้อัปเดต ให้ผู้ดูแลระบบรัน schema.sql ล่าสุด';
     if (rulesErr(m)) return 'บทบาทนี้ไม่มีสิทธิ์ทำรายการนี้';
     return m || 'เกิดข้อผิดพลาด';
   }
@@ -7848,7 +7981,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     var acc = APP.code ? rpc('accept_invite', { c:APP.code }).then(function () { APP.code = ''; ssSet(''); }, function (e) { APP.code = ''; ssSet(''); APP.msg = thErr(e); }) : Promise.resolve();
     return acc.then(function () { return SB.from('profiles').select('id,email,name,role,more_roles,active,is_admin').eq('id', u.id).maybeSingle(); }).then(function (r) {
       sbOk(r); ME = r.data || { id:u.id, email:u.email || '', name:'', role:'pending', more_roles:[], active:true, is_admin:false };
-      if (want && want !== ME.name && String(ME.email).toLowerCase() === String(u.email || '').toLowerCase()) return SB.from('profiles').update({ name:want }).eq('id', ME.id).then(function () { ME.name = want; });
+      if (want && want !== ME.name && String(ME.email).toLowerCase() === String(u.email || '').toLowerCase()) return SB.from('profiles').update({ name:want }).eq('id', ME.id).then(function (r) { if (r && r.error) { APP.msg = (APP.msg ? APP.msg + ' · ' : '') + 'ไม่ได้ใช้ชื่อที่กรอกไว้: ' + thErr(r.error); return; } ME.name = want; });
     }).then(function () {
       if (!ME.active) { APP.view = 'off'; render(); return; }
       if (ME.role === 'pending') { APP.view = 'pending'; render(); return; }
@@ -7913,7 +8046,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   }
   function appReset() {
     APP.ready = false; APP.dirty = false; APP.saving = false; APP.err = ''; APP.hard = false; APP.msg = ''; APP.ok = ''; APP.ext = ''; APP.nm = ''; APP.name = '';
-    ME = null; USERS = []; MEMBERS = []; INVITES = null; DB = appEmptyDb(); SYNC = appSync0();
+    ME = null; USERS = []; MEMBERS = []; INVITES = null; DB = appEmptyDb(); SYNC = appSync0(); APP.sig = ''; SIG_IMG = {}; SIG_TRY = {}; SGN_AFTER = null; SGN_AT = null;
     var tt0 = $('toast'); if (tt0) tt0.hidden = true;
     S.page = 'home'; S.cid = null; S.sid = null; S.caid = null; S.gq = '';
   }
@@ -7997,8 +8130,11 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
       staff ? appAll('case_members', 'case_id,user_id,kind', 'case_id') : Promise.resolve([]),
       cl ? rpc('ca_mine') : staff ? appAll('ca_records', 'id,data,version,created_at', 'created_at') : Promise.resolve([]),
       appRulesRows(),
-      rpc('step_marks').then(function (m) { return Array.isArray(m) ? m : []; }, function () { return []; })   // older schema.sql: none
-    ]).then(function (r) { appBuild(r); RULES = r[10]; rulesApply(); APP.loaded = Date.now(); });
+      rpc('step_marks').then(function (m) { return Array.isArray(m) ? m : []; }, function () { return []; }),   // older schema.sql: none
+      // signatures (14/11/2569): the signed steps, and the signed-in person's own signature; an older schema.sql has neither
+      rpc('step_sigs').then(function (m) { APP.sigOn = true; return Array.isArray(m) ? m : []; }, function (e) { APP.sigOn = !/PGRST202|42883|Could not find the function|function .* does not exist/i.test(String((e && ((e.code || '') + ' ' + (e.message || ''))) || '')); return []; }),
+      SB.from('signatures').select('img').eq('uid', ME.id).then(function (x) { return x && !x.error && x.data && x.data[0] ? x.data[0].img || '' : ''; }, function () { return ''; })
+    ]).then(function (r) { appBuild(r); RULES = r[10]; rulesApply(); APP.sig = r[13] || ''; APP.loaded = Date.now(); });
   }
   /* the permissions (page สิทธิ์ผู้ใช้): role_rules, part_rules and step_rules; a project whose schema.sql is older than the
      rule tables keeps the starting values (null) instead of failing the sign-in */
@@ -8030,6 +8166,8 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     var db = appEmptyDb(), sy = appSync0(), by = function (rows) { var o = {}; rows.forEach(function (x) { (o[x.case_id] = o[x.case_id] || []).push(x); }); return o; };
     var mk = {}; (r[11] || []).forEach(function (m) { if (m && m.x) mk[m.case_id + '|' + m.sid] = m.x; });
     r[3].forEach(function (s) { var x = mk[s.case_id + '|' + s.sid]; if (x) s.x = x; });
+    var sg = {}; (r[12] || []).forEach(function (m) { if (m && m.sig && (m.sig.img || m.sig.h)) sg[m.case_id + '|' + m.sid] = m.sig; });
+    r[3].forEach(function (s) { var g = sg[s.case_id + '|' + s.sid]; if (g) s.sig = g; });
     var parts = by(r[2]), steps = by(r[3]), files = by(r[4]), mail = by(r[5]), log = by(r[6]);
     USERS = r[0]; MEMBERS = r[8]; apMeSync();
     r[7].forEach(function (x) { db[x.key] = x.data; sy.reg[x.key] = { v:x.version, j:JSON.stringify(x.data) }; });
@@ -8058,7 +8196,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     if (!p.f31 && cv.f31) c.f31.sites = cv.f31.sites || '';
     if (!p.f41 && cv.f41) { c.f41.op = cv.f41.op || ''; c.f41.opWhy = cv.f41.opWhy || ''; }
     var st = SYNC.steps[id] = {};
-    steps.forEach(function (s) { var t = c.track[s.sid] = { s:s.s, d:s.d || '' }, x = s.x || {}; if (x.out) t.out = x.out; if (x.skip) t.skip = x.skip; if (x.back) t.back = x.back; st[s.sid] = stKey(t); });
+    steps.forEach(function (s) { var t = c.track[s.sid] = { s:s.s, d:s.d || '' }, x = s.x || {}; if (x.out) t.out = x.out; if (x.skip) t.skip = x.skip; if (x.back) t.back = x.back; if (s.sig && s.s === 'done') t.sig = s.sig; st[s.sid] = stKey(t); });
     var fs = SYNC.files[id] = {};
     files.forEach(function (f) {
       var d = f.data || {}; d.id = d.id || f.id; SYNC.fcase[f.id] = id; fs[f.id] = JSON.stringify(d);
@@ -8072,8 +8210,8 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   // a step as last loaded or saved: its state and date, and how it was closed when not the usual way (recorded for the client, skipped)
   function stKey(v) { var x = v.out ? { out:v.out } : v.skip ? { skip:v.skip } : v.back ? { back:v.back } : null; return v.s + '|' + (v.d || '') + (x ? '|' + JSON.stringify(x) : ''); }
   function appRefresh(why) {
-    if (!APP.ready || APP.saving || APP.dirty || REC_BUSY) return Promise.resolve();
-    return appLoad().then(function () { render(); if (why) toast(why); }).catch(function (e) { APP.err = thErr(e); apStatus(); });
+    if (!APP.ready || APP.saving || APP.dirty || REC_BUSY || SGN_BUSY) return Promise.resolve();
+    return appLoad().then(function () { if (!APP.dirty && !APP.saving) APP.err = '';   /* an older reload's error is over */ render(); if (why) toast(why); }).catch(function (e) { APP.err = thErr(e); apStatus(); });
   }
   window.addEventListener('focus', function () { if (APP_ON && APP.ready && Date.now() - APP.loaded > 20000) appRefresh(); });
 
@@ -8142,11 +8280,12 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
       return jobs[i++]().then(function (x) { if (x && x.reload && !reload) reload = x.reload; return next(); });
     }
     next().then(function () {
+      if (reload) APP.reloads = (APP.reloads || 0) + 1;   // another person saved first: a signing waiting on these saves stops (58-sign.js)
       APP.saving = false;
       if (reload) return appLoad().then(function () { render(); toast(reload === 'ca' ? 'ส่งเรื่องแล้ว GCC จะแจ้งรับเรื่องภายใน 7 วันทำการ' : 'มีผู้อื่นบันทึกข้อมูลเดียวกันก่อน ระบบแสดงฉบับล่าสุดแล้ว ตรวจและกรอกซ้ำถ้าจำเป็น'); });
     }).then(function () { apStatus(); if (APP.again) appFlush(); }).catch(function (e) {
       APP.saving = false; APP.err = thErr(e);
-      if (rulesErr(e) || /^2[23]/.test(String((e && e.code) || ''))) { toast('บันทึกไม่ได้: ' + APP.err); return appLoad().then(function () { APP.err = ''; render(); }); }
+      if (rulesErr(e) || /^2[23]/.test(String((e && e.code) || ''))) { APP.reloads = (APP.reloads || 0) + 1; toast('บันทึกไม่ได้: ' + APP.err); return appLoad().then(function () { APP.err = ''; render(); }); }
       APP.dirty = true; apStatus(); clearTimeout(APP.t); APP.t = setTimeout(appFlush, 8000);
     }).catch(function (e) { APP.err = thErr(e); apStatus(); });
   }
@@ -8304,7 +8443,7 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
   function appUserMenu() {
     modal('บัญชีของฉัน', 'people', '<div class="fg"><div class="f"><label>ชื่อ</label><div class="tv">' + esc(meName()) + '</div></div><div class="f"><label>อีเมล</label><div class="tv">' + esc(ME.email) + '</div></div>' +
       '<div class="f"><label>บทบาท</label><div class="tv">' + esc(myRoles().map(function (k, i) { return roleName(k) + (i === 0 && myRoles().length > 1 ? ' (หลัก)' : ''); }).join(' · ')) + '</div></div></div>' +
-      '<form class="ap-f ap-pw" data-apf="pw" novalidate><h4>เปลี่ยนรหัสผ่าน</h4><div class="fg">' + apFld('apPw', 'รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)', 'password', 'new-password') + apFld('apPw2', 'ยืนยันรหัสผ่าน', 'password', 'new-password') + '</div>' +
+      sgnAcc() + '<form class="ap-f ap-pw" data-apf="pw" novalidate><h4>เปลี่ยนรหัสผ่าน</h4><div class="fg">' + apFld('apPw', 'รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)', 'password', 'new-password') + apFld('apPw2', 'ยืนยันรหัสผ่าน', 'password', 'new-password') + '</div>' +
       '<button type="submit" class="btn">' + ic('key') + 'บันทึกรหัสผ่านใหม่</button></form>',
       '<button type="button" class="btn" data-a="mclose">ปิด</button><button type="button" class="btn pri" data-a="signout">' + ic('out') + 'ออกจากระบบ</button>');
   }
@@ -9588,6 +9727,258 @@ html[data-theme=dark] .rp,html[data-theme=dark] .tb-menu{background:#122244}
     if (t.getAttribute('data-a') === 'inbox') { openInbox(); return; }
     var k = t.getAttribute('data-v'), r = DB.dar.filter(function (x) { return ibxKey(x) === k; })[0];
     if (r) { DU.f = null; darView(DB.dar.indexOf(r)); } else { closeModal(); toast('คำร้องนี้เปลี่ยนไปแล้ว เปิดกล่องงานอีกครั้ง'); }
+  });
+  /* ---------- signatures on approve and confirm (14/11/2569, approved "ใช้แนวนี้ ลงระบบ"). Each person keeps one signature
+     (ลายเซ็นของฉัน: a picture, whose paper turns transparent, or signed on the screen, once). Pressing อนุมัติ on an approval
+     step, or ส่ง / ยืนยัน on a client's confirmation (1.7, 2.3, 3.4, 4.3; not 1.1, which keeps the signed and stamped scan),
+     first runs the step's own checks (setStep with dry), then asks to sign. The step keeps who signed, in which role and when,
+     and its form carries the signature in its signature block (SGN_SLOT). In the app the signature lives with the account
+     (table signatures, read only by its owner); step_sign() in server/schema.sql signs and approves in one go, and the database
+     refuses any other write that would make such a step done, so nobody signs with someone else's signature and no approval
+     is left unsigned. The list of signed steps (step_sigs) carries who, role, time and a fingerprint; each picture comes once
+     through sig_imgs() when a page shows it or a form is exported. On a database without these (schema.sql not run yet) the
+     page approves as before, unsigned. The demo keeps one signature per role in this browser ---------- */
+  IC.pen = '<path class="ac" d="M6 18.5 7.3 14 15.6 5.7l2.7 2.7-8.3 8.3z"/><path d="M5 19.5 6.6 14.3l8.8-8.8a1.5 1.5 0 0 1 2.1 0l1 1a1.5 1.5 0 0 1 0 2.1l-8.8 8.8z"/><path d="m13.8 7.3 2.9 2.9M5 19.5h7"/>';
+  var SGN_CL = ['1.7', '2.3', '3.4', '4.3'];   // the client's confirmations that are signed (as step_sign() and steps_sig() in schema.sql)
+  // the form whose signature block carries each step's signature (FILL in 20-export-word-excel.js); the others are kept with the
+  // step only. 3.4 has none: F-GCC-36's block is the client's acknowledgement at the closing meeting (3.3), not its replies
+  var SGN_SLOT = { '1.3':'F-GCC-24', '1.4':'F-GCC-26', '2.3':'F-GCC-32', '2.4':'F-GCC-31', '4.2':'F-GCC-41' };
+  var SGN_KEY = 'gcc-sig-', SGN_AFTER = null, SGN_AT = null, SGN_BUSY = false, SIG_IMG = {}, SIG_TRY = {};
+  var SGN_W = 600, SGN_H = 200, SGN_MAX = 120000;   // a stored signature: at most 600 x 200 px and 120 000 characters
+  var SGN_WAIT = 45000;   // how long the sign window waits for step_sign's answer; then it opens again and the page reloads
+  function sgnNeeds(st) { return isClient(S.role) ? SGN_CL.indexOf(st[0]) >= 0 : !!st[5]; }
+  function sgnMine() { if (APP_ON) return APP.sig || ''; try { return localStorage.getItem(SGN_KEY + rk()) || ''; } catch (e) { return ''; } }
+  function sgnName() { return APP_ON ? meName() : 'ชื่อ-นามสกุล (ตัวอย่าง)'; }
+  function sgnRoleName(k) { return k === 'client' ? 'ผู้แทนลูกค้า' : role(k)[1]; }
+  function sgnWhen() { var d = new Date(); return todayIso() + ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
+  // a signed step's picture: in the step itself (the demo, and right after signing), or fetched once by fingerprint (the app)
+  function sgnImg(g) { return !g ? '' : g.img || (g.h && SIG_IMG[g.h]) || ''; }
+  function sgnFetch(hs, now) {
+    var t = Date.now(), want = hs.filter(function (h, i) { return h && hs.indexOf(h) === i && !SIG_IMG[h] && (now || !(t - (SIG_TRY[h] || 0) < 30000)); }).slice(0, 50);
+    if (!APP_ON || !want.length) return Promise.resolve();
+    want.forEach(function (h) { SIG_TRY[h] = t; });
+    return rpc('sig_imgs', { hs:want }).then(function (m) {
+      Object.keys(m || {}).forEach(function (h) { if (/^data:image\/png;base64,/.test(m[h] || '')) SIG_IMG[h] = m[h]; });
+      [].forEach.call(document.querySelectorAll('.sgn-ph[data-sgh]'), function (e) {
+        var u = SIG_IMG[e.getAttribute('data-sgh')]; if (!u) return;
+        var im = document.createElement('img'); im.src = u; im.alt = 'ลายเซ็น'; e.parentNode.replaceChild(im, e);
+      });
+    }, function () { /* an empty frame stays; asked again a little later */ });
+  }
+  // before a form is exported: every signed step of the case has its picture
+  function sgnReady(c) {
+    if (!APP_ON || !c || !c.track) return Promise.resolve();
+    return sgnFetch(Object.keys(c.track).map(function (sid) { var g = (c.track[sid] || {}).sig; return g && !sgnImg(g) ? g.h : ''; }), true);
+  }
+  function sgnShow(u) { return u ? '<img class="sgn-img" src="' + esc(u) + '" alt="ลายเซ็น">' : '<span class="sgn-none">ยังไม่มีลายเซ็น</span>'; }
+  // the demo's top-bar badge opens ลายเซ็นของฉัน (the app has it in บัญชีของฉัน; both have it in the sign window)
+  function sgnAv() { var r = role(rk()); return '<button type="button" class="av tb-sgn" data-a="sgnme" style="background:' + r[3] + '" title="' + esc(r[1]) + ' · ลายเซ็นของฉัน">' + esc(r[2]) + '</button>'; }
+  // บัญชีของฉัน in the app: the signature and the button to add or change it
+  function sgnAcc() { if (APP_ON && APP.sigOn === false) return ''; var u = sgnMine(); return '<div class="sgn-acc"><h4>ลายเซ็นของฉัน</h4><div class="sgn-pv">' + sgnShow(u) + '</div><button type="button" class="btn" data-a="sgnme">' + ic('pen') + (u ? 'เปลี่ยนลายเซ็น' : 'เพิ่มลายเซ็น') + '</button></div>'; }
+
+  // ลายเซ็นของฉัน: upload a picture or sign on the screen
+  function sgnMe(after) {
+    SGN_AFTER = after || null;
+    var u = sgnMine();
+    modal('ลายเซ็นของฉัน', 'pen', '<div class="sgn-pv">' + sgnShow(u) + '</div>' +
+      '<div class="sgn-acts"><label class="btn"><input type="file" id="sgnFile" accept="image/png,image/jpeg">' + ic('upload') + 'อัปโหลดรูปลายเซ็น</label>' +
+      '<button type="button" class="btn" data-a="sgndraw">' + ic('pen') + 'เซ็นบนจอ</button>' + (u ? '<button type="button" class="link" data-a="sgndel">ลบลายเซ็น</button>' : '') + '</div>' +
+      '<div id="sgnPad" class="sgn-pad" hidden><canvas width="560" height="180"></canvas><div class="sgn-pact"><span>เซ็นในกรอบด้วยเมาส์ นิ้ว หรือปากกา</span>' +
+      '<button type="button" class="btn sm" data-a="sgnclear">ล้าง</button><button type="button" class="btn sm pri" data-a="sgnuse">ใช้ลายเซ็นนี้</button></div></div>' +
+      note('lock', 'ใช้เฉพาะตอนคุณกดอนุมัติหรือยืนยันเอง ระบบวางลงช่องลงนามของบทบาทคุณในฟอร์มของขั้นนั้น คนอื่นใช้แทนไม่ได้ · รูปพื้นขาวจะทำพื้นใสให้เอง'),
+      '<button type="button" class="btn" data-a="' + (after ? 'sgnback' : 'mclose') + '">' + (after ? 'กลับ' : 'ปิด') + '</button>');
+  }
+  function sgnPadOn() {
+    var p = $('sgnPad'); if (!p) return; p.hidden = false;
+    var cv = p.querySelector('canvas'), g = cv.getContext('2d'), down = false, last = null;
+    g.lineWidth = 2.8; g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = g.fillStyle = '#0B1F4D';
+    var at = function (e) { var r = cv.getBoundingClientRect(); return { x:(e.clientX - r.left) * cv.width / r.width, y:(e.clientY - r.top) * cv.height / r.height }; };
+    cv.onpointerdown = function (e) { down = true; last = at(e); g.beginPath(); g.arc(last.x, last.y, 1.4, 0, 2 * Math.PI); g.fill(); try { cv.setPointerCapture(e.pointerId); } catch (x) { /* an old browser */ } };
+    cv.onpointermove = function (e) { if (!down) return; var q = at(e); g.beginPath(); g.moveTo(last.x, last.y); g.lineTo(q.x, q.y); g.stroke(); last = q; };
+    cv.onpointerup = cv.onpointercancel = function () { down = false; };
+  }
+  // the ink of a picture: cut to it with a small margin, at most SGN_W x SGN_H (made smaller until it fits SGN_MAX), as a PNG
+  function sgnTrim(cv) {
+    var w = cv.width, h = cv.height, d = cv.getContext('2d').getImageData(0, 0, w, h).data, x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 < 0) return '';
+    var iw = x1 - x0 + 1, ih = y1 - y0 + 1, k = Math.min(1, (SGN_W - 12) / iw, (SGN_H - 12) / ih), u = '';
+    for (var n = 0; n < 6; n++, k *= 0.75) {
+      var ow = Math.max(1, Math.round(iw * k)), oh = Math.max(1, Math.round(ih * k)), o = document.createElement('canvas'); o.width = ow + 12; o.height = oh + 12;
+      var og = o.getContext('2d'); og.imageSmoothingQuality = 'high'; og.drawImage(cv, x0, y0, iw, ih, 6, 6, ow, oh);
+      u = o.toDataURL('image/png'); if (u.length <= SGN_MAX) return u;
+    }
+    return u.length <= SGN_MAX ? u : '';
+  }
+  // a photo or scan: the paper is the picture's middle brightness; what is clearly darker is the ink, the rest turns transparent.
+  // Too dark a paper (a dark background, white ink) gives nothing
+  function sgnFromImage(img) {
+    var k = Math.min(1, 1400 / img.width, 1400 / img.height), w = Math.max(1, Math.round(img.width * k)), h = Math.max(1, Math.round(img.height * k));
+    var cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, w, h); g.drawImage(img, 0, 0, w, h);
+    var id = g.getImageData(0, 0, w, h), d = id.data, hist = [], i, v, n = 0, paper = 255;
+    for (v = 0; v < 256; v++) hist.push(0);
+    for (i = 0; i < d.length; i += 4) hist[Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2])]++;
+    for (v = 0; v < 256; v++) { n += hist[v]; if (n * 2 >= w * h) { paper = v; break; } }
+    if (paper < 120) return { err:'รูปพื้นมืดเกินไป ใช้รูปลายเซ็นหมึกเข้มบนกระดาษสีขาว หรือเซ็นบนจอ' };
+    var cut = Math.max(60, Math.min(225, paper - 55));
+    for (i = 0; i < d.length; i += 4) { var l = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; d[i + 3] = l >= cut ? 0 : Math.min(255, Math.round((cut - l) * 255 / 60) + 40); }
+    g.putImageData(id, 0, 0);
+    var u = sgnTrim(cv);
+    return u ? { u:u } : { err:'ไม่พบลายเซ็นในรูปนี้ หรือรูปมีรายละเอียดมากเกินไป ลองตัดรูปให้เหลือแค่ลายเซ็น หรือเซ็นบนจอ' };
+  }
+  function sgnPut(u, then) {
+    if (!APP_ON) {
+      try { if (u) localStorage.setItem(SGN_KEY + rk(), u); else localStorage.removeItem(SGN_KEY + rk()); } catch (e) { toast('เก็บลายเซ็นในเบราว์เซอร์นี้ไม่ได้'); return; }
+      then(); return;
+    }
+    // the answer belongs to the account that saved: after a sign-out it changes nothing on the page
+    var uid = ME && ME.id, mine = function () { return ME && ME.id === uid; };
+    (u ? SB.from('signatures').upsert({ uid:uid, img:u, updated_at:new Date().toISOString() }) : SB.from('signatures').delete().eq('uid', uid))
+      .then(sbOk).then(function () { if (!mine()) return; APP.sig = u; then(); }, function (e) {
+        if (!mine()) return;
+        toast(/signatures_img/.test(String((e && e.message) || '')) ? 'รูปลายเซ็นนี้ใช้ไม่ได้ ลองรูปที่เล็กลงหรือเซ็นบนจอ' : 'บันทึกลายเซ็นไม่ได้: ' + thErr(e));
+      });
+  }
+  function sgnSave(u) { sgnPut(u, function () { toast(u ? 'บันทึกลายเซ็นแล้ว' : 'ลบลายเซ็นแล้ว'); var a = SGN_AFTER; if (u && a) { SGN_AFTER = null; a(); } else sgnMe(a); }); }
+
+  // pressing อนุมัติ or ส่ง / ยืนยัน: the step's own checks first, so nobody signs what cannot pass yet
+  function sgnAsk(c, st) {
+    // the role in use must be one that signs this step (it may have changed while ลายเซ็นของฉัน was open)
+    if (!sgnNeeds(st)) { closeModal(); toast('บทบาทเปลี่ยนไปแล้ว กดอนุมัติหรือยืนยันใหม่อีกครั้ง'); return; }
+    var why = setStep(c, st, 'done', { dry:true, signed:true }); if (why) { toast(why); return; }
+    // a GCC signature puts the person's name on the form (step_sign() in schema.sql refuses a staff account without one)
+    if (APP_ON && !isClient(S.role) && !String((ME && ME.name) || '').trim()) { toast('ยังไม่มีชื่อในบัญชี ให้ผู้ดูแลระบบใส่ชื่อก่อนลงนาม'); return; }
+    var u = sgnMine(), cl = isClient(S.role), verb = cl ? 'ยืนยัน' : 'อนุมัติ', rn = sgnRoleName(cl ? 'client' : rk());
+    SGN_AT = { cid:c.id, sid:st[0], role:S.role };
+    modal(verb + 'และลงนาม', 'check', '<p class="sgn-q">' + verb + ' <b>' + esc(st[0] + ' ' + (cl ? (CLIENT_TASK[st[0]] || st[2]) : st[2])) + '</b> · ' + esc(c.name) + '</p>' +
+      '<div class="sgn-sheet"><div class="sgn-line">' + sgnShow(u) + '</div><div class="sgn-who"><b>' + esc(sgnName()) + '</b><span>' + esc(rn) + '</span><span>วันที่ ' + dL(todayIso()) + '</span>' +
+        (u ? '<button type="button" class="link sgn-chg" data-a="sgnadd">เปลี่ยนลายเซ็น</button>' : '') + '</div></div>' +
+      (u ? note('info', SGN_SLOT[st[0]] ? 'ลายเซ็น ชื่อ และวันที่นี้จะอยู่ในช่องลงนามของ' + esc(rn) + 'ใน ' + SGN_SLOT[st[0]] : 'ระบบบันทึกลายเซ็น ชื่อ และเวลานี้ไว้กับขั้นนี้')
+        : note('alert', 'ยังไม่มีลายเซ็น เพิ่มครั้งเดียวแล้วใช้ได้ทุกครั้ง')),
+      '<button type="button" class="btn" data-a="mclose">ยกเลิก</button>' + (u ? '<button type="button" class="btn ok" data-a="sgnok">' + ic('check') + verb + 'และลงนาม</button>' :
+        '<button type="button" class="btn pri" data-a="sgnadd">' + ic('pen') + 'เพิ่มลายเซ็น</button>'));
+  }
+  // the sign window while the server signs: nothing in it can be pressed, so the window and the form stay as they were
+  function sgnLock(on) {
+    SGN_BUSY = on;
+    [].forEach.call(document.querySelectorAll('#modal button'), function (b) { b.disabled = on; });
+    var ok = document.querySelector('#modal [data-a=sgnok]'); if (ok) { if (on) ok.setAttribute('aria-busy', 'true'); else ok.removeAttribute('aria-busy'); }
+    [].forEach.call(document.body.children, function (el) { if (el.id !== 'modal' && el.id !== 'toast') { if (on) el.setAttribute('inert', ''); else el.removeAttribute('inert'); } });
+    var mb = document.querySelector('#modal .mbox'); if (on && mb) { mb.setAttribute('tabindex', '-1'); mb.focus(); }
+  }
+  function sgnClose() { if (document.querySelector('#modal .sgn-sheet')) closeModal(); }
+  function sgnApprove() {
+    var at = SGN_AT, c = at && caseById(at.cid), st = at && stepById(at.sid), u = sgnMine();
+    if (SGN_BUSY) return;
+    if (at && at.role !== S.role) { sgnClose(); toast('บทบาทเปลี่ยนไปแล้ว กดอนุมัติหรือยืนยันใหม่อีกครั้ง'); return; }
+    if (!c || !st || !u) { sgnClose(); return; }
+    var why = setStep(c, st, 'done', { dry:true, signed:true }); if (why) { sgnClose(); toast(why); return; }
+    if (!APP_ON) { sgnClose(); sgnDone(c.id, st, { img:u, name:sgnName(), role:isClient(S.role) ? 'client' : rk(), at:sgnWhen() }); return; }
+    // the app: the page's own saves first (the form the approval rests on, and no older save of this step lands after it), then
+    // the step's checks again on what was saved, then step_sign() checks the rights and signs and approves in one go. The window
+    // waits SGN_WAIT at most from here: then it opens again, and once step_sign was sent the page reloads to show whether the
+    // server signed (an answer that comes later is still taken while the page shows the step open on that case)
+    sgnLock(true);
+    var over = false, sent = false, end = function () { over = true; clearTimeout(tm); sgnLock(false); };
+    var tm = setTimeout(function () {
+      if (over) return; end(); sgnClose();
+      if (sent) { toast('ระบบยังไม่ตอบ กำลังโหลดข้อมูลล่าสุดเพื่อดูว่าลงนามแล้วหรือยัง'); sgnReload(); }
+      else toast('ข้อมูลยังบันทึกไม่เสร็จ จึงยังไม่ลงนาม ลองกดอนุมัติหรือยืนยันอีกครั้งในอีกสักครู่');
+    }, SGN_WAIT);
+    var stop = function (m) { if (over) return; end(); toast(m); };
+    sgnIdle().then(function (idle) {
+      if (over) return;
+      if (!idle) { stop('ข้อมูลยังบันทึกไม่เสร็จหรือมีผู้อื่นบันทึกก่อน จึงยังไม่ลงนาม' + (APP.err ? ': ' + APP.err : '') + ' ตรวจแล้วกดอีกครั้ง'); return; }
+      var c2 = caseById(at.cid), why2 = c2 ? setStep(c2, st, 'done', { dry:true, signed:true }) : 'ไม่พบเคสนี้แล้ว';
+      if (why2) { stop(why2); return; }
+      sent = true;
+      return rpc('step_sign', { cid:at.cid, step:st[0] }).then(function (g) {
+        if (!over) { end(); sgnClose(); sgnDone(at.cid, st, g); return; }
+        var c3 = caseById(at.cid), t3 = c3 && c3.track[st[0]];
+        if (c3 && S.cid === at.cid && !(t3 && t3.s === 'done')) sgnDone(at.cid, st, g);
+      }, function (e) {
+        if (over) return;
+        // step_sign's own reason (not the general "no right" text the page shows for other refusals)
+        var m = /^ไม่มีสิทธิ์ลงนาม/.test(String((e && e.message) || '')) ? String(e.message) : thErr(e);
+        if (/ไว้แล้ว/.test(m)) { end(); sgnClose(); toast('ขั้นนี้มีผู้อนุมัติหรือยืนยันไว้แล้ว'); appRefresh(); return; }
+        // no answer from the server at all (the network): whether it signed is not known, so the page reloads to see
+        if (!(e && e.code)) { end(); sgnClose(); toast('ไม่แน่ใจว่าลงนามสำเร็จหรือไม่ กำลังโหลดข้อมูลล่าสุด ถ้ายังไม่สำเร็จให้กดอีกครั้ง'); sgnReload(); return; }
+        stop('ลงนามไม่สำเร็จ ขั้นนี้ยังไม่ได้' + (isClient(S.role) ? 'ยืนยัน' : 'อนุมัติ') + ': ' + m);
+      });
+    }).catch(function (e) { stop('ลงนามไม่สำเร็จ: ' + thErr(e)); });
+  }
+  // the app: the page's own saves finish first, so an older save of this step (เริ่มทำ a moment before) never lands after the
+  // signing. Gives true once everything the page holds is saved with no reload of another person's save meanwhile; false when a
+  // save failed, still runs after 15 s, or another person saved first (the page then shows their version). It sends the
+  // page's waiting saves once and never again
+  function sgnIdle() {
+    var r0 = APP.reloads || 0, sent = false;
+    return new Promise(function (ok) {
+      (function wait(n) {
+        if (APP.dirty && !APP.saving && !sent) { sent = true; clearTimeout(APP.t); appFlush(); }
+        if (!APP.dirty && !APP.saving) { ok((APP.reloads || 0) === r0 && !(sent && APP.err)); return; }
+        if (n > 150 || (sent && APP.dirty && !APP.saving)) { ok(false); return; }
+        setTimeout(function () { wait(n + 1); }, 100);
+      })(0);
+    });
+  }
+  // the page reloads to learn how a signing ended, after its own saves (a reload never runs over a save)
+  function sgnReload() { sgnIdle().then(function () { appRefresh(); }); }
+  // the server has signed: the step takes its result as it is (no checks again), on the case as the page holds it now
+  function sgnDone(cid, st, g) {
+    var c = caseById(cid); if (!c || !g) return;
+    var sig = { name:g.name || '', role:g.role || '', at:g.at || '' }, d = '';
+    if (!APP_ON) sig.img = g.img;
+    else {
+      // the server's record is the step's: its Bangkok date stays (not this browser's), and the page does not send it again
+      sig.h = g.h; if (g.mail) sig.mail = g.mail; if (g.h && g.img) SIG_IMG[g.h] = g.img;
+      if (/^\d{4}-\d{2}-\d{2}/.test(g.at || '')) d = String(g.at).slice(0, 10);
+    }
+    setStep(c, st, 'done', { signed:true, applied:true, sig:sig, d:d });
+    var t = c.track[st[0]]; if (APP_ON && t && t.s === 'done' && SYNC.steps[c.id]) SYNC.steps[c.id][st[0]] = stKey(t);
+  }
+  // a signed step: who signed, in which role and when, and the form that carries the signature
+  function sgnBox(c, st) {
+    var g = (c.track[st[0]] || {}).sig, code = SGN_SLOT[st[0]]; if (!g || !(g.img || g.h)) return '';
+    var see = code && (!isClient(S.role) || CLIENT_DOCS.indexOf(code) >= 0), at = String(g.at || ''), u = sgnImg(g);
+    if (!u) sgnFetch([g.h]);
+    return '<div class="sgn-box">' + (u ? '<img src="' + esc(u) + '" alt="ลายเซ็น">' : '<span class="sgn-ph" data-sgh="' + esc(g.h) + '" role="img" aria-label="ลายเซ็น"></span>') +
+      '<div class="sgn-t"><b' + (g.mail ? ' title="' + esc(g.mail) + '"' : '') + '>ลงนามโดย ' + esc(g.name || '-') + '</b><span>' + esc(sgnRoleName(g.role)) + ' · ' + dL(at.slice(0, 10)) + (at.length > 10 ? ' ' + esc(at.slice(11, 16)) + ' น.' : '') + '</span></div>' +
+      (see ? '<button type="button" class="btn sm" data-a="print" data-v="' + code + '" data-c="' + esc(c.id) + '">' + ic('eye') + 'ดูใน ' + code + '</button>' : '') + '</div>';
+  }
+  document.addEventListener('click', function (e) {
+    // while the server signs, the sign window cannot be closed
+    if (SGN_BUSY && e.target.closest && e.target.closest('#modal')) { e.preventDefault(); e.stopImmediatePropagation(); return; }
+    var t = e.target.closest && e.target.closest('[data-a=st][data-v=done]');
+    if (!t || t.disabled || jOn() || (APP_ON && APP.sigOn === false)) return;
+    var c = curCase(), st = c && stepById(S.sid); if (!c || !st || !sgnNeeds(st)) return;
+    e.preventDefault(); e.stopImmediatePropagation(); sgnAsk(c, st);
+  }, true);
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-a]'); if (!t) return;
+    var a = t.getAttribute('data-a');
+    if (a === 'sgnme') sgnMe(APP_ON ? appUserMenu : null);
+    else if (a === 'sgnback') { var b = SGN_AFTER; SGN_AFTER = null; if (b) b(); else closeModal(); }
+    else if (a === 'sgndraw') sgnPadOn();
+    else if (a === 'sgnclear') { var cv = document.querySelector('#sgnPad canvas'); if (cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height); }
+    else if (a === 'sgnuse') { var c2 = document.querySelector('#sgnPad canvas'), u = c2 && sgnTrim(c2); if (!u) { toast('ยังไม่ได้เซ็น'); return; } sgnSave(u); }
+    else if (a === 'sgndel') sgnSave('');
+    else if (a === 'sgnadd') sgnMe(function () {
+      // back from ลายเซ็นของฉัน to the sign window it was opened from, in the role it was opened in
+      var x = SGN_AT, c3 = x && caseById(x.cid), s3 = x && stepById(x.sid);
+      if (x && x.role !== S.role) { closeModal(); toast('บทบาทเปลี่ยนไปแล้ว กดอนุมัติหรือยืนยันใหม่อีกครั้ง'); return; }
+      if (c3 && s3) sgnAsk(c3, s3); else closeModal();
+    });
+    else if (a === 'sgnok') sgnApprove();
+  });
+  document.addEventListener('keydown', function (e) { if (SGN_BUSY && e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+  document.addEventListener('change', function (e) {
+    if (e.target.id !== 'sgnFile' || !e.target.files || !e.target.files[0]) return;
+    var f = e.target.files[0]; if (!/^image\/(png|jpeg)$/.test(f.type)) { toast('รับเฉพาะรูป PNG หรือ JPG'); return; } if (f.size > 15e6) { toast('รูปใหญ่เกิน 15 MB'); return; }
+    var rd = new FileReader();
+    rd.onload = function () { var im = new Image(); im.onload = function () { var r = sgnFromImage(im); if (r.err) { toast(r.err); return; } sgnSave(r.u); }; im.onerror = function () { toast('เปิดรูปนี้ไม่ได้'); }; im.src = rd.result; };
+    rd.readAsDataURL(f);
   });
   if (APP_ON) appStart(); else render();
 })();
