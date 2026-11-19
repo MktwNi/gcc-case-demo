@@ -1524,6 +1524,20 @@ html[data-theme=dark] .jr-s button::before{background:#1A2D55}
 html[data-theme=dark] .jr-s button.past::before{background:#3B6FD0}
 html[data-theme=dark] .jr-s button.on::before{background:#8DBBFF}
 a.btn[href="#local"]{opacity:.62}
+/* SARA read from a Word file at step 2.2 (59-sara-read.js): the note after a read and the window that shows what changes */
+.note.sr-n{margin:0 0 12px}
+.sr-f{display:flex;flex-direction:column;gap:2px;min-width:0;margin:0 0 12px;contain:inline-size}
+.sr-f b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-f small{color:var(--mut);font-size:12.5px}
+.sr-tw{max-height:min(46vh,420px);overflow:auto;margin:0 0 12px;border:1px solid var(--line);border-radius:12px;contain:inline-size}   /* a long name or a wide table scrolls inside, the window keeps the screen's width */
+.sr-t{border-style:hidden}
+.sr-t th{position:sticky;top:0;z-index:1;white-space:nowrap}
+.sr-t td{vertical-align:top;font-size:13px}
+.sr-t td:first-child{white-space:nowrap}
+.sr-e{color:var(--mut)}
+.sr-dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:12px 0 0}
+.sr-dl dt{color:var(--mut);white-space:nowrap}
+.sr-dl dd{margin:0;min-width:0;overflow-wrap:anywhere;font-weight:600}
 @media print{
   body>*:not(#printArea){display:none!important}
   #printArea{display:block}
@@ -4786,7 +4800,7 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
     SR20.forEach(function (x, i) { X.at(4, i + 1, 2, (f.sr || {})[i], o); });
     RF12.forEach(function (x, i) { X.at(8, i + 2, 2, (f.rf || {})[i], o); });
     X.dotsIn('ความเสี่ยงโดยธรรมชาติ ....', [rk.ir, rk.cr, rk.adr, rk.rnc]);
-    [0, 1, 2, 3].forEach(function (i) { X.boxIn(X.cell(9, 1, 1), i, (f.tech || {})[i]); }); X.at(9, 2, 1, f.sites, o);
+    [0, 1, 2, 3].forEach(function (i) { var tk = f.tech || {}; X.boxIn(X.cell(9, 1, 1), i, tk[TECH[i][0]] || tk[i]); }); X.at(9, 2, 1, f.sites, o);
     /* sampling plan: each Scope heading is followed by its own empty rows */
     var T10 = T[10], heads = [['1', 'ประเภทที่ 1'], ['2', 'ประเภทที่ 2'], ['3', 'ประเภทที่ 3'], ['อื่น ๆ', 'อื่น ๆ']];
     heads.forEach(function (h) {
@@ -6543,7 +6557,7 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
     var latest = i === n - 1;
     return '<li' + (latest ? '' : ' class="old"') + '><span class="at-ic">' + ic(flIc(f)) + '</span><div class="nm"><b title="' + esc(f.name) + '">' + esc(f.name) + '</b><span>' +
       esc(attSize(f.size) + ' · แนบโดย ' + f.by + ' · ' + dL(f.at)) + '</span></div>' + (n > 1 ? (latest ? '<span class="chip done">ล่าสุด</span>' : '<span class="chip lock">ไฟล์เดิม</span>') : '') +
-      '<button type="button" class="btn sm" data-a="flview" data-v="' + esc(f.id) + '">' + ic('eye') + 'เปิดดู</button>' +
+      saraBtn(c, f) + '<button type="button" class="btn sm" data-a="flview" data-v="' + esc(f.id) + '">' + ic('eye') + 'เปิดดู</button>' +
       (canRm && f.who !== 'demo' && (f.who === S.role || !isClient(S.role)) ? '<button type="button" class="link at-x" data-a="flrm" data-v="' + esc(f.id) + '" aria-label="ลบ ' + esc(f.name) + '">' + ic('x') + '</button>' : '') + '</li>';
   }
   function flRows(c, l, canRm, plain) {
@@ -6613,11 +6627,11 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
     var l = outList(c, sid), can = flCan(c, 'out', sid), on = ofs(c, sid), forms = codes0.split(/,\s*/).filter(function (x) { return fvCan(x); });
     if (!l.length && !can) return '';
     var how = '<ol class="at-how"><li><b>1</b>' + (cl ? 'ดาวน์โหลดรายการข้อแก้ไข' : 'ดาวน์โหลดแบบฟอร์ม') + ' ' + forms.slice(0, 3).map(function (x) { return expBtn(x, c.id, 'sm'); }).join(' ') + '</li><li><b>2</b>' +
-      (cl ? 'เติมคำตอบในไฟล์' : 'ทำในเครื่องของคุณ') + '</li><li><b>3</b>แนบกลับที่นี่ ระบบเก็บทุกฉบับ</li></ol>';
+      (cl ? 'เติมคำตอบในไฟล์' : 'ทำในเครื่องของคุณ') + '</li><li><b>3</b>' + (sid === '2.2' ? 'แนบกลับที่นี่ ไฟล์ Word ระบบเติมแบบฟอร์มให้' : 'แนบกลับที่นี่ ระบบเก็บทุกฉบับ') + '</li></ol>';
     var tick = '<label class="fl-tick' + (l.length && (can || on) ? '' : ' off') + '"><input type="checkbox" data-ofs="' + sid + '"' + (on ? ' checked' : '') + (l.length && can ? '' : ' disabled') + '><span>' +
       (cl ? 'ตอบในไฟล์ที่แนบแทนการพิมพ์ในระบบ' : 'ใช้ไฟล์ที่แนบแทนการกรอกแบบฟอร์มในระบบ') + '<small>' + (cl ? 'GCC อ่านคำตอบจากไฟล์' : 'ผู้อนุมัติจะยืนยันว่าตรวจไฟล์แล้ว') + '</small></span></label>';
     return flCard('upload', cl ? 'ตอบในไฟล์แล้วแนบกลับ' : 'ทำนอกระบบแล้วแนบกลับ', cl ? 'ถ้าสะดวกตอบใน Word แนบไฟล์ที่ตอบแล้วที่นี่' : 'ถ้าสะดวกทำใน Word หรือ Excel แนบไฟล์ที่ทำเสร็จไว้ที่นี่ ให้อยู่ในแฟ้มของเคส',
-      on ? '<span class="chip doing">ใช้ไฟล์แทน</span>' : l.length ? '<span class="chip done">แนบแล้ว ' + l.length + '</span>' : '', how + flRows(c, l, can) + (can ? flDrop('out', sid, null, null, l.length > 0) : '') + tick);
+      on ? '<span class="chip doing">ใช้ไฟล์แทน</span>' : l.length ? '<span class="chip done">แนบแล้ว ' + l.length + '</span>' : '', how + flRows(c, l, can) + (sid === '2.2' ? saraNote(c) : '') + (can ? flDrop('out', sid, null, null, l.length > 0) : '') + tick);
   }
   /* the gate step lists the steps done outside and its approver confirms they read the files */
   function ofsGateBox(c, st) {
@@ -6644,13 +6658,13 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
     if (!c || !files || !files.length) return;
     if (jOn()) { toast('ขณะดูย้อนหลังแนบไฟล์ไม่ได้'); return; }
     if (!flCan(c, key, sid)) { toast('บทบาทนี้แนบไฟล์ในขั้นนี้ไม่ได้'); return; }
-    var def = FL[key], okx = (def && def.ext ? def.ext : 'pdf,doc,docx,xls,xlsx,xlsm,jpg,jpeg,png,zip').split(','), l = flList(c), jobs = [];
+    var def = FL[key], okx = (def && def.ext ? def.ext : 'pdf,doc,docx,xls,xlsx,xlsm,jpg,jpeg,png,zip').split(','), l = flList(c), jobs = [], added = [];
     [].forEach.call(files, function (f) {
       var x = (f.name.split('.').pop() || '').toLowerCase();
       if (okx.indexOf(x) < 0) { toast(f.name + ' ไม่ใช่ชนิดที่รับ (' + okx.join(', ').toUpperCase() + ')'); return; }
       if (f.size > 50 * 1048576) { toast(f.name + ' ใหญ่เกิน 50 MB'); return; }
       var id = c.id + '-' + key + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-      jobs.push(attPut(id, f).then(function () { l.push({ id:id, slot:key, sid:sid, round:round, fo:fo, name:f.name, size:f.size, type:f.type || flType(x), at:todayIso(), by:byWho(), who:S.role }); }));
+      jobs.push(attPut(id, f).then(function () { l.push({ id:id, slot:key, sid:sid, round:round, fo:fo, name:f.name, size:f.size, type:f.type || flType(x), at:todayIso(), by:byWho(), who:S.role }); added.push({ f:f, id:id }); }));
     });
     if (!jobs.length) return;
     Promise.all(jobs).then(function () {
@@ -6660,6 +6674,7 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
       if (key === 'quote') { mailC(c, 'ใบเสนอราคาและข้อตกลงการทวนสอบพร้อมให้ลงนาม'); msg += ' และส่งอีเมลแจ้งลูกค้าแล้ว'; }
       else if (isClient(S.role)) msg += ' GCC ได้รับแล้ว';
       save(); render(); toast(msg);
+      if (key === 'out' && sid === '2.2') saraAfter(c.id, added);   // a SARA in Word fills the form (59-sara-read.js)
     }).catch(function () { toast('บันทึกไฟล์ในเบราว์เซอร์นี้ไม่ได้'); });
   }
   function flFind(c, id) { var l = flList(c); for (var i = 0; i < l.length; i++) if (l[i].id === id) return i; return -1; }
@@ -8906,6 +8921,502 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
     var rd = new FileReader();
     rd.onload = function () { var im = new Image(); im.onload = function () { var r = sgnFromImage(im); if (r.err) { toast(r.err); return; } sgnSave(r.u); }; im.onerror = function () { toast('เปิดรูปนี้ไม่ได้'); }; im.src = rd.result; };
     rd.readAsDataURL(f);
+  });
+  /* ---------- SARA from a Word file (19/11/2569) ----------
+     F-GCC-31 made outside the system (in Word, or with the gcc-ir-pack plugin) and attached at step 2.2 fills the SARA in the
+     system, so the checks before 2.4 and F-GCC-32 work from it. The file stays in the case folder as the original.
+     - only a .docx on the GCC F-GCC-31 template is read (the one in 05 F, the one the system exports, the plugin's copy);
+       anything else stays a file, as before
+     - a client name in the file that is not this case's stops the read (a SARA of another client)
+     - an empty SARA is filled at once; one with data shows what would change and waits for ใช้ข้อมูลจากไฟล์
+     - left alone: what the system fills from other steps (client, address and scope from F-GCC-24, the size from F-GCC-77 once
+       it is done), the Gate Review of step 2.4 and the signatures; the Risk assessment text and the risk table by facility have
+       no field in the system and stay in the file
+     - Pareto % and cumulative % are worked out again from the tCO2e ---------- */
+  var SR_MAX = 40 * 1048576, SR_MC = 'http://schemas.openxmlformats.org/markup-compatibility/2006', SR_P = null, SR_BUSY = false;
+  // the template's own lines with dotted leaders: the words around each leader find the values in a filled file
+  var SR_PM = 'กำหนดโดยหัวหน้าคณะผู้ทวนสอบ ให้ต่ำกว่าความมีสาระสำคัญข้างต้น  ................ %   (ค่าเริ่มต้นร้อยละ 75 ของความมีสาระสำคัญ หากกำหนดต่ำกว่านี้ให้ระบุเหตุผล ........................)';
+  var SR_SIZE = 'คะแนนปัจจัยที่ 1 ......   ปัจจัยที่ 2 ......   ปัจจัยที่ 3 ......   ปัจจัยที่ 4 ......   (ปัจจัยละ 1 – 3 คะแนน)   รวม ...... คะแนน';
+  var SR_RISK = 'ความเสี่ยงโดยธรรมชาติ ........   ความเสี่ยงในการควบคุม ........   ความเสี่ยงในการตรวจสอบที่ยอมรับได้ ........   ความเสี่ยงไม่สอดคล้องกับเกณฑ์ ........';
+  var SR_OUT = ['แผนและการสุ่มตัวอย่างของการทวนสอบ', 'หัวข้อต่างๆได้รับการชี้บ่ง'];
+  var SR_RK = [['ir', 'ความเสี่ยงโดยธรรมชาติ'], ['cr', 'ความเสี่ยงในการควบคุม'], ['adr', 'ความเสี่ยงในการตรวจสอบที่ยอมรับได้'], ['rnc', 'ความเสี่ยงไม่สอดคล้องกับเกณฑ์']];
+
+  /* the fields read, in the order of the form */
+  function srKeys() {
+    var k = ['obj', 'pm', 'pmWhy', 'qual', 'size.0', 'size.1', 'size.2', 'size.3'];
+    SR20.forEach(function (x, i) { k.push('sr.' + i); });
+    RF12.forEach(function (x, i) { k.push('rf.' + i); });
+    SR_RK.forEach(function (x) { k.push('risk.' + x[0]); });
+    TECH.forEach(function (x) { k.push('tech.' + x[0]); });
+    return k.concat(['sites', 'out.0', 'out.1']);
+  }
+  function srLab(k) {
+    var p = k.split('.'), n = +p[1] + 1;
+    if (p[0] === 'sr') return 'Strategic review ข้อ ' + n;
+    if (p[0] === 'rf') return 'Risk factor ข้อ ' + n;
+    if (p[0] === 'size') return 'ขนาดองค์กร ปัจจัยที่ ' + n;
+    if (p[0] === 'out') return 'Output from SARA ข้อ ' + n;
+    if (p[0] === 'risk') return (SR_RK.filter(function (x) { return x[0] === p[1]; })[0] || [0, k])[1];
+    if (p[0] === 'tech') { var t = TECH.filter(function (x) { return x[0] === p[1]; })[0]; return 'เทคนิค ' + (t ? t[1].replace(/\s*\(.*$/, '') : p[1]); }
+    return { obj:'วัตถุประสงค์ของการทวนสอบ', pm:'ความมีสาระสำคัญเชิงปฏิบัติ (%)', pmWhy:'เหตุผลที่กำหนดต่ำกว่าร้อยละ 75', qual:'เรื่องเชิงคุณภาพที่อาจมีสาระสำคัญ',
+      sites:'เหตุผลในการเลือกสถานที่ที่เข้าทวนสอบ', sp:'แผนการสุ่มตัวอย่าง', docs:'รายการตรวจสอบเอกสารสนับสนุน', pa:'ตาราง ก. แผนการสุ่มรายแหล่งปล่อย' }[k] || k;
+  }
+
+  /* ---------- the parts of a .docx (a zip) ---------- */
+  function srInflate(d) {
+    var rd = new Blob([d]).stream().pipeThrough(new DecompressionStream('deflate-raw')).getReader(), parts = [], tot = 0;
+    return (function pump() {
+      return rd.read().then(function (x) {
+        if (x.done) { var o = new Uint8Array(tot), q = 0; parts.forEach(function (y) { o.set(y, q); q += y.length; }); return o; }
+        tot += x.value.length;
+        if (tot > SR_MAX) { rd.cancel(); throw new Error('ไฟล์ใหญ่เกินกว่าที่ระบบอ่านได้'); }
+        parts.push(x.value); return pump();
+      });
+    })();
+  }
+  function srZip(buf) {
+    var u = new Uint8Array(buf), n = u.length, dv = new DataView(u.buffer, u.byteOffset, n), e = -1, ents = {};
+    for (var i = n - 22; i >= Math.max(0, n - 65557); i--) if (dv.getUint32(i, true) === 0x06054b50) { e = i; break; }
+    if (e < 0) throw new Error('ไม่ใช่ไฟล์ Word (.docx)');
+    var cnt = dv.getUint16(e + 10, true), p = dv.getUint32(e + 16, true);
+    if (cnt === 0xFFFF || p === 0xFFFFFFFF) throw new Error('ไฟล์ใหญ่เกินกว่าที่ระบบอ่านได้');
+    for (var k = 0; k < cnt; k++) {
+      if (p + 46 > n || dv.getUint32(p, true) !== 0x02014b50) throw new Error('ไฟล์เสียหาย');
+      var nl = dv.getUint16(p + 28, true);
+      ents[new TextDecoder().decode(u.subarray(p + 46, p + 46 + nl))] = { enc:!!(dv.getUint16(p + 8, true) & 1), m:dv.getUint16(p + 10, true),
+        cs:dv.getUint32(p + 20, true), us:dv.getUint32(p + 24, true), lo:dv.getUint32(p + 42, true) };
+      p += 46 + nl + dv.getUint16(p + 30, true) + dv.getUint16(p + 32, true);
+    }
+    return {
+      names:function () { return Object.keys(ents); },
+      has:function (nm) { return !!ents[nm]; },
+      get:function (nm) {
+        var x = ents[nm]; if (!x) return Promise.resolve(null);
+        if (x.enc) return Promise.reject(new Error('ไฟล์ตั้งรหัสผ่านไว้'));
+        if (x.us > SR_MAX) return Promise.reject(new Error('ไฟล์ใหญ่เกินกว่าที่ระบบอ่านได้'));
+        if (x.lo + 30 > n || dv.getUint32(x.lo, true) !== 0x04034b50) return Promise.reject(new Error('ไฟล์เสียหาย'));
+        var s = x.lo + 30 + dv.getUint16(x.lo + 26, true) + dv.getUint16(x.lo + 28, true);
+        if (s + x.cs > n) return Promise.reject(new Error('ไฟล์เสียหาย'));
+        var d = u.subarray(s, s + x.cs);
+        if (x.m === 0) return Promise.resolve(d);
+        if (x.m !== 8) return Promise.reject(new Error('ไฟล์บีบอัดแบบที่ระบบอ่านไม่ได้'));
+        return srInflate(d);
+      }
+    };
+  }
+
+  /* ---------- Word text as the reader sees it: changes accepted, tick boxes, pictures and text boxes left out ---------- */
+  function srEls(el) { return Array.prototype.filter.call(el.childNodes, function (n) { return n.nodeType === 1; }); }
+  function srW(n, tag) { return n.namespaceURI === W_NS && n.localName === tag; }
+  function srIsBox(n) { if (!srW(n, 'sdt')) return false; var pr = srEls(n).filter(function (x) { return srW(x, 'sdtPr'); })[0]; return !!(pr && pr.getElementsByTagNameNS(W14_NS, 'checkbox').length); }
+  var SR_SKIP = { del:1, moveFrom:1, drawing:1, pict:1, object:1, instrText:1, delText:1, rPr:1, pPr:1, fldData:1, sdtPr:1, sdtEndPr:1, tblPr:1, trPr:1, tcPr:1 };
+  function srRun(el, o) {
+    srEls(el).forEach(function (n) {
+      if (n.namespaceURI === SR_MC) return;
+      if (n.namespaceURI !== W_NS) { srRun(n, o); return; }
+      var ln = n.localName;
+      if (SR_SKIP[ln] || (ln === 'sdt' && srIsBox(n))) return;
+      if (ln === 't') o.s += n.textContent;
+      else if (ln === 'tab' || ln === 'ptab') o.s += ' ';
+      else if (ln === 'br' || ln === 'cr') o.s += '\n';
+      else if (ln === 'noBreakHyphen') o.s += '-';
+      else if (ln === 'sym') o.s += srSym(n);
+      else srRun(n, o);
+    });
+  }
+  /* a character inserted from a symbol font, as the page shows it: the tick and box marks people use; others are left out */
+  var SR_SYM = { w2:{ 0x50:'✓', 0x52:'☑', 0x4F:'✗', 0x54:'☒', 0xA3:'☐' }, w:{ 0xFC:'✓', 0xFE:'☑', 0xFB:'✗', 0xFD:'☒', 0xA8:'☐', 0x6F:'☐' }, s:{ 0xD6:'√' } };
+  function srSym(n) {
+    var f = (n.getAttributeNS(W_NS, 'font') || '').toLowerCase(), ch = parseInt(n.getAttributeNS(W_NS, 'char') || '', 16) & 0xFF;
+    var set = /wingdings\s*2/.test(f) ? SR_SYM.w2 : /wingdings/.test(f) && !/wingdings\s*3/.test(f) ? SR_SYM.w : /^symbol/.test(f) ? SR_SYM.s : null;
+    return set && set[ch] || '';
+  }
+  /* the paragraphs of a cell or a body part, nested tables included in their order */
+  function srParas(el) {
+    var out = [];
+    if (srW(el, 'tbl')) { srRows(el).forEach(function (tr) { srCells(tr).forEach(function (tc) { out = out.concat(srParas(tc)); }); }); return out; }
+    srEls(el).forEach(function (n) {
+      if (n.namespaceURI !== W_NS) return;
+      if (n.localName === 'p') { var o = { s:'' }; srRun(n, o); out.push(o.s); }
+      else if (n.localName === 'tbl') srRows(n).forEach(function (tr) { srCells(tr).forEach(function (tc) { out = out.concat(srParas(tc)); }); });
+      else if (n.localName === 'sdt') { if (!srIsBox(n)) srEls(n).forEach(function (x) { if (srW(x, 'sdtContent')) out = out.concat(srParas(x)); }); }
+      else if (n.localName === 'customXml' || n.localName === 'ins' || n.localName === 'moveTo') out = out.concat(srParas(n));
+    });
+    return out;
+  }
+  function srTxt(el) {
+    if (!el) return '';
+    var l = []; srParas(el).forEach(function (p) { p.split('\n').forEach(function (x) { l.push(x.replace(/[\s\u200b]+$/, '')); }); });
+    return l.join('\n').replace(/^\s+|\s+$/g, '');
+  }
+  /* the same words however they were typed: sara am as nikhahit + sara aa, curly quotes, en and em dashes */
+  function srForm(s) { return String(s == null ? '' : s).replace(/\u0e4d\u0e32/g, '\u0e33').replace(/[‘’`´]/g, "'").replace(/[“”]/g, '"').replace(/[–—−]/g, '-'); }
+  /* compare words: and no spaces, no case, no colon at the end */
+  function srNz(s) { return srForm(s).replace(/[\s\u200b\u00a0]+/g, '').replace(/[:：]+$/, '').toLowerCase(); }
+  function srDig(s) { return String(s == null ? '' : s).replace(/[๐-๙]/g, function (d) { return String(d.charCodeAt(0) - 0x0e50); }); }
+  function srKids(el, tag) { var o = []; (function go(x) { srEls(x).forEach(function (n) { if (srW(n, tag)) o.push(n); else if (srW(n, 'sdt') || srW(n, 'sdtContent') || srW(n, 'customXml')) go(n); }); })(el); return o; }
+  function srRows(t) { return srKids(t, 'tr'); }
+  function srCells(tr) { return srKids(tr, 'tc'); }
+  function srTbls(doc) {
+    return Array.prototype.filter.call(doc.getElementsByTagNameNS(W_NS, 'tbl'), function (t) { for (var p = t.parentNode; p; p = p.parentNode) if (srW(p, 'tc')) return false; return true; });
+  }
+  function srGrid(t) {
+    var out = [], val = function (el, tag) { var x = el && srEls(el).filter(function (y) { return srW(y, tag); })[0]; return x ? (x.getAttributeNS(W_NS, 'val') || '') : null; };
+    srRows(t).forEach(function (tr, ri) {
+      var row = [], trPr = srEls(tr).filter(function (y) { return srW(y, 'trPr'); })[0], col = +(val(trPr, 'gridBefore') || 0) || 0;
+      srCells(tr).forEach(function (tc) {
+        var pr = srEls(tc).filter(function (y) { return srW(y, 'tcPr'); })[0], span = Math.max(1, +(val(pr, 'gridSpan') || 1) || 1), vm = val(pr, 'vMerge'), up = ri && out[ri - 1][col];
+        var x = { tc:tc, t:vm !== null && vm !== 'restart' && up ? up.t : srTxt(tc), span:span };
+        row[col] = x;
+        for (var k = 1; k < span; k++) row[col + k] = { tc:tc, t:x.t, span:span, cov:true };   // the columns a cell spans carry its words
+        col += span;
+      });
+      out.push(row);
+    });
+    return out;
+  }
+  function srAt(row, i) { return row[i] ? row[i].t : ''; }
+  function srHead(t) { var r = srRows(t)[0]; return r ? srCells(r).map(function (c) { return srNz(srTxt(c)); }) : []; }
+  function srRowBy(t, label) {
+    var L = srNz(label); if (!t) return null;
+    return srRows(t).filter(function (tr) { var c0 = srCells(tr)[0]; return c0 && srNz(srTxt(c0)).indexOf(L) === 0; })[0] || null;
+  }
+  function srCellBy(t, label, j) { var tr = srRowBy(t, label), cs = tr ? srCells(tr) : []; return cs[j == null ? 1 : j] || null; }
+  function srFind(T, fn) { for (var i = 0; i < T.length; i++) { try { if (fn(T[i])) return T[i]; } catch (e) { /* not this table */ } } return null; }
+
+  /* tick boxes (w14:checkbox) with the words that follow each, until the next box */
+  function srBoxOn(sdt) {
+    var pr = srEls(sdt).filter(function (x) { return srW(x, 'sdtPr'); })[0], cb = pr.getElementsByTagNameNS(W14_NS, 'checkbox')[0];
+    var ch = cb.getElementsByTagNameNS(W14_NS, 'checked')[0], st = function (tag, dflt) { var e = cb.getElementsByTagNameNS(W14_NS, tag)[0], v = e && e.getAttributeNS(W14_NS, 'val'); return String.fromCharCode(parseInt(v || dflt, 16)); };
+    var g = ''; Array.prototype.forEach.call(sdt.getElementsByTagNameNS(W_NS, 't'), function (t) { g += t.textContent; });
+    var on = st('checkedState', '2612'), off = st('uncheckedState', '2610');
+    if (g.indexOf(on) >= 0 || /[☒☑✓✔■]/.test(g)) return true;    // what the page shows wins: some editors change only the mark
+    if (g.indexOf(off) >= 0 || /[☐□]/.test(g)) return false;
+    var v = ch ? ch.getAttributeNS(W14_NS, 'val') : '';
+    return v === '1' || v === 'true' || v === 'on';
+  }
+  function srBoxes(cell) {
+    var l = [], cur = null;
+    (function walk(el) {
+      srEls(el).forEach(function (n) {
+        if (n.namespaceURI === SR_MC) return;
+        if (srIsBox(n)) { cur = { on:srBoxOn(n), t:'' }; l.push(cur); return; }
+        if (n.namespaceURI === W_NS && SR_SKIP[n.localName]) return;
+        if (srW(n, 't')) { if (cur) cur.t += n.textContent; return; }
+        walk(n);
+      });
+    })(cell);
+    return l;
+  }
+  /* a box typed as a character in front of its words (☒ ทดสอบ…), for files whose tick boxes were turned into text */
+  function srGlyph(cell, label) {
+    var L = srNz(label).slice(0, 10), lines = srTxt(cell).split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      var s = srForm(lines[i]), k = srNz(s).indexOf(L), at = s.indexOf(srForm(label).slice(0, 4)); if (k < 0 || at < 0) continue;
+      var pre = s.slice(0, at);
+      if (/[☒☑✓✔■]\s*$/.test(pre)) return true;
+      if (/[☐□]\s*$/.test(pre)) return false;
+    }
+    return null;
+  }
+
+  /* ---------- values ---------- */
+  /* the values a line with dotted leaders holds: tpl is the template's line; the words between leaders are found again in the
+     file's line however its spaces changed, and what stands between them is the value */
+  function srDots(text, tpl) {
+    var segs = tpl.split(/[.…]{3,}|_{3,}/), pos = 0, vals = [], m;
+    var re = function (s, g) { return new RegExp(srNz(s).split('').map(function (ch) { return ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('[\\s\\u200b\\u00a0]*'), g ? 'gi' : 'i'); };
+    var src = srForm(text);
+    if (srNz(segs[0])) { m = re(segs[0]).exec(src); if (!m) return null; pos = m.index + m[0].length; }
+    for (var i = 1; i < segs.length; i++) {
+      var rest = src.slice(pos);
+      if (!srNz(segs[i])) { vals.push(srClean(rest)); pos = src.length; continue; }   // the line ends with a leader
+      if (i === segs.length - 1) { var g = re(segs[i], true), last = null; while ((m = g.exec(rest))) { last = m; if (!m[0].length) g.lastIndex++; } m = last; }
+      else m = re(segs[i]).exec(rest);
+      if (!m && segs[i].replace(/^[\s%=:]+/, '') !== segs[i] && srNz(segs[i].replace(/^[\s%=:]+/, ''))) m = re(segs[i].replace(/^[\s%=:]+/, '')).exec(rest);   // words added after the unit
+      if (!m) { while (vals.length < segs.length - 1) vals.push(null); break; }   // the words were changed: the rest is not read
+      vals.push(srClean(rest.slice(0, m.index))); pos += m.index + m[0].length;
+    }
+    return vals;
+  }
+  function srDotsIn(cell, tpl) {
+    var ps = srParas(cell);
+    for (var i = 0; i < ps.length; i++) { var v = srDots(ps[i].replace(/\n/g, ' '), tpl); if (v && v.some(function (x) { return x !== null; })) return v; }
+    return null;
+  }
+  // a value as typed between leaders: leftover dots and the = or : in front of it go
+  function srClean(v) { return srForm(v).replace(/[.…]{2,}|…|_{2,}/g, ' ').replace(/^[\s=:：]+|[\s=:：]+$/g, '').replace(/\s+/g, ' ').trim(); }
+  function srLevel(v) {
+    if (v == null) return null;
+    var s = String(v).replace(/\(.*?\)/g, '').replace(/^\s*ระดับ\s*/, '').trim().toLowerCase();
+    if (!s || /^[-–—]$/.test(s)) return '';
+    if (/^(ต่ำ|low|l)$/.test(s)) return 'ต่ำ';
+    if (/^(ปานกลาง|กลาง|medium|med|moderate|m)$/.test(s)) return 'ปานกลาง';
+    if (/^(สูง|high|h)$/.test(s)) return 'สูง';
+    return null;
+  }
+  function srNumTxt(v) { if (v == null) return null; var s = srDig(v).replace(/[,\s%]/g, ''); if (!s || /^[-–—]$/.test(s)) return ''; return /^-?\d+(\.\d+)?$/.test(s) ? String(+s) : null; }
+  /* performance materiality: the number before % (else the number it starts with) */
+  function srPct(v) {
+    if (v == null) return null; var s = srDig(v).replace(/,/g, '').trim(); if (!s || /^[-–—]$/.test(s)) return '';
+    var m = /(\d+(?:\.\d+)?)\s*%/.exec(s) || /^(\d+(?:\.\d+)?)/.exec(s); return m ? String(+m[1]) : null;
+  }
+  function srScore(v) { if (v == null) return null; var s = srDig(v).replace(/คะแนน/g, '').trim(); return !s ? '' : /^[123]$/.test(s) ? s : null; }
+  function srScope(v) { var s = srDig(v).trim(); if (!s || /^[-–—]$/.test(s)) return ''; var m = /^(?:scope|ประเภทที่|s)?\s*([123])$/i.exec(s); return m ? m[1] : null; }
+  function srMark(v) { var s = String(v || '').trim(); if (!s || /^([-–—✗✘×]|ไม่)/.test(s)) return false; return /[✓✔√☑☒]/.test(s) || /^(ใช่|สุ่ม|สุ่มตรวจ)$/.test(s) ? true : null; }
+
+  /* ---------- read: the document part of the file, as the in-system SARA stores it ---------- */
+  function saraParse(doc, codeTxt) {
+    var r = { v:{}, sp:null, docs:null, pa:null, miss:[], only:[], conv:[], org:'', code:'' }, T = srTbls(doc);
+    var cm = /F-GCC-\d+(?:-\d{2})?/.exec(codeTxt || '');
+    if (cm && !/^F-GCC-31\b/.test(cm[0])) return { bad:'ไฟล์นี้เป็นแบบฟอร์ม ' + cm[0] + ' ไม่ใช่ F-GCC-31' };
+    r.code = cm ? cm[0] : '';
+    var desc = srFind(T, function (t) { return !!srRowBy(t, 'ชื่อบริษัท/ลูกค้า'); });
+    var srt = srFind(T, function (t) { return srRows(t).some(function (tr) { var cs = srCells(tr); return cs.length >= 3 && srNz(srTxt(cs[1])) === 'strategicreview'; }); });
+    var rft = srFind(T, function (t) { return srRows(t).some(function (tr) { var cs = srCells(tr); return cs.length >= 3 && srNz(srTxt(cs[1])).indexOf('riskfactor(iso14064-3') === 0; }); });
+    var sum = srFind(T, function (t) { return !!srRowBy(t, 'สรุปคะแนนความเสี่ยงของงาน'); });
+    var spt = srFind(T, function (t) { var h = srHead(t); return h[0] === 'ประเภทของหลักฐาน' && h[1] === 'วิธีการตรวจสอบ'; });
+    var dct = srFind(T, function (t) { return srHead(t)[0] === 'ชื่อเอกสารสนับสนุน'; });
+    var pat = srFind(T, function (t) { var h = srHead(t); return h[0] === 'ลำดับ' && (h[1] || '').indexOf('แหล่งปล่อย') === 0; });
+    if (!srt || !rft || !sum || !pat) return { bad:'ไฟล์นี้ไม่ได้ทำจากแม่แบบ F-GCC-31 ของ GCC' };
+    var put = function (k, v, raw) { if (v === null || v === undefined) r.miss.push(srLab(k) + (raw ? ' (' + String(raw).slice(0, 24) + ')' : '')); else r.v[k] = v; };
+
+    // 1 Description Client
+    var org = srCellBy(desc, 'ชื่อบริษัท/ลูกค้า');
+    r.org = org ? (srTxt(org).split('\n').filter(function (x) { return x.trim(); })[0] || '').trim() : '';
+    var ob = srCellBy(desc, 'วัตถุประสงค์ของการทวนสอบ'); put('obj', ob ? srTxt(ob) : null);
+    var pmc = srCellBy(desc, 'ความมีสาระสำคัญเชิงปฏิบัติ'), pmd = pmc ? srDotsIn(pmc, SR_PM) : null;
+    if (pmd) {
+      // a figure of 5 or less is a share of the total (3.75 = 75% of the 5% materiality); the form keeps a share of the materiality
+      var pv = srPct(pmd[0]);
+      if (pv && +pv > 0 && +pv <= 5) { var pc = String(Math.round(+pv / 5 * 10000) / 100); r.conv.push('ความมีสาระสำคัญเชิงปฏิบัติ ' + pv + '% ของปริมาณรวม บันทึกเป็น ' + pc + '% ของความมีสาระสำคัญ'); pv = pc; }
+      put('pm', pv, pmd[0]); put('pmWhy', pmd[1]);
+    } else { put('pm', null); put('pmWhy', null); }
+    var ql = srCellBy(desc, 'เรื่องเชิงคุณภาพที่อาจมีสาระสำคัญ');
+    put('qual', ql ? srTxt(ql).replace(/^\s*ผลการระบุ\s*[:：]?/, '').replace(/^\s+/, '') : null);
+    var szc = srCellBy(desc, 'ขนาดองค์กรตาม W-GCC-03'), szd = szc ? srDotsIn(szc, SR_SIZE) : null;
+    [0, 1, 2, 3].forEach(function (i) { put('size.' + i, szd ? srScore(szd[i]) : null, szd && szd[i]); });
+
+    // 2 Strategic review, 3 Risk assessment: rows by their number, checked against the words of each item
+    var item = function (t, n, words) {
+      var tr = srRows(t).filter(function (x) { var c0 = srCells(x)[0]; return c0 && srNz(srTxt(c0)).replace(/\.$/, '') === String(n); })[0], cs = tr ? srCells(tr) : [];
+      return cs.length >= 3 && srNz(srTxt(cs[1])).indexOf(srNz(words).slice(0, 18)) === 0 ? srTxt(cs[2]) : null;
+    };
+    SR20.forEach(function (x, i) { put('sr.' + i, item(srt, i + 1, x)); });
+    RF12.forEach(function (x, i) { put('rf.' + i, item(rft, i + 1, x)); });
+    var rsc = srCellBy(sum, 'สรุปคะแนนความเสี่ยงของงาน'), rsd = rsc ? srDotsIn(rsc, SR_RISK) : null;
+    SR_RK.forEach(function (x, i) { put('risk.' + x[0], rsd ? srLevel(rsd[i]) : null, rsd && rsd[i]); });
+    var tcl = srCellBy(sum, 'เทคนิคการรวบรวมหลักฐานที่เลือกใช้'), tb = tcl ? srBoxes(tcl) : [];
+    TECH.forEach(function (x) {
+      var key = srNz(x[1]).slice(0, 10), b = tb.filter(function (y) { return srNz(y.t).indexOf(key) === 0; })[0];
+      put('tech.' + x[0], b ? b.on : tcl ? srGlyph(tcl, x[1]) : null);
+    });
+    var stc = srCellBy(sum, 'เหตุผลในการเลือกสถานที่ที่เข้าทวนสอบ'); put('sites', stc ? srTxt(stc) : null);
+
+    // 4 sampling plan: the rows under each Scope heading
+    if (spt) {
+      var sc = '', sp = [];
+      srGrid(spt).slice(1).forEach(function (row) {
+        var v = [0, 1, 2, 3, 4].map(function (j) { return srAt(row, j); }), own = row.filter(function (x) { return x && !x.cov; }), t0 = srNz(v[0]);
+        var one = own.length === 1 || own.filter(function (x) { return x.t.trim(); }).length <= 1 && !v.slice(1).some(function (x, j) { return x.trim() && !(row[j + 1] || {}).cov; });
+        if (one && (/^ประเภทที่[123]/.test(t0) || /^อื่นๆ/.test(t0) || /^other/.test(t0))) { var hm = /^ประเภทที่([123])/.exec(t0); sc = hm ? hm[1] : 'อื่น ๆ'; return; }
+        if (!own.some(function (x) { return x.t.trim(); })) return;
+        if (own.length === 1 && own[0].span > 1) { sp.push({ sc:sc, ev:own[0].t, m:'', rl:'', n:'', rm:'' }); return; }   // one cell across the row: its words kept
+        var rl = srLevel(v[2]);
+        var rm = v[4];
+        if (rl === null) { r.miss.push('แผนการสุ่มตัวอย่าง แถว ' + (sp.length + 1) + ' ระดับความเสี่ยง (' + v[2].slice(0, 24) + ')'); rl = ''; rm = 'ระดับความเสี่ยงในไฟล์: ' + v[2] + (rm ? '\n' + rm : ''); }
+        sp.push({ sc:sc, ev:v[0], m:v[1], rl:rl, n:v[3], rm:rm });
+      });
+      r.sp = sp;
+    } else r.miss.push(srLab('sp'));
+    if (dct) {
+      var dl = [];
+      srGrid(dct).slice(1).forEach(function (row) { var v = [0, 1, 2].map(function (j) { return srAt(row, j); }); if (v.join('').trim()) dl.push({ n:v[0], i:v[1], rm:v[2] }); });
+      r.docs = dl;
+    } else r.miss.push(srLab('docs'));
+
+    // ก Pareto: the columns found by their headings, the rows up to รวม / Total
+    var grid = srGrid(pat), hd = (grid[0] || []).map(function (x) { return x ? srNz(x.t) : ''; }), col = function (k, d) { for (var i = 0; i < hd.length; i++) if (hd[i] && hd[i].indexOf(k) === 0) return i; return d; };
+    var ci = { s:col('แหล่งปล่อย', 1), sc:col('scope', 2), t:col('ปริมาณการปล่อย', 3), k:col('สุ่มตรวจ', 6), w:col('จำนวนตัวอย่างที่สุ่ม', 7) }, pa = [];
+    grid.slice(1).some(function (row) {
+      var g = function (k) { return srAt(row, ci[k]); };
+      if (/^รวม/.test(srNz(srAt(row, 0)))) return true;
+      var s = g('s'), sv = g('sc'), tv = g('t'), kv = g('k'), w = g('w');
+      if (!(s + sv + tv + kv + w).trim()) return false;
+      var n = pa.length + 1, a = srScope(sv), b = srNumTxt(tv), k = srMark(kv);
+      if (a === null) { r.miss.push('ตาราง ก. แถว ' + n + ' Scope (' + sv.slice(0, 24) + ')'); a = ''; w = 'Scope ในไฟล์: ' + sv + (w ? '\n' + w : ''); }
+      if (b === null) { r.miss.push('ตาราง ก. แถว ' + n + ' ปริมาณ (' + tv.slice(0, 24) + ')'); b = ''; }
+      if (k === null) { r.miss.push('ตาราง ก. แถว ' + n + ' สุ่มตรวจ (' + kv.slice(0, 24) + ')'); k = false; }
+      pa.push({ s:s, sc:a, t:b, k:k, w:w });
+      return false;
+    });
+    r.pa = pa;
+
+    // Output from SARA
+    var oc = null;
+    T.some(function (t) { return srRows(t).some(function (tr) { return srCells(tr).some(function (c) { var b = srBoxes(c); if (b.length && srNz(b[0].t).indexOf(srNz(SR_OUT[0])) === 0) { oc = c; return true; } return false; }); }); });
+    var obx = oc ? srBoxes(oc) : [];
+    SR_OUT.forEach(function (lab, i) { var b = obx.filter(function (y) { return srNz(y.t).indexOf(srNz(lab)) === 0; })[0] || obx[i]; put('out.' + i, b ? b.on : null); });
+
+    // what the file holds that the system has no field for
+    var rah = srFind(T, function (t) { var rs = srRows(t); return rs.length === 1 && srCells(rs[0]).length === 1 && srNz(srTxt(srCells(rs[0])[0])) === 'riskassessment'; }), ra = rah ? T[T.indexOf(rah) + 1] : null;
+    if (ra && ra !== srt && ra !== rft && srRows(ra).length <= 2 && srTxt(ra)) r.only.push('ข้อความในช่อง Risk assessment');
+    var fac = srFind(T, function (t) { return (srHead(t)[0] || '').indexOf('data/parameter') === 0; });
+    if (fac && srRows(fac).slice(1).some(function (tr) { var cs = srCells(tr); return cs.length > 1 && cs.some(function (x) { return srTxt(x); }); })) r.only.push('ตารางประเมินความเสี่ยงรายสถานที่ (Facility)');
+
+    r.n = Object.keys(r.v).filter(function (k) { var v = r.v[k]; return v === true || (typeof v === 'string' && v.trim()); }).length;
+    r.nr = (r.sp || []).length + (r.docs || []).length + r.pa.length;
+    return r;
+  }
+  /* a Word file (Blob) → the read, or { bad } when it is not a SARA the system can read */
+  function saraRead(blob) {
+    if (typeof DecompressionStream === 'undefined') return Promise.reject(new Error('เบราว์เซอร์นี้อ่านไฟล์ Word ไม่ได้ ลองใช้ Chrome, Edge หรือ Safari รุ่นใหม่'));
+    return blob.arrayBuffer().then(function (buf) {
+      var z = srZip(buf);
+      if (!z.has('word/document.xml')) throw new Error('ไม่ใช่ไฟล์ Word (.docx)');
+      var hf = z.names().filter(function (nm) { return /^word\/(header|footer)\d*\.xml$/.test(nm); });
+      return Promise.all([z.get('word/document.xml')].concat(hf.map(function (nm) { return z.get(nm); }))).then(function (xs) {
+        var dec = new TextDecoder(), x0 = dec.decode(xs[0]);
+        if (/<!DOCTYPE|<!ENTITY/i.test(x0)) throw new Error('ไฟล์มีส่วนที่ระบบไม่อ่าน');
+        var doc = new DOMParser().parseFromString(x0, 'application/xml');
+        if (doc.getElementsByTagName('parsererror').length || !doc.getElementsByTagNameNS(W_NS, 'body').length) throw new Error('ไฟล์เสียหาย');
+        var code = xs.slice(1).map(function (u) { return u ? dec.decode(u).replace(/<[^>]*>/g, '') : ''; }).join(' ');
+        return saraParse(doc, code);
+      });
+    });
+  }
+
+  /* ---------- the case: who may, what changes, fill ---------- */
+  function saraCan(c) {
+    var st = stepById('2.2'); if (!c || !st || isClient(S.role) || ext() || jOn() || closed(c)) return false;
+    var s = stOf(c, '2.2'), lk = !s && lockOf(c, idx(st));
+    return canAct(c, st) && !lk && s !== 'done' && stepEdit(st) && seeDoc(c, st);
+  }
+  function srRowsKey(l, k) {
+    return (l || []).map(function (x) {
+      var v = k === 'sp' ? [x.sc, x.ev, x.m, x.rl, x.n, x.rm] : k === 'docs' ? [x.n, x.i, x.rm] : [x.s, x.sc, x.t === '' || x.t == null ? '' : String(num(x.t)), !!x.k, x.w];
+      return v.map(function (y) { return typeof y === 'boolean' ? y : String(y == null ? '' : y).trim(); });
+    }).filter(function (v) { return k === 'pa' ? !!(v[0] || +v[2]) : v.some(function (y, j) { return (k !== 'sp' || j > 0) && y; }); });
+  }
+  function srVal(v, b) { return typeof b === 'boolean' ? !!v : String(v == null ? '' : v).trim(); }
+  function saraBlank(c) {
+    var f = c.f31 || {}, f77 = f77Done(c);
+    return srKeys().every(function (k) { return (f77 && /^size\./.test(k)) || !srVal(fv(f, k), typeof fv(f, k) === 'boolean' ? false : ''); }) &&
+      ['sp', 'docs', 'pa'].every(function (k) { return !srRowsKey(f[k], k).length; });
+  }
+  function srSum(l) { return { rows:srRowsKey(l, 'pa').length, tot:(l || []).reduce(function (a, x) { return a + num(x.t); }, 0) }; }
+  function saraDiff(c, r) {
+    var f = c.f31 || {}, f77 = f77Done(c), ch = [];
+    srKeys().forEach(function (k) {
+      if (!(k in r.v) || (f77 && /^size\./.test(k))) return;
+      var b = r.v[k], a = srVal(fv(f, k), b); if (a !== srVal(b, b)) ch.push({ k:k, a:a, b:srVal(b, b) });
+    });
+    ['sp', 'docs', 'pa'].forEach(function (k) {
+      if (!r[k] || JSON.stringify(srRowsKey(f[k], k)) === JSON.stringify(srRowsKey(r[k], k))) return;
+      ch.push({ k:k, a:k === 'pa' ? srSum(f[k]) : { rows:srRowsKey(f[k], k).length }, b:k === 'pa' ? srSum(r[k]) : { rows:srRowsKey(r[k], k).length } });
+    });
+    return ch;
+  }
+  /* the size the file gives, against F-GCC-77 when that is done (the system keeps F-GCC-77) */
+  function srKeep(c, r) {
+    if (!f77Done(c)) return [];
+    var f = c.f77.f, d = [0, 1, 2, 3].some(function (i) { var v = r.v['size.' + i]; return v && String(v) !== String(f[i]); });
+    return d ? ['คะแนนขนาดองค์กร (ระบบใช้ค่าจาก F-GCC-77)'] : [];
+  }
+  function saraApply(c, r, from) {
+    var f = c.f31 = c.f31 || {}, f77 = f77Done(c);
+    srKeys().forEach(function (k) { if ((k in r.v) && !(f77 && /^size\./.test(k))) setv(f, k, r.v[k]); });
+    ['sp', 'docs', 'pa'].forEach(function (k) { if (r[k]) f[k] = r[k].map(function (x) { return Object.assign({}, x); }); });
+    f.src = { name:from.name, id:from.id || '', at:todayIso(), by:byWho(), n:r.n, rows:r.nr, miss:r.miss.slice(0, 60), only:r.only.concat(srKeep(c, r)), conv:r.conv.slice() };
+    logC(c, 'เติม SARA (F-GCC-31) จากไฟล์ ' + from.name + ' อ่านได้ ' + r.n + ' ช่อง ' + r.nr + ' แถว' + (r.miss.length ? ' อ่านไม่ได้ ' + r.miss.length + ' ช่อง' : ''));
+    save(); render();
+    toast('เติม SARA จากไฟล์แล้ว อ่านได้ ' + r.n + ' ช่อง' + (r.miss.length ? ' อ่านไม่ได้ ' + r.miss.length + ' ช่อง' : '') + ' ตรวจได้ในแบบฟอร์มด้านล่าง');
+  }
+  function srList(l, n) { n = n || 8; return esc(l.slice(0, n).join(', ')) + (l.length > n ? ' และอีก ' + (l.length - n) + ' รายการ' : ''); }
+  function srShow(v) {
+    if (typeof v === 'boolean') return v ? 'ติ๊ก' : 'ไม่ติ๊ก';
+    if (v && typeof v === 'object') return v.rows + ' แถว' + (v.tot != null && v.rows ? ' · รวม ' + fmt(v.tot, 2) + ' tCO2e' : '');
+    var s = String(v == null ? '' : v); if (!s) return '<span class="sr-e">ว่าง</span>';
+    var one = s.replace(/\s*\n\s*/g, ' · ');
+    return '<span title="' + esc(s) + '">' + esc(one.length > 90 ? one.slice(0, 88) + '…' : one) + '</span>';
+  }
+  function srMore(c, r) {
+    var keep = srKeep(c, r);
+    return (r.conv.length ? note('info', 'ระบบแปลงค่า: ' + srList(r.conv)) : '') + (r.miss.length ? note('alert', 'อ่านไม่ได้ ' + r.miss.length + ' ช่อง ระบบเว้นไว้ให้กรอกเอง: ' + srList(r.miss), 'warn') : '') +
+      (r.only.length || keep.length ? note('docs', 'อยู่ในไฟล์เท่านั้น: ' + srList(r.only.concat(keep))) : '');
+  }
+  function saraAsk(c, r, ch, name) {
+    modal('อ่าน SARA จากไฟล์', 'upload',
+      '<p class="sr-f"><b title="' + esc(name) + '">' + esc(name) + '</b><small>อ่านได้ ' + r.n + ' ช่อง ' + r.nr + ' แถว</small></p>' +
+      note('info', 'SARA ในระบบมีข้อมูลอยู่แล้ว ถ้ากดใช้ข้อมูลจากไฟล์ ' + ch.length + ' รายการด้านล่างจะเปลี่ยนตามไฟล์') +
+      '<div class="sr-tw"><table class="ft sr-t"><thead><tr><th>ช่อง</th><th>ตอนนี้ในระบบ</th><th>จากไฟล์</th></tr></thead><tbody>' +
+      ch.map(function (x) { return '<tr><td>' + esc(srLab(x.k)) + '</td><td>' + srShow(x.a) + '</td><td>' + srShow(x.b) + '</td></tr>'; }).join('') + '</tbody></table></div>' + srMore(c, r),
+      '<button type="button" class="btn" data-a="mclose">ไม่ใช้</button><button type="button" class="btn pri" data-a="saraok">' + ic('check') + 'ใช้ข้อมูลจากไฟล์</button>');
+  }
+  function saraWrong(c, r) {
+    var mine = (c.f24 || {}).org || c.name;
+    modal('ไม่ได้อ่านข้อมูลจากไฟล์', 'alert',
+      note('alert', 'ชื่อลูกค้าในไฟล์ไม่ตรงกับเคสนี้ ระบบจึงไม่เติม SARA จากไฟล์ ไฟล์ยังอยู่ในรายการของขั้นนี้', 'warn') +
+      '<dl class="sr-dl"><dt>ในไฟล์</dt><dd>' + esc(r.org) + '</dd><dt>เคสนี้</dt><dd>' + esc(mine) + '</dd></dl>' +
+      '<p class="fine">ถ้าเป็นไฟล์ของเคสนี้ แก้ชื่อลูกค้าในไฟล์ให้ตรงกับ F-GCC-24 แล้วแนบใหม่ ถ้าแนบผิดไฟล์ ลบไฟล์ออกจากรายการได้</p>',
+      '<button type="button" class="btn pri" data-a="mclose">ปิด</button>');
+  }
+  /* two client names are the same company: words like บริษัท จำกัด (มหาชน) Co., Ltd. and spaces do not count */
+  function srOrgKey(s) {
+    return srForm(s).toLowerCase()
+      .replace(/บริษัท|บจก\.?|บมจ\.?|ห้างหุ้นส่วนจำกัด|หจก\.?|จำกัด|\(มหาชน\)|มหาชน|\bcompany\b|\bco\b\.?|\bltd\b\.?|\blimited\b|\bpublic\b|\bplc\b\.?|\binc\b\.?|\bcorporation\b|\bcorp\b\.?/g, '')
+      .replace(/[\s\u200b\u00a0.,()\-–—_'"&]+/g, '');
+  }
+  function srOrgSame(a, b) {
+    var x = srOrgKey(a), y = srOrgKey(b), s = x.length <= y.length ? x : y, l = s === x ? y : x;
+    return !!x && !!y && (x === y || (s.length >= 4 && l.indexOf(s) >= 0 && s.length >= 0.6 * l.length));
+  }
+  function saraRun(c, blob, name, id, fresh) {
+    var cant = (fresh ? 'แนบไฟล์แล้ว แต่' : '') + 'ระบบอ่านข้อมูลจากไฟล์นี้ไม่ได้: ';
+    var cid = c.id;
+    if (SR_BUSY) { toast('กำลังอ่านไฟล์ก่อนหน้า รอสักครู่'); return; }
+    SR_BUSY = true;
+    Promise.resolve().then(function () { return saraRead(blob); }).then(function (r) {
+      SR_BUSY = false;
+      var c2 = caseById(cid); if (!c2 || !saraCan(c2)) return;
+      if (r.bad) { toast(cant + r.bad); return; }
+      var mine = [(c2.f24 || {}).org, c2.name].filter(Boolean);
+      if (r.org && mine.length && !mine.some(function (n) { return srOrgSame(n, r.org); })) { saraWrong(c2, r); return; }
+      var ch = saraDiff(c2, r);
+      if (!ch.length) { toast('ข้อมูลในไฟล์ตรงกับ SARA ในระบบแล้ว'); return; }
+      if (saraBlank(c2)) { saraApply(c2, r, { name:name, id:id }); return; }
+      SR_P = { cid:cid, r:r, name:name, id:id };
+      saraAsk(c2, r, ch, name);
+    }).catch(function (e) { SR_BUSY = false; toast(cant + ((e && e.message) || e)); });
+  }
+  /* called by flAdd once outside work for step 2.2 is attached: the first Word file is read */
+  function saraAfter(cid, added) {
+    var c = caseById(cid), x = (added || []).filter(function (a) { return /\.docx$/i.test(a.f.name); })[0];
+    if (c && x && saraCan(c)) saraRun(c, x.f, x.f.name, x.id, true);
+  }
+  /* the line in the outside-work box of step 2.2 after a read */
+  function saraNote(c) {
+    var s = (c.f31 || {}).src; if (!s) return '';
+    var gone = s.id && !flList(c).some(function (f) { return f.id === s.id; });
+    return note('docs', 'SARA ในระบบเติมจากไฟล์ <b>' + esc(s.name) + '</b>' + (gone ? ' (ไฟล์นี้ลบออกจากรายการแล้ว)' : '') + ' เมื่อ ' + esc(dL(s.at)) +
+      ' อ่านได้ ' + (+s.n || 0) + ' ช่อง' + (s.rows ? ' ' + (+s.rows) + ' แถว' : '') +
+      (s.conv && s.conv.length ? '<br>ระบบแปลงค่า: ' + srList(s.conv) : '') + (s.miss && s.miss.length ? '<br>อ่านไม่ได้ กรอกเองในแบบฟอร์ม: ' + srList(s.miss) : '') + (s.only && s.only.length ? '<br>อยู่ในไฟล์เท่านั้น: ' + srList(s.only) : ''), 'sr-n');
+  }
+  /* the button on a Word file of step 2.2: read it again */
+  function saraBtn(c, f) {
+    return f.slot === 'out' && f.sid === '2.2' && /\.docx$/i.test(f.name) && f.who !== 'demo' && saraCan(c) ?
+      '<button type="button" class="btn sm" data-a="sararead" data-v="' + esc(f.id) + '">' + ic('docs') + 'อ่านเข้าแบบฟอร์ม</button>' : '';
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target && e.target.closest ? e.target.closest('[data-a="sararead"],[data-a="saraok"]') : null; if (!t) return;
+    if (t.getAttribute('data-a') === 'saraok') {
+      var p = SR_P, c = p ? caseById(p.cid) : null; SR_P = null; closeModal();
+      if (!c || !saraCan(c)) { toast('ขั้น 2.2 แก้ไม่ได้แล้ว ระบบไม่ได้เติมข้อมูล'); return; }
+      saraApply(c, p.r, p); return;
+    }
+    var c1 = curCase(), id = t.getAttribute('data-v'), f = c1 ? flList(c1).filter(function (x) { return x.id === id; })[0] : null;
+    if (!f || !saraCan(c1)) return;
+    attGet(id).then(function (blob) { if (!blob) { toast('ไม่พบไฟล์ ' + f.name); return; } saraRun(c1, blob, f.name, id); }, function () { toast('เปิดไฟล์ ' + f.name + ' ไม่ได้'); });
   });
   if (APP_ON) appStart(); else render();
 })();
