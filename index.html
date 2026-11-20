@@ -4959,7 +4959,21 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
   function dTH(iso) { if (!iso) return ''; var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + (+p[0] + 543); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (ch) { return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]; }); }
   function $(id) { return document.getElementById(id); }
-  function fileUrl(folder, name) { return '#local'; }
+  /* a file of the document register. In the app it opens in GCC's OneDrive (APP_CFG.od, the path of the folder
+     "เอกสารระบบงาน ISO 14065" that holds 01 Q to 06 E; 20/11/2569, "อยากให้คุณนำไปใช้ในการลิงค์เอกสารในเวป"). The link is
+     built from the folder and the file name, so a file replaced under the same name opens as it is now; opening it
+     needs a Microsoft account the folder is shared with. With no file name it opens the folder. The demo, and an app
+     built without the setting, keep the local link below */
+  function odOn() { return APP_ON && !!APP_CFG.od; }
+  function odUrl(path, parent) {
+    return 'https://onedrive.live.com/shared?id=' + encodeURIComponent(path) + (parent ? '&parent=' + encodeURIComponent(parent) : '&ithint=folder') +
+      '&listurl=' + encodeURIComponent(APP_CFG.od.split('/').slice(0, 4).join('/')) + '&migratedtospo=true';   // listurl = /personal/<account>/Documents
+  }
+  function fileUrl(folder, name) {
+    if (!odOn() || !folder) return '#local';
+    var dir = APP_CFG.od + '/' + folder;
+    return name ? odUrl(dir + '/' + name, dir) : odUrl(dir);
+  }
   function exUrl(n) { return EX[n] ? '#local' : ''; }
   /* web test copy: a file on the GCC computer cannot open from the web */
   document.addEventListener('click', function (e) {
@@ -8582,16 +8596,25 @@ html[data-theme=dark] .ibx-o:hover{background:var(--tint-2)}
           '<td>Rev.' + esc(d.rev || '00') + '</td><td>' + (d.date ? '<span class="date">' + dL(d.date) + '</span>' : '<span class="ct-none">-</span>') + '</td><td>' + st + '</td><td class="dc-go">' + ic('back') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
   }
+  /* the file name of the issue in force. The register keeps "<code>-<rev> <name>.<ext>" (external documents have no
+     rev) and publishing a revision changes only d.rev, so the name follows the rev in force: the OneDrive link then
+     finds the file the document controller saves under the new rev. Any other name stays as it is */
+  function docFile(d) {
+    var f = String(d.file || ''), h = d.code + '-';
+    return d.rev && f.indexOf(h) === 0 && /^\d+ /.test(f.slice(h.length)) ? h + d.rev + f.slice(f.indexOf(' ')) : f;
+  }
   /* one document: its file, the request open on it, every revision, and what this role may do */
   function dcDoc(code) {
     var d = docByCode(code); if (!d) return;
     var dcc = S.role === 'dcc', r = darOpen().filter(function (x) { return x.code === d.code; })[0];
     var kv = function (k, v) { return v ? '<dt>' + k + '</dt><dd>' + v + '</dd>' : ''; };
+    var od = !d.cf && odOn(), fn = od ? docFile(d) : d.file;   // in the app the file opens in GCC's OneDrive (24-dates-text.js)
     var file = d.cf ? '<button type="button" class="btn pri" data-a="dcopen" data-v="' + esc(d.code) + '">' + ic('eye') + 'เปิดไฟล์</button>' :
-      '<a class="btn pri" href="' + fileUrl(d.folder, d.file) + '" target="_blank" rel="noopener">' + ic('eye') + 'เปิดไฟล์</a>';
+      '<a class="btn pri" href="' + esc(fileUrl(d.folder, fn)) + '" target="_blank" rel="noopener"' + (od ? ' title="เปิดใน OneDrive ของ GCC (ล็อกอินบัญชี Microsoft ที่ได้รับแชร์โฟลเดอร์)"' : '') + '>' +
+        ic('eye') + (od ? (fn ? 'เปิดใน OneDrive' : 'เปิดโฟลเดอร์') : 'เปิดไฟล์') + '</a>';
     var body = '<div class="dd-h"><span class="dc-c">' + esc(catOf(d.code)) + '</span><div><b>' + esc(d.code) + '</b><span>' + esc(catName(catOf(d.code))) + '</span></div></div>' +
       '<dl class="fv-kv dr-kv">' + kv('ฉบับ', 'Rev.' + esc(d.rev || '00')) + kv('ประกาศใช้', d.date ? dL(d.date) : '-') + kv('หมวด', esc(d.grp || '')) +
-      kv('ไฟล์', esc(d.cf ? d.cf.name + (d.cf.cover ? ' · ปก GCC + ต้นฉบับ ' + d.cf.src + ' หน้า' : '') : (d.file || d.folder || '-'))) +
+      kv('ไฟล์', esc(d.cf ? d.cf.name + (d.cf.cover ? ' · ปก GCC + ต้นฉบับ ' + d.cf.src + ' หน้า' : '') : (fn || d.folder || '-'))) +
       kv('คำร้องที่เปิดอยู่', r ? '<button type="button" class="link" data-a="daropen" data-v="' + DB.dar.indexOf(r) + '">' + esc((r.no || 'รอเลขที่') + ' · ' + DAR_TYPE[r.type] + ' · ' + DAR_ST[r.st]) + '</button>' : '') + '</dl>' +
       '<div class="dd-acts">' + file + (r ? '' : '<button type="button" class="btn" data-a="darnew" data-v="' + esc(d.code) + '">' + ic('msg') + 'ยื่นคำร้องแก้ไขหรือยกเลิก</button>') + (dcc ? '<button type="button" class="btn" data-a="dedit" data-v="' + esc(d.code) + '">แก้ข้อมูลในทะเบียน</button>' : '') + '</div>' +
       '<h5 class="dr-h">ประวัติการแก้ไข</h5><ol class="dh">' + (d.hist || []).map(function (x, k) {
