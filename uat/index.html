@@ -2194,7 +2194,7 @@ html[data-theme=dark] .hm-ic.k-slate{background:#1E2A44;color:#B4C3DB}
 :root{--side-w:84px;--r:24px;--nl-soft:#E9F0FC;--nl-wm:rgba(30,64,175,.07);--nl-pill:#1E40AF;--nl-ib:#1E40AF;--nl-card:#fff;--nl-fline:#D3DEEC;--nl-now:#EEF4FF}
 html[data-theme=dark]{--nl-soft:#1A2C52;--nl-wm:rgba(141,187,255,.06);--nl-pill:#2B50C4;--nl-ib:#A9C1FF;--nl-card:#122244;--nl-fline:#2A4170;--nl-now:#182B52}
 body{font-feature-settings:normal}
-.frame{border-radius:30px}
+@media (min-width:901px){.frame{border-radius:30px}}
 
 /* ---------- the menu rail: 84px on the page colour, names under the icons, the open page a blue pill that slides
    (the pill is .nav-ind, 37-motion-dark-mode.js; items keep 62px and the 22px padding the slide is measured with) ---------- */
@@ -2215,9 +2215,7 @@ body{font-feature-settings:normal}
 }
 
 /* ---------- the top bar: logo and name, search, the date, the theme and mail buttons as 44px rounded squares, the person ---------- */
-.topbar{gap:12px;padding-right:22px}
-.tb-brand img{width:44px;height:44px}
-.tb-brand b{font-size:16px}
+@media (min-width:901px){.topbar{gap:12px;padding-right:22px}.tb-brand img{width:44px;height:44px}.tb-brand b{font-size:16px}}
 .tb-brand small{font-size:12.5px;color:var(--mut)}
 .search{height:44px;border-color:var(--line);border-radius:14px;background:var(--nl-card)}
 .tb-date{flex:none;color:var(--mut);font-size:14px;white-space:nowrap}
@@ -2250,6 +2248,13 @@ html[data-theme=dark] .tb-me:hover{background:var(--nl-soft)}
   .tb-me,.topbar>.tb-me{height:44px;padding:2px;box-shadow:none;background:none}
   .tb-me .av{width:36px;height:36px}
   .tb-out{display:none}
+  /* 09-app.css painted these for the old blue phone bar */
+  .ap-sync .ok{stroke:#16A34A}
+  .ap-sync[data-st=busy]{background:var(--info-bg);color:var(--info)}
+  .ap-sync[data-st=err]{background:var(--bad-bg);color:var(--bad)}
+  .tb-me,.topbar>.tb-me,html[data-theme=dark] .tb-me{border:0;background:none;color:var(--ink)}
+  .tb-me small,.tb-me>.ic{color:var(--mut)}
+  .tb-me .av,html[data-theme=dark] .tb-me .av{background:var(--nl-pill)!important;color:#fff}
 }
 @media (max-width:560px){.topbar>.tb-sgn{display:none}}   /* the sample page's card, as its old avatar: no room on a phone (the app keeps its account button) */
 
@@ -2274,9 +2279,16 @@ html[data-theme=dark] .tb-me:hover{background:var(--nl-soft)}
 .hm-sub{font-size:16px;margin-top:14px}
 @media (max-width:900px){.hm-hi h1{font-size:28px}.hm-wm{font-size:120px}}
 
-/* ---------- the big tiles and the blue band on the other pages use the home's pieces (.hm-tiles, .hm-tile, .hm-band) ---------- */
-.nl-tiles{margin:0 0 22px}
-.nl-band{margin:0 0 22px}
+/* ---------- the homes keep the big tiles and the blue band (.hm-tiles, .hm-tile, .hm-band); the list pages carry their
+   counts in the tab row instead (design ข, 21/11/2569): .ct-sum chips beside the case list's tabs, like the Master Plan's
+   .mpo-sum, and a count inside a tab (.tabs .n), red when it counts late items ---------- */
+.ct-sum{align-self:center;gap:5px;margin-left:12px;font-weight:500}
+.ct-sum+.ct-sum{margin-left:8px}
+.ct-sum .ic{width:14px;height:14px}
+.ct-sum b{font-weight:600}
+.tabs .n.bad,.tabs button[aria-selected=true] .n.bad{color:var(--bad);font-weight:600}
+.ct-wsel .n{margin-left:5px;color:var(--mut);font-size:12px}   /* as the year pills (.ct-yr .n) */
+@media (max-width:900px){.ct-sum{margin-left:4px}}
 @media (min-width:1401px){.hm-tile{min-height:156px;padding:24px 24px 22px}.hm-tile b{font-size:26px}.hm-tile>span:last-child{font-size:14px}}   /* narrower: 19-home.css keeps 21px so a title never gets cut */
 .hm-tile b{font-weight:700}
 .hm-band{border-radius:24px;background:var(--nl-pill)}
@@ -2285,6 +2297,12 @@ html[data-theme=dark] .hm-band{background:#1E3A8A}
 /* ---------- cards, buttons, tabs and fields ---------- */
 .card{border:0;border-radius:24px;background:var(--nl-card);box-shadow:var(--sh)}
 html[data-theme=dark] .card{border:1px solid var(--line)}
+.card.fx{border:0;border-radius:28px;background:var(--fx-bg)}   /* the flow board's warm grey (04-flow-and-folders.css) */
+.card.ap-card{border:0;box-shadow:0 24px 48px -28px rgba(15,30,61,.45),0 0 0 1px var(--line)}   /* the sign-in card's ring (09-app.css) */
+html[data-theme=dark] .card.ap-card{box-shadow:0 24px 48px -28px rgba(0,0,0,.7),0 0 0 1px #22406F}
+/* the case head band sat on the card's 1px border with -1px margins; the light card has no border now */
+.chd .chead{margin:0}
+html[data-theme=dark] .chd .chead{margin:-1px -1px 0}
 .btn{min-height:44px;padding:6px 18px;border-color:var(--nl-fline);border-radius:14px;font-weight:500}
 .btn.pri{border-color:var(--nl-pill);background:var(--nl-pill);font-weight:600;box-shadow:0 12px 22px -14px rgba(30,64,175,.9)}
 .btn.pri:hover{border-color:#1E3A8A;background:#1E3A8A}
@@ -2302,11 +2320,10 @@ html[data-theme=dark] .card{border:1px solid var(--line)}
 table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weight:600}
 .chip{border-radius:10px;font-weight:600}
 .kpi{border:0;border-radius:24px;background:var(--nl-card)}
-.ct-who{margin:-4px 0 14px}
+.ct-wsel{margin:-4px 0 14px}   /* the who-waits pills under the case list's tabs (.ct-who is the status cell) */
 
-/* ---------- a step the work may fill ahead (21/11/2569 "เปิดการใส่ข้อมูลให้สามารถข้ามขั้นตอนได้บางขั้นตอน"): the note in
-   the panel and a small mark in the step list; done and approve still wait for the approval before it ---------- */
-.nl-ahead{display:inline-flex;align-items:center;gap:4px;padding:0 8px;border-radius:9px;background:var(--nl-soft);color:var(--nl-ib);font-size:11.5px;font-weight:600;line-height:20px;white-space:nowrap}
+/* a step the work may fill ahead (21/11/2569) shows the panel note .note.nl-ah and, in the step list, a clip icon instead
+   of the lock (44-cases.js tlMark); done and approve still wait for the approval before it */
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -2602,7 +2619,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
       AGENDA_T.map(function (t, i) { return '<tr><td>' + t + '</td><td>' + AGENDA_P[i] + '</td><td>' + cellT(c, p + 'ag.' + i, r) + '</td></tr>'; }).join('') + '</tbody></table></div>';
     h += '<div class="fs"><h4><i>✓</i>การรับทราบแผนโดยลูกค้า</h4><div class="fg3">' + inp(c, p + 'ackN', 'ชื่อผู้แทนลูกค้า', { ro:!edit }) + inp(c, p + 'ackP', 'ตำแหน่ง', { ro:!edit }) +
       auto('วันที่รับทราบ', done ? dL((c.track[st[0]] || {}).d) : 'ลงให้เมื่อกดยืนยัน') + '</div>' +
-      (!cl && !done && edit ? '<p class="fine">ถ้าลูกค้าตอบรับทางอีเมล ใส่ชื่อผู้ตอบรับแทนได้ และเก็บอีเมลไว้ในแฟ้มงาน</p><p style="margin-top:10px"><button type="button" class="btn" data-a="sendplan">' + ic('mail') + 'ส่งแผนให้ลูกค้าทางอีเมล</button></p>' : '') + '</div>';
+      (!cl && !done && edit && !lockedNow(c, stepById('2.3')) ? '<p class="fine">ถ้าลูกค้าตอบรับทางอีเมล ใส่ชื่อผู้ตอบรับแทนได้ และเก็บอีเมลไว้ในแฟ้มงาน</p><p style="margin-top:10px"><button type="button" class="btn" data-a="sendplan">' + ic('mail') + 'ส่งแผนให้ลูกค้าทางอีเมล</button></p>' : '') + '</div>';
     return h;
   }
 
@@ -2633,7 +2650,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
   function f39cView(c, edit, st) {
     var cl = isClient(S.role), done = stOf(c, st[0]) === 'done';
     return note('info', cl ? (done ? 'คุณเห็นชอบร่างถ้อยแถลงแล้ว' : 'ตรวจเนื้อความในร่างถ้อยแถลง แล้วกด "ส่ง / ยืนยัน" ถ้าต้องแก้ส่วนที่กระทบผล GCC จะส่งให้ผู้ทบทวนอิสระพิจารณาอีกครั้ง (P-GCC-08)') : 'รอลูกค้าตรวจร่างถ้อยแถลงและเห็นชอบเป็นลายลักษณ์อักษร') + f39Summary(c) +
-      '<p style="margin-top:14px">' + (flLast(c, 'dstm') ? '' : '<a class="btn" href="' + exUrl(21) + '" target="_blank" rel="noopener">' + ic('download') + 'เปิดร่างถ้อยแถลง</a>') + (!cl && !ext() && !done ? ' <button type="button" class="btn" data-a="remind">' + ic('mail') + 'ส่งอีเมลเตือนลูกค้า</button>' : '') + '</p>';
+      '<p style="margin-top:14px">' + (flLast(c, 'dstm') ? '' : '<a class="btn" href="' + exUrl(21) + '" target="_blank" rel="noopener">' + ic('download') + 'เปิดร่างถ้อยแถลง</a>') + (!cl && !ext() && !done && !lockedNow(c, stepById('4.3')) ? ' <button type="button" class="btn" data-a="remind">' + ic('mail') + 'ส่งอีเมลเตือนลูกค้า</button>' : '') + '</p>';
   }
 
   /* ---------- 4.2 F-GCC-41 ---------- */
@@ -5223,7 +5240,16 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
      agreement), the client's confirmations (1.7, 3.4, 4.3), the site-day records (3.2, 3.3), the closure (3.5), the
      independent review (4.2), the issue (4.4) and phase 5 */
   var AHEAD = { '1.4':1, '1.6':1, '2.1':1, '2.2':1, '2.3':1, '3.1':1, '4.1':1 };
-  function aheadOk(c, st) { return !!st && !!AHEAD[st[0]] && !isClient(S.role) && !ext() && !jOn() && !closed(c); }
+  /* only behind the next approval in line, never two approvals away: 1.6 opens once 1.3 is approved (so the team head
+     cannot change under the lead verifier named at 1.3), and 2.1 to 2.3 once 1.4 is approved (the agreement is signed) */
+  function aheadOk(c, st) {
+    if (!st || !AHEAD[st[0]] || isClient(S.role) || ext() || jOn() || closed(c)) return false;
+    var g = lockOf(c, idx(st)); return !g || !lockOf(c, idx(g));
+  }
+  // this role may fill this locked step ahead here (the panel's note and form, the step list's mark)
+  function aheadHere(c, st) { return aheadOk(c, st) && canAct(c, st) && stepEdit(st) && seeDoc(c, st); }
+  // a step that waits for the approval before it and has not started: nothing may be sent to the client for it yet
+  function lockedNow(c, st) { return !!st && !stOf(c, st[0]) && !!lockOf(c, idx(st)); }
   /* the 16 Master Plan activities: the first plan's durations from the case start, or the dates set in the Master Plan tab (c.mp.d) */
   function acts(c) { var md = (c.mp || {}).d || {}; return DRAFT.map(function (o, i) { var m = md[i + 1] || {}; return { s:m.s || addDays(c.start, o[0]), e:m.e || addDays(c.start, o.length > 1 ? o[1] : o[0]) }; }); }
   function due(c, st) { var a = acts(c), best = ''; st[7].forEach(function (n) { var e = a[n - 1].e; if (e > best) best = e; }); return best; }
@@ -5581,7 +5607,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
   function titles() {
     if (S.page === 'ca' || S.page === 'carec') return cxTitles();
     var c = S.page === 'case' ? caseById(S.cid) : null;
-    if (c) { var vd = visitDate(c); return [c.name || c.short, (c.job || 'ยังไม่มีเลขที่งาน') + (vd ? ' · ลงพื้นที่ ' + dL(vd) : '')]; }
+    if (c) { var vd = visitDate(c); return [c.name || c.short, (c.job || 'ยังไม่มีเลขที่งาน') + (vd ? (stOf(c, '2.3') === 'done' ? ' · ลงพื้นที่ ' : ' · ลงพื้นที่ตามแผน ') + dL(vd) : '')]; }
     return { home:['สวัสดี ' + byWho(), 'วันนี้ ' + dL(todayIso())], users:['ผู้ใช้งาน', 'บัญชี บทบาท และคำเชิญ'], cases:[navName('cases'), cases().length + ' เคส'], cal:['ปฏิทินการทวนสอบ', 'นัดลงพื้นที่และจัดคิวงานของทุกเคส'], mpo:['Master Plan', 'ภาพรวมแผนงานของทุกเคส'], reg:['ทะเบียน', 'สร้างจากข้อมูลเคสให้เอง'], docs:['เอกสารควบคุม', 'ทะเบียนเอกสารออนไลน์ แก้ไข ยกเลิก และประกาศในที่เดียว'],
       flow:['ผังกระบวนการ', '23 ขั้น · ต้องอนุมัติ 7 ขั้น · ตามเอกสารประกาศใช้ 08/11/2569'], perm:['สิทธิ์ผู้ใช้', 'ใครเห็นอะไร และทำอะไรได้'] }[S.page] || ['', ''];
   }
@@ -6481,7 +6507,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
      the view changes (not while typing). Off under "reduce motion" ---------- */
   var MO = { nav:null, ink:{}, pick:{}, key:'' };
   function moReduced() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
-  function moKey() { return [S.page, S.cid, S.caid, S.ctab, S.ptab, S.sid, S.da, S.dt, S.cft, S.cy, S.rt, S.sub, S.cxtab, S.cxs, S.fvo, S.cm, S.cv, S.cw, S.fph, S.role].join('|'); }
+  function moKey() { return [S.page, S.cid, S.caid, S.ctab, S.ptab, S.sid, S.da, S.dt, S.cft, S.cy, S.rt, S.sub, S.cxtab, S.cxs, S.fvo, S.cm, S.cv, S.cw, S.cwho, S.fph, S.role].join('|'); }
   function moSlide(el, from, to, prop) {
     if (from && !moReduced() && (from.a !== to.a || from.b !== to.b)) {
       el.style.transition = 'none'; prop(from); el.offsetWidth; el.style.transition = '';
@@ -6797,7 +6823,9 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
   function flCan(c, key, sid) {
     if (ext() || closed(c)) return false;
     var st = stepById(sid); if (!st) return false;
-    var s = stOf(c, sid); if (s === 'done' || (lockOf(c, idx(st)) && !s && !aheadOk(c, st))) return false;   // a step filled ahead takes its files too
+    var s = stOf(c, sid); if (s === 'done') return false;
+    // a step filled ahead takes its own roles' files, but not the quotation: attaching it e-mails the client (flAdd)
+    if (lockedNow(c, st) && !(aheadOk(c, st) && st[8].indexOf(rk()) >= 0 && key !== 'quote')) return false;
     var by = key === 'out' ? st[8].concat(sid === '3.4' ? ['admin'] : []) : key === 'misc' ? ['admin', 'mgr', 'lv'] : (FL[key] || {}).by || [];
     if (key === 'out' && sid === '1.3' && rk() === 'lv' && !lead(c)) return false;   // a lead verifier works 1.3 once the manager names one
     return by.indexOf(rk()) >= 0;
@@ -6886,7 +6914,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
   function ofsGateBox(c, st) {
     var g = st[5]; if (!g || isClient(S.role) || ext()) return '';
     var off = ofsGate(c, g); if (!off.length) return '';
-    var can = GATE_BY[g] === rk() && stOf(c, st[0]) !== 'done' && !jOn(), ok = !!(c.ofsOk || {})[g];
+    var can = GATE_BY[g] === rk() && stOf(c, st[0]) !== 'done' && !lockedNow(c, st) && !jOn(), ok = !!(c.ofsOk || {})[g];
     var rows = off.map(function (sid) { var s1 = stepById(sid); return '<h5 class="fl-h5">ขั้น ' + sid + ' ' + esc(s1[2]) + '</h5>' + flRows(c, outList(c, sid), false); }).join('');
     return flCard('shield', 'ข้อมูลของขั้นนี้อยู่ในไฟล์ที่ทำนอกระบบ', 'ระบบตรวจข้อมูลจากไฟล์ไม่ได้ ' + role(GATE_BY[g])[1] + 'เปิดตรวจแล้วยืนยันก่อนอนุมัติขั้น ' + gateSid(g),
       ok ? '<span class="chip done">ยืนยันแล้ว</span>' : '<span class="chip late">รอยืนยัน</span>',
@@ -7033,7 +7061,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
       c.ofs = c.ofs || {}; c.ofs[sid] = t.checked; logC(c, (t.checked ? 'ใช้ไฟล์ที่ทำนอกระบบแทนแบบฟอร์ม ขั้น ' : 'กลับมาใช้แบบฟอร์มในระบบ ขั้น ') + sid); save(); render();
       toast(t.checked ? 'ขั้น ' + sid + ' ใช้ไฟล์ที่แนบแทนแบบฟอร์มในระบบ' : 'กลับมาใช้แบบฟอร์มในระบบ');
     } else if (t.hasAttribute('data-ofsok')) {
-      var g = +t.getAttribute('data-ofsok'); if (GATE_BY[g] !== rk()) { render(); return; }
+      var g = +t.getAttribute('data-ofsok'); if (GATE_BY[g] !== rk() || lockedNow(c, stepById(gateSid(g)))) { render(); return; }
       c.ofsOk = c.ofsOk || {}; c.ofsOk[g] = t.checked; logC(c, (t.checked ? 'ยืนยันว่าตรวจไฟล์ที่ทำนอกระบบแล้ว ก่อนอนุมัติขั้น ' : 'ยกเลิกการยืนยันไฟล์ที่ทำนอกระบบ ขั้น ') + gateSid(g)); save(); render();
     }
   });
@@ -7163,7 +7191,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
   function hmOn() { var r = S.role; return !isClient(r) && !ext() && r !== 'qmr' && r !== 'dcc' && r !== 'md'; }
   function hmMonday(iso) { var d = new Date(Date.parse(iso + 'T00:00:00Z')).getUTCDay(); return addDays(iso, d === 0 ? -6 : 1 - d); }
   function hmTile(cls, icon, title, sub, act) {
-    return '<button type="button" class="hm-tile ' + cls + '" ' + act + '><span class="hm-blob" aria-hidden="true"></span>' + ic(icon) + '<b>' + esc(title) + '</b><span>' + esc(sub) + '</span></button>';
+    return '<button type="button" class="hm-tile ' + cls + '" ' + act + '><span class="hm-blob" aria-hidden="true"></span>' + ic(icon) + '<b>' + esc(title) + '</b><span title="' + esc(sub) + '">' + esc(sub) + '</span></button>';
   }
   /* the dates the home page shows: site visits, next deadlines, plan milestones, complaints; payments only for the roles
      that handle them. A plan milestone is finished when every step under it is done (as the Master Plan page marks it)
@@ -7211,7 +7239,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     h += '<section class="card hm-card"><div class="hm-ch"><h3>นัดถัดไป</h3>' + (nv.indexOf('cal') >= 0 ? '<button type="button" class="link" data-a="nav" data-v="cal">ดูปฏิทิน</button>' : '') + '</div>' +
       (next.length ? next.map(function (e) {
         var act = e.t === 'ca' ? 'data-a="cxopen" data-v="' + esc(e.ca.id) + '"' : 'data-a="case" data-v="' + esc(e.c.id) + '"' + (e.s && e.s !== 'pay' ? ' data-s="' + esc(e.s) + '"' : '');
-        return '<button type="button" class="hm-ap" ' + act + '><span class="hm-dc"><b>' + (+e.d.slice(8, 10)) + '</b><small>' + TH_M[+e.d.slice(5, 7) - 1] + '</small></span><span class="hm-at"><b>' + esc(e.txt) + '</b><small>' + esc(CAL_T[e.t][0] + (e.sub ? ' · ' + e.sub : '')) + '</small></span></button>';
+        return '<button type="button" class="hm-ap" ' + act + '><span class="hm-dc"><b>' + (+e.d.slice(8, 10)) + '</b><small>' + TH_M[+e.d.slice(5, 7) - 1] + '</small></span><span class="hm-at"><b title="' + esc(e.txt) + '">' + esc(e.txt) + '</b><small title="' + esc(CAL_T[e.t][0] + (e.sub ? ' · ' + e.sub : '')) + '">' + esc(CAL_T[e.t][0] + (e.sub ? ' · ' + e.sub : '')) + '</small></span></button>';
       }).join('') : '<p class="hm-none">ยังไม่มีนัดใน 30 วันข้างหน้า</p>') + '</section>';
     return h;
   }
@@ -7237,16 +7265,16 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var open = list.filter(function (c) { return !closed(c); }), lateL = open.filter(function (c) { var k = cur(c); return k && diff(due(c, k)) < 0; }), ib = ibxItems(), nv = navs(), ev = hmEvents();
     var all = open.map(function (c) { return { c:c, k:cur(c) }; }).filter(function (x) { return x.k; }), xa = kStats(all);
     var soon = list.filter(function (c) { var v = visitDate(c); return v && diff(v) >= 0 && diff(v) <= 7 && stOf(c, '3.2') !== 'done'; }).length;
-    var tiles = (adm ? hmTile('t-blue', 'clip', 'งานถัดไปของทุกเคส', all.length + ' เคส · ถึงกำหนดใน 7 วัน ' + xa.soon, 'data-a="nav" data-v="cases"') :
+    var tiles = (adm ? hmTile('t-blue', 'clip', 'งานถัดไปของทุกเคส', all.length + ' เคส · ถึงกำหนดใน 7 วัน ' + xa.soon, 'data-a="nav" data-v="cases" data-fresh="1"') :
         r === 'sales' ? hmTile('t-blue', 'clip', 'รอใบเสนอราคา', mine.length + ' เคส', 'data-a="inbox"') :
         hmTile('t-blue', 'clip', 'งานที่รอคุณ', ib.length + ' งาน · เลยกำหนด ' + ibxLate(ib) + ' งาน', 'data-a="inbox"')) +
-      (r === 'sales' ? hmTile('t-sky', 'folder', 'เคสทั้งหมด', list.length + ' เคส · ปิดแฟ้มแล้ว ' + list.filter(closed).length, 'data-a="nav" data-v="cases"') :
+      (r === 'sales' ? hmTile('t-sky', 'folder', 'เคสทั้งหมด', list.length + ' เคส · ปิดแฟ้มแล้ว ' + list.filter(closed).length, 'data-a="nav" data-v="cases" data-fresh="1"') :
         hmTile('t-sky', 'cal', 'ลงพื้นที่', '7 วันข้างหน้า ' + soon + ' เคส', 'data-a="nav" data-v="' + (nv.indexOf('cal') >= 0 ? 'cal' : nv.indexOf('mpo') >= 0 ? 'mpo' : 'cases') + '"')) +
-      hmTile(lateL.length ? 't-red' : 't-green', lateL.length ? 'alert' : 'check', 'เลยกำหนด', lateL.length ? lateL.length + ' เคส · นานสุด ' + xa.maxLate + ' วัน' : 'ไม่มีเคสที่เลยกำหนด', 'data-a="nav" data-v="cases"');
+      hmTile(lateL.length ? 't-red' : 't-green', lateL.length ? 'alert' : 'check', 'เลยกำหนด', lateL.length ? lateL.length + ' เคส · นานสุด ' + xa.maxLate + ' วัน' : 'ไม่มีเคสที่เลยกำหนด', 'data-a="nav" data-v="cases" data-fresh="1"');
     var sub = adm ? 'มีเคสที่กำลังทำ ' + all.length + ' เคส เลือกเมนูด้านล่างได้เลย' : ib.length ? 'วันนี้มีงานรอคุณ ' + ib.length + ' งาน เลือกเมนูด้านล่างได้เลย' : 'ตอนนี้ไม่มีงานที่รอคุณ เลือกเมนูด้านล่างได้เลย';
     var h = '<div class="hm"><div class="hm-row"><div class="hm-main"><span class="hm-wmw" aria-hidden="true"><span class="hm-wm">GCC</span></span>' +
       '<div class="hm-hi"><h1 title="' + esc('สวัสดี ' + byWho()) + '">สวัสดี ' + esc(byWho()) + '</h1><span class="hi-d">' + ic('cal') + 'ข้อมูล ณ ' + dL(todayIso()) + '</span></div>' +
-      '<span class="hm-bar" aria-hidden="true"></span><p class="hm-sub">' + esc(sub) + '</p><div class="hm-tiles">' + tiles + '</div>' + hmBand(r, adm, list, ib) +
+      '<span class="hm-bar" aria-hidden="true"></span><p class="hm-sub" title="' + esc(sub) + '">' + esc(sub) + '</p><div class="hm-tiles">' + tiles + '</div>' + hmBand(r, adm, list, ib) +
       '<div class="hm-mods">' + hmMods(list, ib, nv) + '</div></div><aside class="hm-side" aria-label="ทางลัด">' + hmSide(nv, ev) + '</aside>' + hmTrail(ev) + '</div>';
     h += '<section class="sec"><div class="sec-h"><h3>' + (adm ? 'งานถัดไปของทุกเคส' : 'งานที่รอคุณ') + '</h3><div class="sp"></div><button type="button" class="btn sm" data-a="nav" data-v="cases">ดูทุกเคส</button></div>' +
       '<div class="card ct-card">' + (mine.length ? nextTable(mine) : '<div class="pad empty">ตอนนี้ไม่มีงานที่รอคุณ</div>') + '</div></section>';
@@ -7281,6 +7309,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var fx = function (f) { return f ? '<button type="button" class="btn sm" data-a="flview" data-v="' + esc(f.id) + '">' + ic('eye') + '<span>เปิดดู</span></button>' : ''; };
     var pv = function (code) { return '<button type="button" class="btn sm xb" data-a="print" data-v="' + code + '" data-c="' + c.id + '">' + ic('eye') + '<span>ดู</span><small>' + xlab(code).trim() + '</small></button>'; };
     var q = flLast(c, 'quote'), r1 = flLast(c, 'rep', 1), r2 = flLast(c, 'rep', 2), d4 = stOf(c, '4.4') === 'done', fs = d4 ? flLast(c, 'fstm') : stOf(c, '4.3') ? flLast(c, 'dstm') : null;
+    if (!clientSees(c, stepById('1.4'))) q = null;   // a quotation the client has not reached yet stays with GCC
     return [['แบบคำขอที่คุณกรอก', stOf(c, '1.1') ? pv('F-GCC-24') : ''], ['ใบเสนอราคา', fx(q)], ['ข้อตกลงการทวนสอบ', q && stOf(c, '1.4') ? pv('F-GCC-26') : ''],
       ['เล่มรายงานที่คุณส่ง' + (r2 ? ' (ฉบับแก้ไข)' : ''), fx(r2 || r1)], ['แผนการทวนสอบ', stOf(c, '2.3') ? pv('F-GCC-32') : ''],
       ['รายการข้อแก้ไขและข้อชี้แจงเพิ่มเติม', stOf(c, '3.3') === 'done' ? '<a class="btn sm" href="' + exUrl(17) + '" target="_blank" rel="noopener">' + ic('download') + 'ดาวน์โหลด</a>' : ''],
@@ -7314,10 +7343,10 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var st23 = stOf(c, '2.3'), st14 = stOf(c, '1.4'), nMail = (c.mail || []).length;
     var mod = function (icon, k2, name, sub, act) { return '<button type="button" class="hm-mod" ' + act + '><span class="hm-ic ' + k2 + '">' + ic(icon) + '</span><b title="' + esc(name) + '">' + esc(name) + '</b><span>' + esc(sub) + '</span></button>'; };
     var mods = mod('cal', 'k-blue', 'แผนการทวนสอบ', st23 === 'done' ? 'ยืนยันแล้ว' : k && k[0] === '2.3' ? 'รอคุณยืนยัน' : 'ยังไม่ถึงขั้นนี้', go + (clientSees(c, stepById('2.3')) ? ' data-s="2.3"' : '')) +
-      mod('folder', 'k-green', 'ไฟล์ของคุณ', files + ' ไฟล์', go) + mod('mail', 'k-amber', 'อีเมลจาก GCC', nMail + ' ฉบับ', go) +
-      mod('coin', 'k-sky', 'ใบเสนอราคาและข้อตกลง', st14 === 'done' ? 'ลงนามแล้ว' : flLast(c, 'quote') ? 'รอคุณลงนาม' : 'GCC กำลังจัดทำ', go + (clientSees(c, stepById('1.4')) ? ' data-s="1.4"' : '')) +
+      mod('folder', 'k-green', 'ไฟล์ของคุณ', files + ' ไฟล์', go) + mod('mail', 'k-amber', 'อีเมลจาก GCC', nMail + ' ฉบับ', go + ' data-t="hist"') +
+      mod('coin', 'k-sky', 'ใบเสนอราคาและข้อตกลง', st14 === 'done' ? 'ลงนามแล้ว' : !(flLast(c, 'quote') && clientSees(c, stepById('1.4'))) ? 'GCC กำลังจัดทำ' : clientPart(c, stepById('1.4')) === 'sent' ? 'รอ GCC ตรวจ' : 'รอคุณลงนาม', go + (clientSees(c, stepById('1.4')) ? ' data-s="1.4"' : '')) +
       (navs().indexOf('ca') >= 0 ? mod('msg', 'k-red', 'ร้องเรียนหรืออุทธรณ์', 'ยื่นเรื่องได้ทุกเมื่อ', 'data-a="nav" data-v="ca"') : '');
-    var lv = lead(c), ml = (c.mail || []).slice().sort(function (a, b) { return a.at < b.at ? 1 : -1; }).slice(0, 3);
+    var lv = stOf(c, '1.7') === 'done' ? lead(c) : '', ml = (c.mail || []).slice().sort(function (a, b) { return a.at < b.at ? 1 : -1; }).slice(0, 3);
     var side = '<section class="card hm-card"><h3>ติดต่อ GCC</h3>' + (lv ? '<div class="hm-ap"><span class="hm-dc"><b>LV</b></span><span class="hm-at"><b>' + esc(lv) + '</b><small>หัวหน้าผู้ทวนสอบของงานนี้</small></span></div>' : '') +
       '<a class="btn pri" href="tel:0820069977">' + ic('phone') + 'โทร 082-006-9977</a></section>' +
       '<section class="card hm-card"><h3>อีเมลจาก GCC</h3>' + (ml.length ? ml.map(function (m) {
@@ -7329,10 +7358,10 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var trail = '<div class="hm-trail" aria-hidden="true"><b>งานของคุณ</b><div class="hm-tl">' + CL_POINTS.map(function (p, i) {
       return '<div class="hm-td' + (stOf(c, p[0]) === 'done' ? ' ev' : i === first ? ' today' : '') + '"><span>' + p[1] + '</span><i></i></div>';
     }).join('') + '</div></div>';
-    var hello = 'สวัสดี ' + (c.short || c.name);
+    var hello = 'สวัสดี ' + (c.short || c.name), csub = 'งานทวนสอบคาร์บอนฟุตพริ้นท์ขององค์กร (CFO) · ' + (c.job ? 'เลขที่งาน ' + c.job : 'รอเลขที่งาน');
     var h = '<div class="hm"><div class="hm-row"><div class="hm-main"><span class="hm-wmw" aria-hidden="true"><span class="hm-wm">GCC</span></span>' +
       '<div class="hm-hi"><h1 title="' + esc(hello) + '">' + esc(hello) + '</h1></div><span class="hm-bar" aria-hidden="true"></span>' +
-      '<p class="hm-sub">' + esc('งานทวนสอบคาร์บอนฟุตพริ้นท์ขององค์กร (CFO) · ' + (c.job ? 'เลขที่งาน ' + c.job : 'รอเลขที่งาน')) + '</p><div class="hm-tiles">' + tiles + '</div>' + band +
+      '<p class="hm-sub" title="' + esc(csub) + '">' + esc(csub) + '</p><div class="hm-tiles">' + tiles + '</div>' + band +
       '<div class="hm-mods">' + mods + '</div></div><aside class="hm-side" aria-label="ติดต่อและอีเมล">' + side + '</aside>' + trail + '</div>';
     h += '<section class="sec"><div class="sec-h"><h3>ไฟล์ของคุณ</h3></div><div class="card pad">' + clientFiles(c) + '</div></section>';
     return h + '</div>';
@@ -7371,23 +7400,23 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var ysel = ys.length > 1 ? '<div class="subtabs ct-yr" role="tablist" aria-label="ปีของเคส">' + [['all', 'ทุกปี', every.length]].concat(ys.map(function (y) { return [y, 'ปี ' + y, years[y]]; })).map(function (t) {
       return '<button type="button" role="tab" data-a="cy" data-v="' + t[0] + '" aria-selected="' + (yr === t[0]) + '">' + t[1] + '<span class="n">' + t[2] + '</span></button>';
     }).join('') + '</div>' : '';
-    /* 21/11/2569 the new look: three tiles over the list, and pills that keep the cases waiting for one side (the client,
-       GCC's team or the independent reviewer), read from the case's next step the way the client home reads it */
+    /* 21/11/2569 the new look, design ข ("ใช้แบบ ข ตัวเลขอยู่ในแถบแท็บ"): no big tiles; the tab row carries the counts (cases
+       with a site visit in the next 14 days, cases late on their next step), and pills keep the cases waiting for one side
+       (the client, GCC's team or the independent reviewer), read from the case's next step the way the client home reads it */
     var who = function (c) { var k = cur(c); if (!k || closed(c)) return ''; return clientSees(c, k) && clientPart(c, k) === 'todo' ? 'cl' : k[8].indexOf('ir') >= 0 ? 'ir' : 'gc'; };
-    var base = tab === 'closed' ? shut : tab === 'all' ? all : open, cw = tab === 'closed' || ['cl', 'gc', 'ir'].indexOf(S.cw) < 0 ? 'all' : S.cw;
+    var base = tab === 'closed' ? shut : tab === 'all' ? all : open, cw = tab === 'closed' || ['cl', 'gc', 'ir'].indexOf(S.cwho) < 0 ? 'all' : S.cwho;   // S.cw is the calendar's week
     var list = cw === 'all' ? base : base.filter(function (c) { return who(c) === cw; });
-    var lateL = open.filter(function (c) { var k = cur(c); return k && diff(due(c, k)) < 0; }), maxLate = 0, nv = navs();
+    var live = base.filter(function (c) { return !closed(c); }), lateL = live.filter(function (c) { var k = cur(c); return k && diff(due(c, k)) < 0; }), maxLate = 0;
     lateL.forEach(function (c) { var d = -diff(due(c, cur(c))); if (d > maxLate) maxLate = d; });
-    var site = open.filter(function (c) { var v = visitDate(c); return v && diff(v) >= 0 && diff(v) <= 14 && stOf(c, '3.2') !== 'done'; }).length;
-    var tiles = '<div class="hm-tiles nl-tiles">' + hmTile('t-blue', 'play', 'กำลังทำ', open.length + ' เคส · ช่วงวางแผน ' + open.filter(function (c) { var k = cur(c); return k && k[1] === 2; }).length + ' เคส', 'data-a="cft" data-v="open"') +
-      hmTile('t-sky', 'cal', 'ลงพื้นที่', site + ' เคส ใน 14 วันข้างหน้า', nv.indexOf('cal') >= 0 ? 'data-a="nav" data-v="cal"' : 'data-a="cft" data-v="open"') +
-      hmTile(lateL.length ? 't-red' : 't-green', lateL.length ? 'alert' : 'check', 'เลยกำหนด', lateL.length ? lateL.length + ' เคส · นานสุด ' + maxLate + ' วัน' : 'ไม่มีเคสที่เลยกำหนด', 'data-a="cft" data-v="open"') + '</div>';
-    var wsel = tab === 'closed' ? '' : '<div class="subtabs ct-who" role="tablist" aria-label="รอใคร">' + [['all', 'ทุกเคส'], ['cl', 'รอลูกค้า'], ['gc', 'รอทีม GCC'], ['ir', 'รอผู้ทบทวนอิสระ']].map(function (t) {
-      return '<button type="button" role="tab" data-a="cw" data-v="' + t[0] + '" aria-selected="' + (cw === t[0]) + '">' + t[1] + '<span class="n">' + (t[0] === 'all' ? base.length : base.filter(function (c) { return who(c) === t[0]; }).length) + '</span></button>';
+    var site = live.filter(function (c) { var v = visitDate(c); return v && diff(v) >= 0 && diff(v) <= 14 && stOf(c, '3.2') !== 'done'; }).length;
+    var sum = (site ? '<span class="chip doing ct-sum" title="เคสที่นัดลงพื้นที่ภายใน 14 วันนับจากวันนี้">' + ic('cal') + '<span>ลงพื้นที่ใน 14 วัน <b>' + site + '</b></span></span>' : '') +
+      (lateL.length ? '<span class="chip late ct-sum" title="เคสที่ขั้นถัดไปเลยวันครบกำหนด">' + ic('alert') + '<span>เลยกำหนด <b>' + lateL.length + '</b> · นานสุด ' + maxLate + ' วัน</span></span>' : '');
+    var wsel = tab === 'closed' ? '' : '<div class="subtabs ct-wsel" role="tablist" aria-label="รอใคร">' + [['all', 'ทุกเคส'], ['cl', 'รอลูกค้า'], ['gc', 'รอทีม GCC'], ['ir', 'รอผู้ทบทวนอิสระ']].map(function (t) {
+      return '<button type="button" role="tab" data-a="cwho" data-v="' + t[0] + '" aria-selected="' + (cw === t[0]) + '">' + t[1] + '<span class="n">' + (t[0] === 'all' ? base.length : base.filter(function (c) { return who(c) === t[0]; }).length) + '</span></button>';
     }).join('') + '</div>';
-    var h = tiles + '<div class="ct-bar"><div class="tabs" role="tablist">' + [['open', 'กำลังทำ', open.length, 'play'], ['closed', 'ปิดแฟ้มแล้ว', shut.length, 'archive'], ['all', 'ทั้งหมด', all.length, 'docs']].map(function (t) {
+    var h = '<div class="ct-bar"><div class="tabs" role="tablist">' + [['open', 'กำลังทำ', open.length, 'play'], ['closed', 'ปิดแฟ้มแล้ว', shut.length, 'archive'], ['all', 'ทั้งหมด', all.length, 'docs']].map(function (t) {
       return '<button type="button" role="tab" data-a="cft" data-v="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + ic(t[3]) + '<span>' + t[1] + '<span class="n">' + t[2] + '</span></span></button>';
-    }).join('') + '</div><div class="sp"></div>' + ysel + (S.role === 'admin' ? '<button type="button" class="btn pri" data-a="newcase">' + ic('plus') + 'เปิดเคสใหม่และเชิญลูกค้า</button>' : '') + '</div>' + wsel;
+    }).join('') + '</div>' + sum + '<div class="sp"></div>' + ysel + (S.role === 'admin' ? '<button type="button" class="btn pri" data-a="newcase">' + ic('plus') + 'เปิดเคสใหม่และเชิญลูกค้า</button>' : '') + '</div>' + wsel;
     if (!list.length) return h + '<section class="card pad empty">' + (base.length && cw !== 'all' ? 'ไม่มีเคสที่' + { cl:'รอลูกค้า', gc:'รอทีม GCC', ir:'รอผู้ทบทวนอิสระ' }[cw] + 'ในแท็บนี้' : all.length ? 'ไม่มีเคสในแท็บนี้' : every.length ? 'ไม่มีเคสของปีนี้' : 'ไม่มีเคสที่บทบาทนี้เห็น') + '</section>';
     var groups = PH.map(function (p, i) { return { name:'ช่วงที่ ' + i + ' · ' + p[0], icon:p[1], list:[] }; }), fin = {};
     list.forEach(function (c) { var k = cur(c), y; if (k) groups[k[1]].list.push(c); else { y = caseYear(c); (fin[y] = fin[y] || { name:'ครบทุกขั้น · ปี ' + y, icon:'check', list:[] }).list.push(c); } });
@@ -7414,16 +7443,17 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     if (!isClient(S.role) && !ext()) tabs.push(['file', 'แฟ้มงาน']);
     tabs.push(['hist', isClient(S.role) ? 'อีเมลจาก GCC' : 'อีเมลและประวัติ']);
     if (!tabs.some(function (t) { return t[0] === S.ctab; })) S.ctab = 'docs';
-    var tk = tabs.map(function (t) { return t[0]; }), nk = cur(c), fls = flList(c), lf = fls.length ? fls[fls.length - 1] : null, mi = mpoInfo(c, acts(c)), nDone = STEPS.filter(function (st) { return stOf(c, st[0]) === 'done'; }).length;
+    /* design ข (21/11/2569): no tiles; the tabs carry their own counts (files in the case file, Master Plan activities
+       that are late) and the head band says the next step and who it waits on */
+    var nk = cur(c), nFl = flList(c).length, nLate = closed(c) ? 0 : mpoInfo(c, acts(c)).late.length, nDone = STEPS.filter(function (st) { return stOf(c, st[0]) === 'done'; }).length;
     var wk = nk ? (clientSees(c, nk) && clientPart(c, nk) === 'todo' ? 'รอลูกค้า' : nk[8].indexOf('ir') >= 0 ? 'รอผู้ทบทวนอิสระ' : 'รอทีม GCC') : '';
-    var h = '<div class="hm-tiles nl-tiles">' + hmTile('t-blue', 'clip', 'ขั้นตอนนี้', nk ? nk[0] + ' ' + nk[2] + ' · ' + wk : 'ครบทุกขั้นแล้ว', 'data-a="case" data-v="' + esc(c.id) + '"' + (nk && seeStep(c, nk) ? ' data-s="' + nk[0] + '"' : '')) +
-      hmTile('t-sky', 'folder', 'ไฟล์ของเคส', fls.length + ' ไฟล์' + (lf && lf.at ? ' · ล่าสุด ' + dL(String(lf.at).slice(0, 10)) : ''), 'data-a="ctab" data-v="' + (tk.indexOf('file') >= 0 ? 'file' : 'docs') + '"') +
-      hmTile(mi.late.length ? 't-red' : 't-green', 'chart', 'Master Plan', acts(c).length + ' กิจกรรม · ' + (closed(c) ? 'ปิดแฟ้มแล้ว' : mi.late.length ? 'เลยกำหนด ' + mi.late.length : 'ตามแผน'), 'data-a="ctab" data-v="' + (tk.indexOf('plan') >= 0 ? 'plan' : 'docs') + '"') + '</div>';
-    h += '<section class="card chd"><div class="chead"><div>' + ring(pct(c)) + '<h2>ความคืบหน้า ' + nDone + '/' + STEPS.length + ' ขั้น</h2>' +
+    var tabN = { file:nFl ? '<span class="n">' + nFl + '</span>' : '', plan:nLate ? '<span class="n bad" title="กิจกรรมที่เลยกำหนด ' + nLate + ' กิจกรรม">เลย ' + nLate + '</span>' : '' };
+    var h = '<section class="card chd"><div class="chead"><div>' + ring(pct(c)) + '<h2>ความคืบหน้า ' + nDone + '/' + STEPS.length + ' ขั้น</h2>' +
       '<div class="meta"><span>' + esc(c.job || 'ยังไม่มีเลขที่งาน') + '</span><span class="chip doing">CFO</span><span class="chip wait">ระดับความเชื่อมั่นแบบจำกัด</span>' + (closed(c) ? '<span class="chip lock">ปิดแฟ้มแล้ว อ่านอย่างเดียว</span>' : '') +
+      (staff && nk ? '<span title="' + esc('ขั้นถัดไป ' + nk[0] + ' ' + nk[2]) + '">ขั้น ' + nk[0] + ' · ' + wk + '</span>' : '') +
       (staff ? '<span title="หัวหน้าผู้ทวนสอบ">LV ' + esc(lead(c) || 'ยังไม่มอบหมาย') + '</span><span title="ผู้ทบทวนอิสระ">IR ' + esc(irName(c)) + '</span>' : '') + '</div></div><span class="hd-art" aria-hidden="true">' + art() + '</span><div class="acts">' + caseActions(c) + '</div></div>' +
       (sh ? '<div style="padding:0 20px">' + note('share', 'แชร์ให้ ' + esc(role(S.role)[1]) + ' ถึง ' + dL(sh.until) + ' · ' + (sh.scope === 'all' ? 'ทั้งแฟ้ม' : 'เฉพาะรายงานและถ้อยแถลง') + ' · อ่านอย่างเดียว · ทุกการเปิดดูถูกบันทึก', 'warn') + '</div>' : '') +
-      stepper(c) + '<div class="tabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-a="ctab" data-v="' + t[0] + '" aria-selected="' + (S.ctab === t[0]) + '">' + ic(TAB_IC[t[0]] || 'docs') + '<span>' + t[1] + '</span></button>'; }).join('') + '</div></section>';
+      stepper(c) + '<div class="tabs" role="tablist">' + tabs.map(function (t) { return '<button type="button" role="tab" data-a="ctab" data-v="' + t[0] + '" aria-selected="' + (S.ctab === t[0]) + '">' + ic(TAB_IC[t[0]] || 'docs') + '<span>' + t[1] + (tabN[t[0]] || '') + '</span></button>'; }).join('') + '</div></section>';
     if (S.ctab === 'plan') h += planView(c);
     else if (S.ctab === 'pay') h += payView(c);
     else if (S.ctab === 'hist') h += histView(c);
@@ -7454,7 +7484,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
       t.out ? '<span class="tl-m ok" title="' + esc('ลูกค้าตอบนอกระบบ ' + dS(t.d)) + '">นอกระบบ</span>' : '<span class="tl-m ok" title="' + esc('สำเร็จ ' + dS(t.d)) + '">' + ic('check') + '</span>';
     if (k === 'late') return '<span class="tl-m bad" title="' + esc('กำหนด ' + dL(du)) + '">เลย ' + (-diff(du)) + ' วัน</span>';
     if (k === 'doing') return '<span class="tl-m on" title="' + esc('กำหนด ' + dL(du)) + '">กำลังทำ</span>';
-    if (k === 'lock') return '<span class="tl-m" title="' + esc('ขั้นตอนถัดไป' + (aheadOk(c, st) && canAct(c, st) ? ' · กรอกล่วงหน้าได้' : '') + ' · กำหนด ' + dL(du)) + '">' + ic('lock') + '</span>';
+    if (k === 'lock') { var ah = aheadHere(c, st); return '<span class="tl-m" title="' + esc('ขั้นตอนถัดไป' + (ah ? ' · กรอกล่วงหน้าได้' : '') + ' · กำหนด ' + dL(du)) + '">' + ic(ah ? 'clip' : 'lock') + '</span>'; }
     return '<span class="tl-m">' + dS(du) + '</span>';
   }
   // one continuous bar per phase (never dots or dashes): done in deep blue, then the step under way, red when it is late
@@ -7719,7 +7749,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var h = '<section class="card panel"><div class="ph"><div><div class="ph-tt">' + (S.tlc ? stepNav(c, st) : '') + '<h3>' + st[0] + ' ' + esc(st[2]) + (st[5] ? ' <span class="chip doing">ต้องอนุมัติ</span>' : '') + '</h3></div>' +
       '<div class="meta"><span class="who" title="' + esc('ผู้ทำ ' + st[4]) + '">' + st[8].map(function (k) { return av(k); }).join('') + '</span>กำหนดตามแผน ' + dL(du) + '</div></div><div class="acts">' + stepBtns(c, st, s, lk, can) + '</div></div>' +
       '<div class="tabs">' + [['form', 'แบบฟอร์ม'], ['flow', 'ผังงาน'], ['files', 'ไฟล์']].map(function (t) { return '<button type="button" data-a="ptab" data-v="' + t[0] + '" aria-selected="' + (S.ptab === t[0]) + '">' + ic(TAB_IC[t[0]]) + '<span>' + t[1] + '</span></button>'; }).join('') + '</div><div class="pb">';
-    var ah = lk && aheadOk(c, st) && can && stepEdit(st) && seeDoc(c, st);   // the form may be filled ahead (25-steps.js)
+    var ah = lk && can && aheadHere(c, st);   // the form may be filled ahead (25-steps.js)
     if (ah) h += note('clip', '<b>กรอกล่วงหน้าได้</b> ข้อมูลที่กรอกบันทึกไว้ให้ · กดทำเสร็จได้เมื่อขั้น ' + lk[0] + ' อนุมัติแล้ว', 'info nl-ah');
     else if (lk) h += note('lock', 'เริ่มได้เมื่อขั้น ' + lk[0] + ' อนุมัติแล้ว: ' + esc(lk[6]), 'warn');
     if (S.ptab === 'flow') h += flowLane(st[1], c, st[0]);
@@ -7858,7 +7888,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var h = '<div class="todo" style="padding:0 0 14px">' + ic(PH[st[1]][1]) + '<div><h3>' + esc(what[0]) + '</h3><p>' + (isClient(S.role) ? 'GCC ส่งเอกสารนี้ให้คุณตรวจ เมื่อตรวจแล้วกด "ส่ง / ยืนยัน" ด้านบน' : 'รอลูกค้าตรวจและยืนยันในระบบ ระบบส่งอีเมลแจ้งลูกค้าให้แล้ว') + '</p></div>' +
       (url ? '<a class="btn" href="' + url + '" target="_blank" rel="noopener">' + ic('download') + 'เปิดเอกสาร</a>' : '') + '</div>';
     if (st[0] === '1.7') h += '<div class="fg">' + vteam(c).map(function (m) { return auto(m.r, m.n); }).join('') + '</div>';
-    if (!isClient(S.role) && S.role !== 'tisi' && S.role !== 'tgo' && stOf(c, st[0]) !== 'done') h += '<p style="margin-top:14px"><button type="button" class="btn" data-a="remind">' + ic('mail') + 'ส่งอีเมลเตือนลูกค้า</button></p>';
+    if (!isClient(S.role) && S.role !== 'tisi' && S.role !== 'tgo' && stOf(c, st[0]) !== 'done' && !lockedNow(c, st)) h += '<p style="margin-top:14px"><button type="button" class="btn" data-a="remind">' + ic('mail') + 'ส่งอีเมลเตือนลูกค้า</button></p>';
     return h;
   }
   function gateView(c, edit) {
@@ -8006,8 +8036,8 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     if (!t || t.tagName === 'SELECT' || t.tagName === 'INPUT') return;
     var a = t.getAttribute('data-a'), v = t.getAttribute('data-v'), c = curCase();
     if ((a === 'case' || a === 'cxopen') && t.closest('#modal')) closeModal();
-    if (a === 'nav') { S.page = v; S.cid = null; render(); toTop(); }
-    else if (a === 'case') { S.page = 'case'; S.cid = v; S.sid = t.getAttribute('data-s') || null; S.ctab = 'docs'; S.ptab = 'form'; S.hf = 'all'; S.hq = ''; S.hn = 20; render(); toTop(); }
+    if (a === 'nav') { S.page = v; S.cid = null; if (t.hasAttribute('data-fresh')) { S.cft = 'open'; S.cy = 'all'; S.cwho = 'all'; } render(); toTop(); }
+    else if (a === 'case') { S.page = 'case'; S.cid = v; S.sid = t.getAttribute('data-s') || null; S.ctab = t.getAttribute('data-t') || 'docs'; S.ptab = 'form'; S.hf = 'all'; S.hq = ''; S.hn = 20; render(); toTop(); }
     else if (a === 'step') { S.sid = v; S.ptab = 'form'; var stp = stepById(v); if (stp) (S.tlo = S.tlo || {})[stp[1]] = true; render(); }
     else if (a === 'tlph') { S.tlo = S.tlo || {}; S.tlo[v] = !S.tlo[v]; tlFold(v, S.tlo[v]); }
     else if (a === 'recout' && c) openRecOut(c, stepById(S.sid));
@@ -8024,7 +8054,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     else if (a === 'tlc' || a === 'tlfp') { S.tlc = a === 'tlc' && v === '1'; if (a === 'tlfp') (S.tlo = S.tlo || {})[v] = true; try { localStorage.setItem('gcc-uat-tlc', S.tlc ? '1' : '0'); } catch (e) { /* this view only */ } tlMorph(); }
     else if (a === 'cft') { S.cft = v; render(); }
     else if (a === 'cy') { S.cy = v; render(); }
-    else if (a === 'cw') { S.cw = v; render(); }
+    else if (a === 'cwho') { S.cwho = v; render(); }
     else if (a === 'ctab') { S.ctab = v; render(); }
     else if (a === 'ptab') { S.ptab = v; render(); }
     else if (a === 'st' && c) setStep(c, stepById(S.sid), v);
@@ -8048,6 +8078,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     else if (a === 'addg') { DB[v] = DB[v] || []; DB[v].push({ n:'', x:'ไม่รับให้บริการตรวจ', after:'', by:'', note:'' }); save(); render(); }
     else if (a === 'f35open') { S.f35open = !S.f35open; render(); }
     else if (a === 'f34fill' && c) { c.f34.rows = pareto(c).rows.filter(function (x) { return x.r.k; }).map(function (x) { return { pi:x.i, s:x.r.s, src:'', why:x.r.w || '', who:'', exp:'', res:'' }; }); logC(c, 'ดึงรายการสุ่มจากตาราง ก. ลง F-GCC-34'); save(); render(); }
+    else if (a === 'sendplan' && c && lockedNow(c, stepById('2.3'))) toast('ส่งแผนให้ลูกค้าได้เมื่อขั้น ' + lockOf(c, idx(stepById('2.3')))[0] + ' อนุมัติแล้ว');
     else if (a === 'sendplan' && c) { mailC(c, 'แผนการทวนสอบ (F-GCC-32) พร้อมให้ตรวจและยืนยันในระบบ'); save(); render(); toast('ส่งอีเมลแจ้งแผนถึงลูกค้าแล้ว (ตัวอย่าง)'); }
     else if (a === 'invite' && c) openInvite(c);
     else if (a === 'sendinvite' && c) {
@@ -8070,6 +8101,7 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
       logC(c, 'แชร์เคสให้ ' + role(to)[1] + ': ' + why); save(); closeModal(); render(); toast('แชร์ให้ ' + role(to)[1] + ' แล้ว ลองเปลี่ยนบทบาทเป็น ' + role(to)[1] + ' เพื่อดู');
     }
     else if (a === 'sharedel' && c) { var s0 = c.shares.splice(+v, 1)[0]; if (s0) logC(c, 'ยกเลิกการแชร์ให้ ' + role(s0.to)[1]); save(); closeModal(); render(); toast('ยกเลิกการแชร์แล้ว'); }
+    else if (a === 'remind' && c && lockedNow(c, stepById(S.sid))) toast('ยังไม่ถึงขั้นนี้ของลูกค้า จึงยังไม่ส่งอีเมลเตือน');
     else if (a === 'remind' && c) { var st0 = stepById(S.sid); mailC(c, 'เตือน: รอคุณ' + st0[2]); save(); render(); toast('ส่งอีเมลเตือนลูกค้าแล้ว (ตัวอย่าง)'); }
     else if (a === 'addfinding' && c) {
       var ty = $('nfType').value, tx = $('nfText').value.trim();
@@ -8674,13 +8706,6 @@ table.t th{background:var(--nl-soft);color:var(--mut);font-size:12.5px;font-weig
     var tabs = '<div class="ct-bar"><div class="tabs" role="tablist">' + [['open', 'กำลังทำ', open.length, 'play'], ['closed', 'ปิดแฟ้มแล้ว', shut.length, 'archive'], ['all', 'ทั้งหมด', all.length, 'docs']].map(function (t) {
       return '<button type="button" role="tab" data-a="cft" data-v="' + t[0] + '" aria-selected="' + (tab === t[0]) + '">' + ic(t[3]) + '<span>' + t[1] + '<span class="n">' + t[2] + '</span></span></button>';
     }).join('') + '</div>';
-    /* 21/11/2569 the new look: three tiles over the time line for the open cases of the year picked */
-    var oL = 0, oS = 0, oOk = 0, oFirst = null;
-    open.forEach(function (c) { var x = mpoInfo(c, acts(c)); oL += x.late.length; oS += x.soon; if (!x.late.length) oOk++; else if (!oFirst || x.late[0].e < oFirst.e) oFirst = { e:x.late[0].e, c:c }; });
-    var nv = navs(), tiles = '<div class="hm-tiles nl-tiles">' + hmTile('t-blue', 'chart', 'ตามแผน', oOk + ' จาก ' + open.length + ' เคส · ออก Master Plan แล้ว ' + open.filter(function (c) { return !!mpLast(c); }).length + ' เคส', 'data-a="cft" data-v="open"') +
-      hmTile('t-sky', 'cal', 'ใกล้ครบกำหนด', oS + ' กิจกรรม ใน 7 วัน', nv.indexOf('cal') >= 0 ? 'data-a="nav" data-v="cal"' : 'data-a="cft" data-v="open"') +
-      hmTile(oL ? 't-red' : 't-green', oL ? 'alert' : 'check', 'เลยกำหนด', oL ? oL + ' กิจกรรม · ' + (oFirst.c.short || oFirst.c.name) : 'ไม่มีกิจกรรมที่เลยกำหนด', 'data-a="cft" data-v="open"') + '</div>';
-    tabs = tiles + tabs;
     var list = (tab === 'closed' ? shut : tab === 'all' ? all : open).slice();
     if (!list.length) return tabs + '<div class="sp"></div>' + ysel + '</div><section class="card pad empty">' + (all.length ? 'ไม่มีเคสในแท็บนี้' : every.length ? 'ไม่มีเคสของปีนี้' : 'ไม่มีเคสที่บทบาทนี้เห็น') + '</section>';
     var w = mpoWin(), A = {}, I = {}, R = { late:0, soon:1, ok:2, fin:3, shut:4 };
